@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - StyleHub Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== MISMAS VARIABLES QUE EN INDEX.HTML ===== */
+        :root {
+            --primary: #ff3366;
+            --primary-dark: #e62e5c;
+            --secondary: #1a1a1a;
+            --accent: #ffcc00;
+            --light: #ffffff;
+            --gray: #f5f5f5;
+            --dark-gray: #777;
+            --text: #333;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --border-radius: 20px;
+            --success: #4CAF50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            line-height: 1.7;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: var(--transition);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.5px;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #d42a54 100%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(255, 51, 102, 0.3);
+        }
+
+        .btn:hover::after {
+            opacity: 1;
+        }
+
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* ===== TOP BAR (IGUAL QUE INDEX) ===== */
+        .top-bar {
+            background: linear-gradient(135deg, var(--secondary) 0%, #333 100%);
+            color: white;
+            padding: 12px 0;
+            font-size: 0.9rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .top-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .top-bar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-message {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .top-message::before {
+            content: '🎁';
+            font-size: 1.1rem;
+        }
+
+        .top-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .top-links a {
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .top-links a:hover {
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* ===== HEADER SIMPLIFICADO ===== */
+        .main-header {
+            padding: 25px 0;
+            background: white;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: scale(1.02);
+        }
+
+        .logo i {
+            color: var(--primary);
+            font-size: 2rem;
+        }
+
+        .logo span {
+            color: var(--primary);
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .back-home {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 25px;
+            border-radius: 50px;
+            transition: var(--transition);
+            background: var(--gray);
+        }
+
+        .back-home:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateX(-5px);
+        }
+
+        /* ===== FORMULARIO DE REGISTRO PREMIUM ===== */
+        .register-section {
+            padding: 60px 0;
+        }
+
+        .register-container {
+            max-width: 550px;
+            margin: 0 auto;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            animation: fadeInUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .register-header {
+            background: linear-gradient(135deg, var(--secondary) 0%, #333 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .register-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .register-header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .register-header i {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .register-form {
+            padding: 50px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 0.95rem;
+        }
+
+        .form-group label i {
+            color: var(--primary);
+            margin-right: 8px;
+            width: 20px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid var(--gray);
+            border-radius: 15px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition);
+            background: #fafafa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(255, 51, 102, 0.1);
+        }
+
+        .form-group input[type="password"] {
+            letter-spacing: 2px;
+        }
+
+        .form-group input.error {
+            border-color: #f44336;
+        }
+
+        .password-strength {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .strength-bar {
+            flex: 1;
+            height: 5px;
+            background: var(--gray);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .strength-bar-fill {
+            height: 100%;
+            width: 0;
+            transition: var(--transition);
+            border-radius: 5px;
+        }
+
+        .strength-text {
+            font-weight: 600;
+        }
+
+        .terms-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 30px 0;
+        }
+
+        .terms-group input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        .terms-group label {
+            font-size: 0.95rem;
+            color: var(--dark-gray);
+            cursor: pointer;
+        }
+
+        .terms-group a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .terms-group a:hover {
+            text-decoration: underline;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid var(--gray);
+        }
+
+        .login-link p {
+            color: var(--dark-gray);
+        }
+
+        .login-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+            transition: var(--transition);
+        }
+
+        .login-link a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        .social-register {
+            margin-top: 30px;
+        }
+
+        .social-register p {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            color: var(--dark-gray);
+        }
+
+        .social-register p::before,
+        .social-register p::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 30%;
+            height: 1px;
+            background: var(--gray);
+        }
+
+        .social-register p::before {
+            left: 0;
+        }
+
+        .social-register p::after {
+            right: 0;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 14px;
+            border: 2px solid var(--gray);
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            background: rgba(255, 51, 102, 0.02);
+        }
+
+        .social-btn.google:hover {
+            border-color: #DB4437;
+            color: #DB4437;
+        }
+
+        .social-btn.facebook:hover {
+            border-color: #4267B2;
+            color: #4267B2;
+        }
+
+        .social-btn i {
+            font-size: 1.2rem;
+        }
+
+        /* ===== NOTIFICACIONES ===== */
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, var(--success) 0%, #45a049 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 10000;
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+            animation: slideIn 0.4s ease, fadeOut 0.4s ease 2.6s;
+            font-weight: 500;
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+            box-shadow: 0 10px 30px rgba(244, 67, 54, 0.3);
+        }
+
+        .notification.info {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            box-shadow: 0 10px 30px rgba(33, 150, 243, 0.3);
+        }
+
+        /* ===== LOADING SPINNER ===== */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== ANIMACIONES ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .top-bar-content {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+            
+            .top-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+            
+            .register-header h2 {
+                font-size: 2rem;
+            }
+            
+            .register-form {
+                padding: 30px 20px;
+            }
+            
+            .social-buttons {
+                flex-direction: column;
+            }
+            
+            .notification {
+                top: 20px;
+                right: 20px;
+                left: 20px;
+                padding: 15px 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .register-header {
+                padding: 30px 20px;
+            }
+            
+            .register-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar (Igual que en index.html) -->
+    <div class="top-bar">
+        <div class="container top-bar-content">
+            <div class="top-message">¡Envío gratis en pedidos superiores a $49.99!</div>
+            <div class="top-links">
+                <a href="#"><i class="fas fa-question-circle"></i> Ayuda</a>
+                <a href="#"><i class="fas fa-shipping-fast"></i> Seguimiento</a>
+                <a href="registro.html" id="topAccountLink"><i class="fas fa-user"></i> Mi cuenta</a>
+                <a href="#" class="language-selector"><i class="fas fa-globe"></i> ES</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header con enlace a index.html -->
+    <header class="main-header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-crown"></i>
+                Style<span>Hub</span>
+            </a>
+            
+            <a href="index.html" class="back-home">
+                <i class="fas fa-arrow-left"></i>
+                Volver a la tienda
+            </a>
+        </div>
+    </header>
+
+    <!-- Sección de Registro -->
+    <section class="register-section">
+        <div class="container">
+            <div class="register-container">
+                <div class="register-header">
+                    <i class="fas fa-user-plus"></i>
+                    <h2>Crear Cuenta</h2>
+                    <p>Únete a StyleHub Premium</p>
+                </div>
+                
+                <div class="register-form">
+                    <form id="registerForm">
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> Nombre completo</label>
+                            <input type="text" id="fullName" placeholder="Ej: María García López" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-envelope"></i> Correo electrónico</label>
+                            <input type="email" id="email" placeholder="tucorreo@ejemplo.com" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-phone"></i> Teléfono</label>
+                            <input type="tel" id="phone" placeholder="+34 600 000 000">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-lock"></i> Contraseña</label>
+                            <input type="password" id="password" placeholder="Mínimo 8 caracteres" required>
+                            <div class="password-strength">
+                                <div class="strength-bar">
+                                    <div class="strength-bar-fill" id="strengthBar"></div>
+                                </div>
+                                <span class="strength-text" id="strengthText">Débil</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-lock"></i> Confirmar contraseña</label>
+                            <input type="password" id="confirmPassword" placeholder="Repite tu contraseña" required>
+                        </div>
+                        
+                        <div class="terms-group">
+                            <input type="checkbox" id="terms" required>
+                            <label for="terms">
+                                Acepto los <a href="#">Términos y Condiciones</a> y la 
+                                <a href="#">Política de Privacidad</a> de StyleHub Premium
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn register-btn" id="registerBtn">
+                            <span><i class="fas fa-user-check"></i> Crear Cuenta</span>
+                        </button>
+                    </form>
+                    
+                    <div class="login-link">
+                        <p>¿Ya tienes una cuenta? <a href="usuarios.html">Inicia sesión aquí</a></p>
+                    </div>
+                    
+                    <div class="social-register">
+                        <p>O regístrate con</p>
+                        <div class="social-buttons">
+                            <a href="#" class="social-btn google" id="googleRegister">
+                                <i class="fab fa-google"></i>
+                                Google
+                            </a>
+                            <a href="#" class="social-btn facebook" id="facebookRegister">
+                                <i class="fab fa-facebook-f"></i>
+                                Facebook
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer simplificado -->
+    <footer style="background: linear-gradient(135deg, var(--secondary) 0%, #222 100%); color: white; padding: 40px 0; margin-top: 60px;">
+        <div class="container">
+            <div class="copyright" style="text-align: center;">
+                <p>&copy; 2024 StyleHub Premium. Todos los derechos reservados.</p>
+                <p>Desarrollado con <i class="fas fa-heart"></i> para los amantes de la moda premium</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Constantes
+        const API_URL = 'http://localhost:3000/api';
+
+        // Función para mostrar notificaciones
+        function showNotification(message, isError = false, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${isError ? 'error' : type}`;
+            notification.innerHTML = `
+                <i class="fas ${isError ? 'fa-exclamation-circle' : type === 'info' ? 'fa-info-circle' : 'fa-check-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
+        }
+
+        // Función para actualizar la UI según el estado del usuario
+        function updateUserInterface() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const topAccountLink = document.getElementById('topAccountLink');
+            
+            if (currentUser) {
+                // Usuario logueado - mostrar su nombre
+                const firstName = currentUser.fullName.split(' ')[0];
+                
+                if (topAccountLink) {
+                    topAccountLink.innerHTML = `<i class="fas fa-user-circle"></i> ${firstName}`;
+                    topAccountLink.href = 'usuarios.html';
+                }
+            } else {
+                // Usuario no logueado
+                if (topAccountLink) {
+                    topAccountLink.innerHTML = '<i class="fas fa-user"></i> Mi cuenta';
+                    topAccountLink.href = 'registro.html';
+                }
+            }
+        }
+
+        // Medidor de fortaleza de contraseña
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const strengthBar = document.getElementById('strengthBar');
+            const strengthText = document.getElementById('strengthText');
+            
+            let strength = 0;
+            
+            if (password.length >= 8) strength += 25;
+            if (password.match(/[a-z]+/)) strength += 25;
+            if (password.match(/[A-Z]+/)) strength += 25;
+            if (password.match(/[0-9]+/)) strength += 25;
+            if (password.match(/[$@#&!]+/)) strength += 25;
+            
+            // Limitar a 100
+            strength = Math.min(strength, 100);
+            
+            // Actualizar barra
+            strengthBar.style.width = strength + '%';
+            
+            // Cambiar color y texto según fortaleza
+            if (strength < 30) {
+                strengthBar.style.background = '#f44336';
+                strengthText.textContent = 'Débil';
+                strengthText.style.color = '#f44336';
+            } else if (strength < 60) {
+                strengthBar.style.background = '#ff9800';
+                strengthText.textContent = 'Media';
+                strengthText.style.color = '#ff9800';
+            } else if (strength < 90) {
+                strengthBar.style.background = '#2196F3';
+                strengthText.textContent = 'Fuerte';
+                strengthText.style.color = '#2196F3';
+            } else {
+                strengthBar.style.background = '#4CAF50';
+                strengthText.textContent = 'Muy fuerte';
+                strengthText.style.color = '#4CAF50';
+            }
+        });
+
+        // Manejar el registro con backend
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Obtener valores
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const terms = document.getElementById('terms').checked;
+            const registerBtn = document.getElementById('registerBtn');
+            
+            // Validaciones
+            if (!fullName || !email || !password || !confirmPassword) {
+                showNotification('Por favor completa todos los campos obligatorios', true);
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showNotification('Las contraseñas no coinciden', true);
+                return;
+            }
+            
+            if (password.length < 8) {
+                showNotification('La contraseña debe tener al menos 8 caracteres', true);
+                return;
+            }
+            
+            if (!terms) {
+                showNotification('Debes aceptar los términos y condiciones', true);
+                return;
+            }
+            
+            // Validar email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showNotification('Por favor ingresa un email válido', true);
+                return;
+            }
+            
+            // Deshabilitar botón durante la petición
+            registerBtn.disabled = true;
+            registerBtn.innerHTML = '<span><i class="fas fa-spinner fa-spin"></i> Registrando...</span>';
+            
+            try {
+                const response = await fetch(`${API_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fullName, email, phone, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Registro exitoso
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                    
+                    showNotification(`¡Bienvenido/a ${fullName}! Registro exitoso.`);
+                    
+                    // Actualizar UI
+                    updateUserInterface();
+                    
+                    // Redirigir a index.html después de 1.5 segundos
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else {
+                    // Registro fallido
+                    showNotification(data.message || 'Error en el registro', true);
+                    
+                    // Reactivar botón
+                    registerBtn.disabled = false;
+                    registerBtn.innerHTML = '<span><i class="fas fa-user-check"></i> Crear Cuenta</span>';
+                }
+            } catch (error) {
+                showNotification('Error de conexión con el servidor', true);
+                console.error('Error en registro:', error);
+                
+                // Reactivar botón
+                registerBtn.disabled = false;
+                registerBtn.innerHTML = '<span><i class="fas fa-user-check"></i> Crear Cuenta</span>';
+            }
+        });
+
+        // Verificar si ya hay sesión iniciada
+        document.addEventListener('DOMContentLoaded', function() {
+            updateUserInterface();
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const token = localStorage.getItem('token');
+            
+            if (currentUser && token) {
+                // Si ya hay sesión, preguntar si quiere cerrar sesión
+                if (confirm(`Ya tienes una sesión activa como ${currentUser.fullName}. ¿Quieres cerrar sesión para crear una nueva cuenta?`)) {
+                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('token');
+                    updateUserInterface();
+                } else {
+                    window.location.href = 'index.html';
+                }
+            }
+        });
+
+        // Simular registro con Google (placeholder)
+        document.getElementById('googleRegister').addEventListener('click', function(e) {
+            e.preventDefault();
+            showNotification('Redirigiendo a Google...', false, 'info');
+        });
+
+        // Simular registro con Facebook (placeholder)
+        document.getElementById('facebookRegister').addEventListener('click', function(e) {
+            e.preventDefault();
+            showNotification('Redirigiendo a Facebook...', false, 'info');
+        });
+    </script>
+</body>
+</html>
