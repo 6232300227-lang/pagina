@@ -7,20 +7,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ===== VARIABLES PREMIUM ===== */
+        /* ===== VARIABLES Y RESET ===== */
         :root {
             --primary: #ff3366;
             --primary-dark: #e62e5c;
             --secondary: #1a1a1a;
             --accent: #ffcc00;
-            --light: #ffffff;
+            --text: #333333;
             --gray: #f5f5f5;
-            --dark-gray: #777;
-            --text: #333;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            --border-radius: 20px;
+            --dark-gray: #666666;
             --success: #4CAF50;
+            --border-radius: 20px;
+            --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         * {
@@ -32,91 +30,59 @@
         body {
             font-family: 'Poppins', sans-serif;
             color: var(--text);
-            line-height: 1.7;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            min-height: 100vh;
+            line-height: 1.6;
+            background: #fafafa;
         }
 
         .container {
-            width: 100%;
             max-width: 1400px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 30px;
         }
 
+        /* ===== TYPOGRAPHY ===== */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ===== BUTTONS ===== */
         .btn {
             display: inline-block;
             padding: 16px 40px;
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            border: none;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
             text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            letter-spacing: 1px;
             transition: var(--transition);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            letter-spacing: 0.5px;
-        }
-
-        .btn::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--primary-dark) 0%, #d42a54 100%);
-            opacity: 0;
-            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(255, 51, 102, 0.25);
+            text-transform: uppercase;
+            font-size: 0.95rem;
         }
 
         .btn:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(255, 51, 102, 0.3);
+            box-shadow: 0 15px 35px rgba(255, 51, 102, 0.4);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
         }
 
-        .btn:hover::after {
-            opacity: 1;
-        }
-
-        .btn span {
-            position: relative;
-            z-index: 1;
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-        }
-
-        .btn-outline:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        /* ===== TOP BAR PREMIUM ===== */
+        /* ===== TOP BAR ===== */
         .top-bar {
-            background: linear-gradient(135deg, var(--secondary) 0%, #333 100%);
+            background: var(--secondary);
             color: white;
             padding: 12px 0;
-            font-size: 0.9rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .top-bar::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-bottom: 3px solid var(--primary);
         }
 
         .top-bar-content {
@@ -126,15 +92,12 @@
         }
 
         .top-message {
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            padding: 5px 20px;
+            border-radius: 30px;
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .top-message::before {
-            content: '🎁';
-            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 3px 10px rgba(255, 51, 102, 0.3);
         }
 
         .top-links {
@@ -143,13 +106,12 @@
         }
 
         .top-links a {
-            color: white;
+            color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
             transition: var(--transition);
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-weight: 500;
+            gap: 5px;
         }
 
         .top-links a:hover {
@@ -157,129 +119,117 @@
             transform: translateY(-2px);
         }
 
-        .language-selector {
-            font-weight: 700;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 5px 15px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* ===== HEADER PREMIUM ===== */
-        .main-header {
-            padding: 25px 0;
+        /* ===== HEADER ===== */
+        header {
             background: white;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
-            position: relative;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .header-content {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 25px;
+            padding: 25px 0;
+            gap: 40px;
         }
 
         .logo {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-weight: 900;
+            letter-spacing: -1px;
             color: var(--secondary);
-            text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 10px;
-            transition: var(--transition);
-        }
-
-        .logo:hover {
-            transform: scale(1.02);
+            gap: 12px;
+            font-family: 'Montserrat', sans-serif;
         }
 
         .logo i {
             color: var(--primary);
-            font-size: 2rem;
+            font-size: 2.5rem;
+            filter: drop-shadow(0 5px 15px rgba(255, 51, 102, 0.4));
         }
 
         .logo span {
-            color: var(--primary);
             background: linear-gradient(45deg, var(--primary), var(--accent));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
 
-        /* ===== BARRA DE BÚSQUEDA PREMIUM ===== */
+        /* ===== SEARCH BAR ===== */
         .search-bar {
-            display: flex;
             flex: 1;
-            max-width: 650px;
-            margin: 0 25px;
+            max-width: 700px;
+            position: relative;
         }
 
         .search-bar input {
-            flex: 1;
+            width: 100%;
             padding: 18px 25px;
-            border: 2px solid var(--gray);
-            border-radius: 50px 0 0 50px;
-            font-size: 1rem;
-            border-right: none;
-            font-family: 'Poppins', sans-serif;
+            border: 3px solid transparent;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, #f8f8f8, #ffffff);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
             transition: var(--transition);
-            background: #fafafa;
+            padding-right: 70px;
         }
 
         .search-bar input:focus {
             outline: none;
             border-color: var(--primary);
-            background: white;
-            box-shadow: 0 0 0 3px rgba(255, 51, 102, 0.1);
+            box-shadow: 0 10px 30px rgba(255, 51, 102, 0.15);
         }
 
         .search-bar button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border: none;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
             color: white;
-            border: 2px solid var(--primary);
-            border-left: none;
-            padding: 18px 35px;
-            border-radius: 0 50px 50px 0;
             cursor: pointer;
-            font-size: 1.1rem;
             transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
         }
 
         .search-bar button:hover {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, #d42a54 100%);
-            transform: translateX(5px);
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 5px 20px rgba(255, 51, 102, 0.4);
         }
 
-        /* ===== ACCIONES DE USUARIO PREMIUM ===== */
+        /* ===== USER ACTIONS ===== */
         .user-actions {
             display: flex;
-            align-items: center;
             gap: 25px;
+            align-items: center;
         }
 
-        .account-link, .wishlist-link, .cart-link {
+        .user-actions a {
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: var(--text);
             text-decoration: none;
-            font-size: 0.85rem;
+            color: var(--secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
             transition: var(--transition);
-            padding: 10px 15px;
-            border-radius: 15px;
-            min-width: 80px;
             position: relative;
         }
 
-        .account-link:hover, .wishlist-link:hover, .cart-link:hover {
+        .user-actions a:hover {
             color: var(--primary);
-            background: rgba(255, 51, 102, 0.05);
             transform: translateY(-5px);
         }
 
@@ -470,7 +420,7 @@
         /* ===== BANNER PREMIUM ===== */
         .banner {
             background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
-                        url('imagenes/banner-principal.jpg');
+                        url('https://placehold.co/1920x1080/1a1a1a/ff3366?text=StyleHub');
             background-size: cover;
             background-position: center;
             color: white;
@@ -624,14 +574,13 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
         }
 
-        .product-grid {
+        .product-grid--three {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 35px;
-            margin-bottom: 60px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
         }
 
-        .product-card {
+        .product-card--center {
             background: white;
             border-radius: var(--border-radius);
             overflow: hidden;
@@ -639,162 +588,31 @@
             transition: var(--transition);
             position: relative;
             border: 1px solid #f0f0f0;
+            text-align: center;
+            padding: 40px;
         }
 
-        .product-card:hover {
-            transform: translateY(-15px) scale(1.02);
+        .product-card--center:hover {
+            transform: translateY(-10px) scale(1.02);
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
-            border-color: var(--primary);
         }
 
-        .product-badge {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 25px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            z-index: 2;
-            box-shadow: 0 5px 15px rgba(255, 51, 102, 0.3);
-        }
-
-        .product-image {
-            height: 300px;
-            overflow: hidden;
-        }
-
-        .product-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .product-card:hover .product-image img {
-            transform: scale(1.1);
-        }
-
-        .product-info {
-            padding: 25px;
-        }
-
-        .product-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-            height: auto;
-            line-height: 1.4;
-            color: var(--secondary);
-        }
-
-        .product-price {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+        .product-icon-large {
+            font-size: 4rem;
+            color: var(--primary);
             margin-bottom: 20px;
         }
 
-        .current-price {
+        .product-heading-large {
             font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--primary);
+            margin-bottom: 15px;
+            color: var(--secondary);
         }
 
-        .original-price {
-            font-size: 1.2rem;
+        .product-desc {
             color: var(--dark-gray);
-            text-decoration: line-through;
-        }
-
-        .discount {
-            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
-            color: #d32f2f;
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-size: 1rem;
-            font-weight: 700;
-        }
-
-        .product-rating {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-
-        .product-rating i {
-            color: var(--accent);
+            margin-bottom: 30px;
             font-size: 1.1rem;
-        }
-
-        .product-rating span {
-            font-size: 1rem;
-            color: var(--dark-gray);
-            font-weight: 500;
-        }
-
-        .add-to-cart-btn {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, var(--secondary) 0%, #333 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: var(--transition);
-        }
-
-        .add-to-cart-btn:hover {
-            background: linear-gradient(135deg, #333 0%, #444 100%);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .added-to-cart-btn {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            cursor: default;
-            font-weight: 700;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0 5px 20px rgba(76, 175, 80, 0.3);
-        }
-
-        .load-more-container {
-            text-align: center;
-            margin-top: 60px;
-        }
-
-        .load-more-btn {
-            background: white;
-            color: var(--primary);
-            border: 3px solid var(--primary);
-            padding: 18px 60px;
-            font-weight: 800;
-            letter-spacing: 1px;
-        }
-
-        .load-more-btn:hover {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(255, 51, 102, 0.3);
         }
 
         /* ===== FOOTER PREMIUM ===== */
@@ -1041,6 +859,9 @@
             .section-title {
                 font-size: 2.8rem;
             }
+            .product-grid--three {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 768px) {
@@ -1075,7 +896,7 @@
             .category-grid {
                 grid-template-columns: 1fr;
             }
-            .product-grid {
+            .product-grid--three {
                 grid-template-columns: 1fr;
             }
             .footer-content {
@@ -1271,28 +1092,28 @@
             <h2 class="section-title">Categorías Destacadas</h2>
             <div class="category-grid">
                 <a href="novedades.html" class="category-card">
-                    <img src="imagenes/categoria-novedades.jpg" alt="Novedades">
+                    <img src="https://placehold.co/600x400/ff3366/ffffff?text=Novedades" alt="Novedades">
                     <div class="overlay">
                         <h3>Novedades</h3>
                         <p>Colección 2024</p>
                     </div>
                 </a>
                 <a href="ofertas.html" class="category-card">
-                    <img src="imagenes/categoria-ofertas.jpg" alt="Ofertas">
+                    <img src="https://placehold.co/600x400/ffcc00/000000?text=Ofertas" alt="Ofertas">
                     <div class="overlay">
                         <h3>Ofertas Especiales</h3>
                         <p>Hasta 70% de descuento</p>
                     </div>
                 </a>
                 <a href="colecciones.html" class="category-card">
-                    <img src="imagenes/categoria-colecciones.jpg" alt="Colecciones">
+                    <img src="https://placehold.co/600x400/1a1a1a/ff3366?text=Colecciones" alt="Colecciones">
                     <div class="overlay">
                         <h3>Colecciones Exclusivas</h3>
                         <p>Diseños únicos</p>
                     </div>
                 </a>
                 <a href="novedades.html" class="category-card">
-                    <img src="imagenes/categoria-tendencias.jpg" alt="Tendencias">
+                    <img src="https://placehold.co/600x400/ff3366/ffffff?text=Tendencias" alt="Tendencias">
                     <div class="overlay">
                         <h3>Últimas Tendencias</h3>
                         <p>Verano 2024</p>
@@ -1306,23 +1127,23 @@
     <section class="products">
         <div class="container">
             <h2 class="section-title">Descubre Nuestras Colecciones</h2>
-            <div class="product-grid" style="grid-template-columns: repeat(3, 1fr);">
-                <div class="product-card" style="text-align: center; padding: 40px 20px;">
-                    <i class="fas fa-tshirt" style="font-size: 4rem; color: var(--primary); margin-bottom: 20px;"></i>
-                    <h3 style="font-size: 1.8rem; margin-bottom: 15px;">Moda Mujer</h3>
-                    <p style="margin-bottom: 20px; color: var(--dark-gray);">Descubre las últimas tendencias en moda femenina</p>
+            <div class="product-grid--three">
+                <div class="product-card--center">
+                    <i class="fas fa-tshirt product-icon-large"></i>
+                    <h3 class="product-heading-large">Moda Mujer</h3>
+                    <p class="product-desc">Descubre las últimas tendencias en moda femenina</p>
                     <a href="vestidos.html" class="btn">Explorar</a>
                 </div>
-                <div class="product-card" style="text-align: center; padding: 40px 20px;">
-                    <i class="fas fa-tshirt" style="font-size: 4rem; color: var(--primary); margin-bottom: 20px;"></i>
-                    <h3 style="font-size: 1.8rem; margin-bottom: 15px;">Moda Hombre</h3>
-                    <p style="margin-bottom: 20px; color: var(--dark-gray);">Estilo y elegancia para el hombre moderno</p>
+                <div class="product-card--center">
+                    <i class="fas fa-tshirt product-icon-large"></i>
+                    <h3 class="product-heading-large">Moda Hombre</h3>
+                    <p class="product-desc">Estilo y elegancia para el hombre moderno</p>
                     <a href="camisetas.html" class="btn">Explorar</a>
                 </div>
-                <div class="product-card" style="text-align: center; padding: 40px 20px;">
-                    <i class="fas fa-child" style="font-size: 4rem; color: var(--primary); margin-bottom: 20px;"></i>
-                    <h3 style="font-size: 1.8rem; margin-bottom: 15px;">Moda Infantil</h3>
-                    <p style="margin-bottom: 20px; color: var(--dark-gray);">Para los más pequeños de la casa</p>
+                <div class="product-card--center">
+                    <i class="fas fa-child product-icon-large"></i>
+                    <h3 class="product-heading-large">Moda Infantil</h3>
+                    <p class="product-desc">Para los más pequeños de la casa</p>
                     <a href="ninos.html" class="btn">Explorar</a>
                 </div>
             </div>
@@ -1384,189 +1205,16 @@
     </footer>
 
     <script>
-        // Función para mostrar notificaciones
-        function showNotification(message, type = 'success') {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.innerHTML = `
-                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
-                <span>${message}</span>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            }, 3000);
-        }
-
-        // Función para actualizar la UI según el estado del usuario
-        function updateUserInterface() {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            const accountLink = document.getElementById('accountLink');
-            const accountText = document.getElementById('accountText');
-            const topAccountLink = document.getElementById('topAccountLink');
-            
-            if (currentUser) {
-                // Usuario logueado - mostrar su nombre y opción de cerrar sesión
-                const firstName = currentUser.fullName.split(' ')[0];
-                
-                // Actualizar link de cuenta en el header principal
-                accountLink.href = '#';
-                accountText.textContent = firstName;
-                
-                // Actualizar link en top bar
-                if (topAccountLink) {
-                    topAccountLink.innerHTML = `<i class="fas fa-user-circle"></i> ${firstName}`;
-                    topAccountLink.href = '#';
-                }
-                
-                // Agregar badge de usuario logueado
-                const accountIcon = accountLink.querySelector('i');
-                if (!document.querySelector('.user-badge')) {
-                    const badge = document.createElement('span');
-                    badge.className = 'user-badge';
-                    badge.innerHTML = '✓';
-                    accountIcon.style.position = 'relative';
-                    accountIcon.appendChild(badge);
-                }
-                
-                // Cambiar comportamiento al hacer clic
-                accountLink.onclick = function(e) {
-                    e.preventDefault();
-                    if (confirm(`¿Cerrar sesión ${currentUser.fullName}?`)) {
-                        logout();
-                    }
-                };
-                
-                if (topAccountLink) {
-                    topAccountLink.onclick = function(e) {
-                        e.preventDefault();
-                        if (confirm(`¿Cerrar sesión ${currentUser.fullName}?`)) {
-                            logout();
-                        }
-                    };
-                }
-            } else {
-                // Usuario no logueado - mostrar opciones de registro/login
-                accountLink.href = 'registro.html';
-                accountText.textContent = 'Mi cuenta';
-                
-                if (topAccountLink) {
-                    topAccountLink.innerHTML = '<i class="fas fa-user"></i> Mi cuenta';
-                    topAccountLink.href = 'registro.html';
-                }
-                
-                // Remover badge si existe
-                const badge = document.querySelector('.user-badge');
-                if (badge) {
-                    badge.remove();
-                }
-                
-                // Restaurar comportamiento por defecto
-                accountLink.onclick = null;
-                if (topAccountLink) {
-                    topAccountLink.onclick = null;
-                }
-            }
-        }
-
-        // Función para cerrar sesión
-        function logout() {
-            localStorage.removeItem('currentUser');
-            localStorage.removeItem('token');
-            updateUserInterface();
-            showNotification('Has cerrado sesión correctamente', 'info');
-        }
-
-        // Función para añadir productos al carrito
-        function addToCart(button) {
-            const productCard = button.closest('.product-card');
-            const product = {
-                id: productCard.dataset.id,
-                name: productCard.dataset.name,
-                price: parseFloat(productCard.dataset.price),
-                originalPrice: parseFloat(productCard.dataset.original),
-                image: productCard.dataset.image,
-                quantity: 1
-            };
-            
-            // Obtener carrito actual
-            let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
-            
-            // Verificar si el producto ya existe
-            const existingProduct = cart.find(item => item.id === product.id);
-            
-            if (existingProduct) {
-                existingProduct.quantity += 1;
-            } else {
-                cart.push(product);
-            }
-            
-            // Guardar en localStorage
-            localStorage.setItem('shoppingCart', JSON.stringify(cart));
-            
-            // Actualizar contador
-            updateCartCount();
-            
-            // Cambiar estilo del botón
-            button.innerHTML = '<i class="fas fa-check"></i> Añadido';
-            button.classList.remove('add-to-cart-btn');
-            button.classList.add('added-to-cart-btn');
-            button.disabled = true;
-            
-            // Mostrar notificación
-            showNotification(`${product.name} se ha añadido al carrito`);
-        }
-        
-        // Función para actualizar el contador del carrito
-        function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
-            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-            const cartCountElement = document.getElementById('cartCount');
-            
-            if (cartCountElement) {
-                cartCountElement.textContent = totalItems;
-                
-                // Animación del contador
-                cartCountElement.style.transform = 'scale(1.3)';
-                setTimeout(() => {
-                    cartCountElement.style.transform = 'scale(1)';
-                }, 300);
-            }
-        }
-        
-        // Cargar todo al iniciar la página
+        // JavaScript básico para el menú móvil
         document.addEventListener('DOMContentLoaded', function() {
-            updateCartCount();
-            updateUserInterface();
-            
-            // Menú móvil
-            const menuToggle = document.querySelector('.mobile-menu-toggle');
+            const mobileToggle = document.querySelector('.mobile-menu-toggle');
             const navLinks = document.querySelector('.nav-links');
             
-            if (menuToggle && navLinks) {
-                menuToggle.addEventListener('click', () => {
+            if (mobileToggle) {
+                mobileToggle.addEventListener('click', function() {
                     navLinks.classList.toggle('active');
-                    menuToggle.innerHTML = navLinks.classList.contains('active') 
-                        ? '<i class="fas fa-times"></i>' 
-                        : '<i class="fas fa-bars"></i>';
                 });
             }
-            
-            // Dropdowns en móvil
-            const dropdowns = document.querySelectorAll('.dropdown > .nav-link');
-            dropdowns.forEach(dropdown => {
-                dropdown.addEventListener('click', function(e) {
-                    if (window.innerWidth <= 992) {
-                        e.preventDefault();
-                        const parent = this.parentElement;
-                        parent.classList.toggle('active');
-                    }
-                });
-            });
         });
     </script>
 </body>

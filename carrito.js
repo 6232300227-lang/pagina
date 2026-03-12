@@ -12,23 +12,156 @@ const VALID_PROMO_CODES = {
     'STYLE10': 0.10 // 10% de descuento
 };
 
+// Variables globales para el proceso de checkout
+let currentStep = 1;
+let selectedPaymentMethod = 'card';
+let orderData = {
+    subtotal: 0,
+    shipping: 0,
+    discount: 0,
+    total: 0,
+    shippingInfo: {},
+    paymentMethod: ''
+};
+
 // Inicializar cuando el DOM esté cargado
 document.addEventListener('DOMContentLoaded', function() {
     // Cargar carrito desde localStorage
     loadCartFromStorage();
     
-    // Configurar eventos
-    setupEventListeners();
-    
     // Actualizar visualización del carrito
     updateCartDisplay();
+    
+    // Configurar eventos
+    setupEventListeners();
+
+    // Configurar menú móvil
+    setupMobileMenu();
+
+    // Formatear número de tarjeta
+    const cardNumber = document.getElementById('cardNumber');
+    if (cardNumber) {
+        cardNumber.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+            e.target.value = value;
+        });
+    }
+
+    // Formatear fecha de expiración
+    const expiryDate = document.getElementById('expiryDate');
+    if (expiryDate) {
+        expiryDate.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0,2) + '/' + value.substring(2,4);
+            }
+            e.target.value = value;
+        });
+    }
+
+    // Formatear CVV
+    const cvv = document.getElementById('cvv');
+    if (cvv) {
+        cvv.addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '');
+        });
+    }
 });
+
+// Función para mostrar notificaciones
+function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+        <span>${message}</span>
+    `;
+    document.body.appendChild(notification);
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 3000);
+}
+
+// Función para actualizar la UI según el estado del usuario
+function updateUserInterface() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const accountLink = document.getElementById('accountLink');
+    const accountText = document.getElementById('accountText');
+    const topAccountLink = document.getElementById('topAccountLink');
+    
+    if (currentUser) {
+        const firstName = currentUser.fullName ? currentUser.fullName.split(' ')[0] : 'Usuario';
+        
+        if (accountLink) {
+            accountLink.href = '#';
+            accountText.textContent = firstName;
+            
+            const accountIcon = accountLink.querySelector('i');
+            if (accountIcon && !document.querySelector('.user-badge')) {
+                const badge = document.createElement('span');
+                badge.className = 'user-badge';
+                badge.innerHTML = '✓';
+                accountIcon.style.position = 'relative';
+                accountIcon.appendChild(badge);
+            }
+            
+            accountLink.onclick = function(e) {
+                e.preventDefault();
+                if (confirm(`¿Cerrar sesión ${currentUser.fullName}?`)) {
+                    logout();
+                }
+            };
+        }
+        
+        if (topAccountLink) {
+            topAccountLink.innerHTML = `<i class="fas fa-user-circle"></i> ${firstName}`;
+            topAccountLink.href = '#';
+            topAccountLink.onclick = function(e) {
+                e.preventDefault();
+                if (confirm(`¿Cerrar sesión ${currentUser.fullName}?`)) {
+                    logout();
+                }
+            };
+        }
+    } else {
+        if (accountLink) {
+            accountLink.href = 'usuarios.html';
+            accountText.textContent = 'Mi cuenta';
+            
+            const badge = document.querySelector('.user-badge');
+            if (badge) badge.remove();
+            
+            accountLink.onclick = null;
+        }
+        
+        if (topAccountLink) {
+            topAccountLink.innerHTML = '<i class="fas fa-user"></i> Mi cuenta';
+            topAccountLink.href = 'usuarios.html';
+            topAccountLink.onclick = null;
+        }
+    }
+}
+
+function logout() {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('token');
+    updateUserInterface();
+    showNotification('Has cerrado sesión correctamente', 'info');
+}
 
 // Cargar carrito desde localStorage
 function loadCartFromStorage() {
     const savedCart = localStorage.getItem('shoppingCart');
     if (savedCart) {
         cart = JSON.parse(savedCart);
+        // Asegurar que cada item tenga una propiedad cartId única para operaciones
+        cart = cart.map((item, index) => ({
+            ...item,
+            cartId: item.cartId || `cart_${index}_${Date.now()}`
+        }));
     }
 }
 
@@ -40,13 +173,13 @@ function saveCartToStorage() {
 // Configurar event listeners
 function setupEventListeners() {
     // Botón para vaciar carrito
-    const clearCartBtn = document.getElementById('clearCartBtn');
+    const clearCartBtn = document.querySelector('.clear-cart-btn');
     if (clearCartBtn) {
         clearCartBtn.addEventListener('click', clearCart);
     }
     
     // Botón para aplicar código promocional
-    const applyPromoBtn = document.getElementById('applyPromoBtn');
+    const applyPromoBtn = document.querySelector('.apply-promo-btn');
     if (applyPromoBtn) {
         applyPromoBtn.addEventListener('click', applyPromoCode);
     }
@@ -54,75 +187,10 @@ function setupEventListeners() {
     // Botón para proceder al pago
     const checkoutBtn = document.getElementById('checkoutBtn');
     if (checkoutBtn) {
-        checkoutBtn.addEventListener('click', showCheckoutModal);
-    }
-    
-    // Botón para seguir comprando
-    const continueShoppingBtn = document.getElementById('continueShoppingBtn');
-    if (continueShoppingBtn) {
-        continueShoppingBtn.addEventListener('click', function() {
-            window.location.href = 'index.html';
+        checkoutBtn.addEventListener('click', function() {
+            goToStep(2);
         });
     }
-    
-    // Modal de checkout
-    const checkoutModal = document.getElementById('checkoutModal');
-    if (checkoutModal) {
-        // Cerrar modal
-        const closeModalBtns = checkoutModal.querySelectorAll('.close-modal, .cancel-purchase');
-        closeModalBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                checkoutModal.classList.remove('show');
-            });
-        });
-        
-        // Enviar formulario de compra
-        const checkoutForm = document.getElementById('checkoutForm');
-        if (checkoutForm) {
-            checkoutForm.addEventListener('submit', processCheckout);
-        }
-    }
-    
-    // Modal de recibo
-    const receiptModal = document.getElementById('receiptModal');
-    if (receiptModal) {
-        // Cerrar modal
-        const closeReceiptBtns = receiptModal.querySelectorAll('.close-modal');
-        closeReceiptBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                receiptModal.classList.remove('show');
-            });
-        });
-        
-        // Botón para imprimir ticket
-        const printReceiptBtn = document.getElementById('printReceiptBtn');
-        if (printReceiptBtn) {
-            printReceiptBtn.addEventListener('click', printReceipt);
-        }
-        
-        // Botón para volver a la tienda
-        const backToStoreBtn = document.getElementById('backToStoreBtn');
-        if (backToStoreBtn) {
-            backToStoreBtn.addEventListener('click', function() {
-                receiptModal.classList.remove('show');
-                window.location.href = 'index.html';
-            });
-        }
-    }
-    
-    // Cerrar modales al hacer clic fuera
-    window.addEventListener('click', function(event) {
-        const checkoutModal = document.getElementById('checkoutModal');
-        const receiptModal = document.getElementById('receiptModal');
-        
-        if (checkoutModal && event.target === checkoutModal) {
-            checkoutModal.classList.remove('show');
-        }
-        
-        if (receiptModal && event.target === receiptModal) {
-            receiptModal.classList.remove('show');
-        }
-    });
 }
 
 // Actualizar visualización del carrito
@@ -137,132 +205,91 @@ function updateCartItems() {
     const cartItemsContainer = document.getElementById('cartItemsContainer');
     const emptyCartMessage = document.getElementById('emptyCartMessage');
     const cartItemsCount = document.getElementById('cart-items-count');
+    const proceedBtn = document.getElementById('proceedToInfo');
     
     if (!cartItemsContainer) return;
     
-    // Limpiar contenedor
-    cartItemsContainer.innerHTML = '';
-    
     if (cart.length === 0) {
-        // Mostrar mensaje de carrito vacío
-        if (emptyCartMessage) {
-            emptyCartMessage.style.display = 'block';
-        }
-        if (cartItemsCount) {
-            cartItemsCount.textContent = '0';
-        }
-        return;
-    }
-    
-    // Ocultar mensaje de carrito vacío
-    if (emptyCartMessage) {
-        emptyCartMessage.style.display = 'none';
-    }
-    
-    // Actualizar contador de items
-    if (cartItemsCount) {
-        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-        cartItemsCount.textContent = totalItems;
-    }
-    
-    // Agregar cada item del carrito
-    cart.forEach(item => {
-        const cartItemElement = createCartItemElement(item);
-        cartItemsContainer.appendChild(cartItemElement);
-    });
-}
-
-// Crear elemento HTML para un item del carrito
-function createCartItemElement(item) {
-    const cartItem = document.createElement('div');
-    cartItem.className = 'cart-item';
-    cartItem.dataset.id = item.cartId;
-    
-    const itemTotal = item.price * item.quantity;
-    
-    cartItem.innerHTML = `
-        <div class="cart-item-image">
-            <img src="${item.image}" alt="${item.name}">
-        </div>
-        <div class="cart-item-details">
-            <h3 class="cart-item-title">${item.name}</h3>
-            <div class="cart-item-price">$${item.price.toFixed(2)}</div>
-            <div class="cart-item-actions">
-                <div class="quantity-selector">
-                    <button class="quantity-btn decrease-btn">-</button>
-                    <input type="number" class="quantity-input" value="${item.quantity}" min="1" max="10">
-                    <button class="quantity-btn increase-btn">+</button>
+        cartItemsContainer.innerHTML = `
+            <div class="empty-cart">
+                <div class="empty-cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
                 </div>
-                <button class="remove-item-btn">
-                    <i class="fas fa-trash"></i> Eliminar
-                </button>
+                <h3>Tu carrito está vacío</h3>
+                <p>Agrega productos desde la tienda para comenzar tu compra</p>
+                <a href="index.html" class="btn" style="display: inline-block; padding: 15px 40px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; text-decoration: none; border-radius: 50px; font-weight: 700;">Explorar Productos</a>
             </div>
-        </div>
-        <div class="cart-item-total">$${itemTotal.toFixed(2)}</div>
-    `;
+        `;
+        if (proceedBtn) proceedBtn.disabled = true;
+        if (cartItemsCount) cartItemsCount.textContent = '(0 productos)';
+    } else {
+        let html = '';
+        let subtotal = 0;
+        
+        cart.forEach((item, index) => {
+            const itemTotal = item.price * (item.quantity || 1);
+            subtotal += itemTotal;
+            
+            html += `
+                <div class="cart-item" data-index="${index}">
+                    <div class="cart-item-image">
+                        <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/300x400?text=Sin+Imagen'">
+                    </div>
+                    <div class="cart-item-details">
+                        <h3 class="cart-item-title">${item.name}</h3>
+                        <div class="cart-item-price">
+                            <span>$${item.price.toFixed(2)}</span>
+                            ${item.originalPrice ? `<span class="cart-item-original-price">$${item.originalPrice.toFixed(2)}</span>` : ''}
+                        </div>
+                        <div class="cart-item-actions">
+                            <div class="quantity-controls">
+                                <button class="quantity-btn decrease-btn" onclick="updateQuantity(${index}, -1)">-</button>
+                                <span class="quantity-display">${item.quantity || 1}</span>
+                                <button class="quantity-btn increase-btn" onclick="updateQuantity(${index}, 1)">+</button>
+                            </div>
+                            <button class="remove-btn" onclick="removeFromCart(${index})">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="cart-item-total">
+                        <div class="cart-item-total-price">$${itemTotal.toFixed(2)}</div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        cartItemsContainer.innerHTML = html;
+        if (proceedBtn) proceedBtn.disabled = false;
+        
+        const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+        if (cartItemsCount) cartItemsCount.textContent = `(${totalItems} ${totalItems === 1 ? 'producto' : 'productos'})`;
+    }
     
-    // Agregar event listeners a los botones
-    const decreaseBtn = cartItem.querySelector('.decrease-btn');
-    const increaseBtn = cartItem.querySelector('.increase-btn');
-    const quantityInput = cartItem.querySelector('.quantity-input');
-    const removeBtn = cartItem.querySelector('.remove-item-btn');
-    
-    decreaseBtn.addEventListener('click', function() {
-        updateQuantity(item.cartId, -1);
-    });
-    
-    increaseBtn.addEventListener('click', function() {
-        updateQuantity(item.cartId, 1);
-    });
-    
-    quantityInput.addEventListener('change', function() {
-        const newQuantity = parseInt(this.value);
-        if (newQuantity >= 1 && newQuantity <= 10) {
-            setQuantity(item.cartId, newQuantity);
-        } else {
-            this.value = item.quantity;
-        }
-    });
-    
-    removeBtn.addEventListener('click', function() {
-        removeFromCart(item.cartId);
-    });
-    
-    return cartItem;
+    updateCartCount();
 }
 
 // Actualizar cantidad de un item
-function updateQuantity(cartId, change) {
-    const itemIndex = cart.findIndex(item => item.cartId === cartId);
-    if (itemIndex === -1) return;
-    
-    const newQuantity = cart[itemIndex].quantity + change;
-    
-    if (newQuantity >= 1 && newQuantity <= 10) {
-        cart[itemIndex].quantity = newQuantity;
+function updateQuantity(index, change) {
+    if (cart[index]) {
+        cart[index].quantity = (cart[index].quantity || 1) + change;
+        
+        if (cart[index].quantity <= 0) {
+            cart.splice(index, 1);
+        }
+        
         saveCartToStorage();
         updateCartDisplay();
+        showNotification('Cantidad actualizada', 'success');
     }
 }
 
-// Establecer cantidad específica de un item
-function setQuantity(cartId, quantity) {
-    const itemIndex = cart.findIndex(item => item.cartId === cartId);
-    if (itemIndex === -1) return;
-    
-    cart[itemIndex].quantity = quantity;
-    saveCartToStorage();
-    updateCartDisplay();
-}
-
 // Remover item del carrito
-function removeFromCart(cartId) {
-    cart = cart.filter(item => item.cartId !== cartId);
+function removeFromCart(index) {
+    cart.splice(index, 1);
     saveCartToStorage();
     updateCartDisplay();
-    
-    // Mostrar notificación
-    showNotification('Producto eliminado del carrito');
+    showNotification('Producto eliminado del carrito', 'success');
 }
 
 // Vaciar todo el carrito
@@ -273,16 +300,14 @@ function clearCart() {
         cart = [];
         saveCartToStorage();
         updateCartDisplay();
-        
-        // Mostrar notificación
-        showNotification('Carrito vaciado correctamente');
+        showNotification('Carrito vaciado correctamente', 'success');
     }
 }
 
 // Actualizar resumen del pedido
 function updateOrderSummary() {
     // Calcular subtotal
-    const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    const subtotal = cart.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
     
     // Calcular costo de envío
     const shipping = subtotal >= SHIPPING_FREE_THRESHOLD ? 0 : SHIPPING_COST;
@@ -306,13 +331,18 @@ function updateOrderSummary() {
     if (shippingElement) shippingElement.textContent = shipping === 0 ? 'Gratis' : `$${shipping.toFixed(2)}`;
     if (discountElement) discountElement.textContent = discount > 0 ? `-$${discount.toFixed(2)}` : '$0.00';
     if (totalElement) totalElement.textContent = `$${total.toFixed(2)}`;
+    
+    orderData.subtotal = subtotal;
+    orderData.shipping = shipping;
+    orderData.discount = discount;
+    orderData.total = total;
 }
 
 // Actualizar contador del carrito en el header
 function updateCartCount() {
-    const cartCountElement = document.querySelector('.cart-count');
+    const cartCountElement = document.getElementById('cartCount');
     if (cartCountElement) {
-        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+        const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
         cartCountElement.textContent = totalItems;
     }
 }
@@ -325,7 +355,7 @@ function applyPromoCode() {
     const code = promoCodeInput.value.trim().toUpperCase();
     
     if (!code) {
-        showNotification('Por favor ingresa un código promocional');
+        showNotification('Por favor ingresa un código promocional', 'error');
         return;
     }
     
@@ -334,88 +364,214 @@ function applyPromoCode() {
         discountAmount = VALID_PROMO_CODES[code];
         updateOrderSummary();
         
-        // Mostrar notificación
         showNotification(`¡Código ${code} aplicado! Descuento del ${discountAmount * 100}%`);
         
-        // Deshabilitar campo y botón
         promoCodeInput.disabled = true;
-        document.getElementById('applyPromoBtn').disabled = true;
-        document.getElementById('applyPromoBtn').textContent = 'Aplicado';
+        document.querySelector('.apply-promo-btn').disabled = true;
+        document.querySelector('.apply-promo-btn').textContent = 'Aplicado';
     } else {
-        showNotification('Código promocional inválido');
+        showNotification('Código promocional inválido', 'error');
         promoCodeInput.value = '';
     }
 }
 
-// Mostrar modal de checkout
-function showCheckoutModal() {
-    if (cart.length === 0) {
-        showNotification('Tu carrito está vacío');
-        return;
+// Función para navegar entre pasos
+function goToStep(step) {
+    if (step === 2) {
+        if (cart.length === 0) {
+            showNotification('Tu carrito está vacío', 'error');
+            return;
+        }
     }
     
-    const checkoutModal = document.getElementById('checkoutModal');
-    if (checkoutModal) {
-        checkoutModal.classList.add('show');
+    for (let i = 1; i <= 4; i++) {
+        const circle = document.getElementById(`step${i}Circle`);
+        const label = document.getElementById(`step${i}Label`);
+        const container = document.getElementById(`step${i}`);
+        
+        if (i < step) {
+            if (circle) circle.className = 'step-circle completed';
+            if (label) label.className = 'step-label completed';
+        } else if (i === step) {
+            if (circle) circle.className = 'step-circle active';
+            if (label) label.className = 'step-label active';
+        } else {
+            if (circle) circle.className = 'step-circle';
+            if (label) label.className = 'step-label';
+        }
+        
+        if (container) {
+            container.className = i === step ? 'step-container active' : 'step-container';
+        }
+    }
+    
+    currentStep = step;
+    
+    if (step === 4) {
+        loadConfirmationDetails();
     }
 }
 
-// Procesar checkout
-async function processCheckout(event) {
-    event.preventDefault();
+// Función para validar y continuar al pago
+function validateAndGoToPayment() {
+    if (validateInfo()) {
+        goToStep(3);
+    }
+}
 
-    // Obtener datos del formulario
-    const fullName = document.getElementById('fullName').value;
-    const email = document.getElementById('email').value;
-    const phone = document.getElementById('phone') ? document.getElementById('phone').value : '';
-    const address = document.getElementById('address').value;
-    const city = document.getElementById('city').value;
-    const zipCode = document.getElementById('zipCode').value;
-    const paymentMethod = document.getElementById('paymentMethod').value;
+// Función para validar información de envío
+function validateInfo() {
+    const fullName = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const address = document.getElementById('address').value.trim();
+    const city = document.getElementById('city').value.trim();
+    const zipCode = document.getElementById('zipCode').value.trim();
+    
+    document.querySelectorAll('.form-control').forEach(input => {
+        input.classList.remove('error');
+    });
+    
+    let isValid = true;
+    
+    if (!fullName) {
+        document.getElementById('fullName').classList.add('error');
+        isValid = false;
+    }
+    
+    if (!email || !email.includes('@') || !email.includes('.')) {
+        document.getElementById('email').classList.add('error');
+        isValid = false;
+    }
+    
+    if (!phone || phone.length < 9) {
+        document.getElementById('phone').classList.add('error');
+        isValid = false;
+    }
+    
+    if (!address) {
+        document.getElementById('address').classList.add('error');
+        isValid = false;
+    }
+    
+    if (!city) {
+        document.getElementById('city').classList.add('error');
+        isValid = false;
+    }
+    
+    if (!zipCode || zipCode.length < 5) {
+        document.getElementById('zipCode').classList.add('error');
+        isValid = false;
+    }
+    
+    if (!isValid) {
+        showNotification('Por favor completa todos los campos correctamente', 'error');
+        return false;
+    }
+    
+    orderData.shippingInfo = {
+        fullName, email, phone, address, city, zipCode
+    };
+    
+    return true;
+}
 
-    // Validar que todos los campos estén completos
-    if (!fullName || !email || !address || !city || !zipCode || !paymentMethod) {
-        showNotification('Por favor completa todos los campos obligatorios');
+// Función para seleccionar método de pago
+function selectPaymentMethod(method, element) {
+    selectedPaymentMethod = method;
+    
+    document.querySelectorAll('.payment-method').forEach(el => {
+        el.classList.remove('selected');
+    });
+    
+    element.classList.add('selected');
+    
+    const cardDetails = document.getElementById('cardDetails');
+    if (method === 'card') {
+        cardDetails.style.display = 'block';
+    } else {
+        cardDetails.style.display = 'none';
+    }
+}
+
+// Función para validar tarjeta de crédito
+function validateCard() {
+    const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+    const expiryDate = document.getElementById('expiryDate').value;
+    const cvv = document.getElementById('cvv').value;
+    const cardHolder = document.getElementById('cardHolder').value.trim();
+    
+    let isValid = true;
+    
+    if (!cardNumber || cardNumber.length < 16) {
+        document.getElementById('cardNumber').classList.add('error');
+        isValid = false;
+    } else {
+        document.getElementById('cardNumber').classList.remove('error');
+    }
+    
+    if (!expiryDate || expiryDate.length < 5) {
+        document.getElementById('expiryDate').classList.add('error');
+        isValid = false;
+    } else {
+        document.getElementById('expiryDate').classList.remove('error');
+    }
+    
+    if (!cvv || cvv.length < 3) {
+        document.getElementById('cvv').classList.add('error');
+        isValid = false;
+    } else {
+        document.getElementById('cvv').classList.remove('error');
+    }
+    
+    if (!cardHolder) {
+        document.getElementById('cardHolder').classList.add('error');
+        isValid = false;
+    } else {
+        document.getElementById('cardHolder').classList.remove('error');
+    }
+    
+    return isValid;
+}
+
+// Procesar el pago
+async function processPayment() {
+    if (selectedPaymentMethod === 'card') {
+        if (!validateCard()) {
+            showNotification('Datos de tarjeta inválidos', 'error');
+            return;
+        }
+    }
+
+    if (cart.length === 0) {
+        showNotification('Tu carrito está vacío', 'error');
         return;
     }
 
-    // Cerrar modal de checkout
-    const checkoutModal = document.getElementById('checkoutModal');
-    if (checkoutModal) {
-        checkoutModal.classList.remove('show');
-    }
+    orderData.paymentMethod = selectedPaymentMethod;
 
-    // Generar recibo (actualiza DOM con número de orden)
-    generateReceipt(fullName, email, address, city, zipCode, paymentMethod);
-
-    // Obtener número de pedido generado en el recibo
+    const generatedNumber = '#SH-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
     const orderNumberEl = document.getElementById('orderNumber');
-    const numeroPedido = orderNumberEl ? orderNumberEl.textContent : (Math.floor(Math.random() * 1000000).toString().padStart(6, '0'));
+    if (orderNumberEl) orderNumberEl.textContent = generatedNumber;
 
-    // Preparar payload para enviar al servidor
-    const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    const subtotal = cart.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
     const shipping = subtotal >= SHIPPING_FREE_THRESHOLD ? 0 : SHIPPING_COST;
     const discount = promoCodeApplied ? subtotal * discountAmount : 0;
     const total = subtotal + shipping - discount;
 
     const payload = {
-        numero_pedido: numeroPedido,
-        shippingInfo: {
-            fullName: fullName,
-            email: email,
-            phone: phone,
-            address: address,
-            city: city,
-            zipCode: zipCode
-        },
-        productos: cart.map(item => ({ id: item.id || null, name: item.name, price: item.price, quantity: item.quantity })),
+        numero_pedido: generatedNumber,
+        shippingInfo: orderData.shippingInfo || {},
+        productos: cart.map(i => ({ id: i.id ?? null, name: i.name, price: i.price, quantity: i.quantity || 1 })),
         subtotal: subtotal,
         shipping: shipping,
         discount: discount,
         total: total,
-        paymentMethod: paymentMethod,
-        promoCode: (document.getElementById('promoCode') ? document.getElementById('promoCode').value : '')
+        paymentMethod: selectedPaymentMethod,
+        promoCode: document.getElementById('promoCode') ? document.getElementById('promoCode').value : ''
     };
+
+    showNotification('Enviando pedido...', 'info');
 
     try {
         const resp = await fetch('api/procesar_pedido.php', {
@@ -425,250 +581,73 @@ async function processCheckout(event) {
         });
 
         const result = await resp.json();
+        if (resp.ok && result && result.success) {
+            showNotification('Pedido guardado (ID: ' + (result.pedido_id || '-') + ')', 'success');
 
-        if (result && result.success) {
-            showNotification('Pedido guardado correctamente (ID: ' + (result.pedido_id || '-') + ')');
-
-            // Vaciar carrito después de la compra
             cart = [];
+            promoCodeApplied = false;
+            discountAmount = 0;
             saveCartToStorage();
-            updateCartDisplay();
+            updateCartCount();
 
-            // Mostrar modal de recibo
-            const receiptModal = document.getElementById('receiptModal');
-            if (receiptModal) {
-                receiptModal.classList.add('show');
-            }
+            goToStep(4);
+            loadConfirmationDetails();
         } else {
             const msg = (result && result.message) ? result.message : 'Error al guardar el pedido';
-            showNotification(msg);
-            console.error('Error procesando pedido:', result);
+            showNotification(msg, 'error');
+            console.error('procesar_pedido error:', result);
         }
     } catch (err) {
-        showNotification('Error de red al enviar el pedido');
+        showNotification('Error de red al enviar el pedido', 'error');
         console.error('Fetch error:', err);
     }
 }
 
-// Generar recibo
-function generateReceipt(fullName, email, address, city, zipCode, paymentMethod) {
-    // Calcular totales
-    const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-    const shipping = subtotal >= SHIPPING_FREE_THRESHOLD ? 0 : SHIPPING_COST;
-    const discount = promoCodeApplied ? subtotal * discountAmount : 0;
-    const total = subtotal + shipping - discount;
+// Cargar detalles en la sección de confirmación
+function loadConfirmationDetails() {
+    const container = document.getElementById('confirmationDetails');
+    if (!container) return;
+
+    const info = orderData.shippingInfo || {};
+    const subt = orderData.subtotal || cart.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
+    const sh = orderData.shipping || (subt >= SHIPPING_FREE_THRESHOLD ? 0 : SHIPPING_COST);
+    const disc = orderData.discount || (promoCodeApplied ? subt * discountAmount : 0);
+    const tot = orderData.total || (subt + sh - disc);
+
+    container.innerHTML = `
+        <div class="detail-row"><div class="detail-label">Nombre</div><div class="detail-value">${info.fullName || ''}</div></div>
+        <div class="detail-row"><div class="detail-label">Email</div><div class="detail-value">${info.email || ''}</div></div>
+        <div class="detail-row"><div class="detail-label">Dirección</div><div class="detail-value">${info.address || ''}, ${info.city || ''} ${info.zipCode || ''}</div></div>
+        <div class="detail-row"><div class="detail-label">Subtotal</div><div class="detail-value">$${Number(subt).toFixed(2)}</div></div>
+        <div class="detail-row"><div class="detail-label">Envío</div><div class="detail-value">${sh === 0 ? 'Gratis' : '$' + Number(sh).toFixed(2)}</div></div>
+        <div class="detail-row"><div class="detail-label">Descuento</div><div class="detail-value">-$${Number(disc).toFixed(2)}</div></div>
+        <div class="detail-row"><div class="detail-label">Total</div><div class="detail-value">$${Number(tot).toFixed(2)}</div></div>
+        <div class="detail-row"><div class="detail-label">Método de pago</div><div class="detail-value">${selectedPaymentMethod === 'card' ? 'Tarjeta de Crédito/Débito' : 'PayPal'}</div></div>
+    `;
+}
+
+// Configurar menú móvil
+function setupMobileMenu() {
+    const menuToggle = document.querySelector('.mobile-menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
     
-    // Actualizar fecha y número de orden
-    const now = new Date();
-    const receiptDate = document.getElementById('receiptDate');
-    const orderNumber = document.getElementById('orderNumber');
-    
-    if (receiptDate) {
-        receiptDate.textContent = now.toLocaleDateString('es-ES', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
+    if (menuToggle && navLinks) {
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            menuToggle.innerHTML = navLinks.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
         });
     }
     
-    if (orderNumber) {
-        orderNumber.textContent = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
-    }
-    
-    // Actualizar items del recibo
-    const receiptItemsBody = document.getElementById('receiptItemsBody');
-    if (receiptItemsBody) {
-        receiptItemsBody.innerHTML = '';
-        
-        cart.forEach(item => {
-            const row = document.createElement('tr');
-            const itemTotal = item.price * item.quantity;
-            
-            row.innerHTML = `
-                <td>${item.name}</td>
-                <td>${item.quantity}</td>
-                <td>$${item.price.toFixed(2)}</td>
-                <td>$${itemTotal.toFixed(2)}</td>
-            `;
-            
-            receiptItemsBody.appendChild(row);
+    const dropdowns = document.querySelectorAll('.dropdown > .nav-link');
+    dropdowns.forEach(dropdown => {
+        dropdown.addEventListener('click', function(e) {
+            if (window.innerWidth <= 992) {
+                e.preventDefault();
+                const parent = this.parentElement;
+                parent.classList.toggle('active');
+            }
         });
-    }
-    
-    // Actualizar totales del recibo
-    const receiptSubtotal = document.getElementById('receiptSubtotal');
-    const receiptShipping = document.getElementById('receiptShipping');
-    const receiptDiscount = document.getElementById('receiptDiscount');
-    const receiptTotal = document.getElementById('receiptTotal');
-    const receiptPaymentMethod = document.getElementById('receiptPaymentMethod');
-    
-    if (receiptSubtotal) receiptSubtotal.textContent = `$${subtotal.toFixed(2)}`;
-    if (receiptShipping) receiptShipping.textContent = shipping === 0 ? 'Gratis' : `$${shipping.toFixed(2)}`;
-    if (receiptDiscount) receiptDiscount.textContent = discount > 0 ? `-$${discount.toFixed(2)}` : '$0.00';
-    if (receiptTotal) receiptTotal.textContent = `$${total.toFixed(2)}`;
-    
-    // Actualizar método de pago
-    if (receiptPaymentMethod) {
-        const paymentMethods = {
-            'credit': 'Tarjeta de crédito',
-            'debit': 'Tarjeta de débito',
-            'paypal': 'PayPal',
-            'cash': 'Contra reembolso'
-        };
-        receiptPaymentMethod.textContent = paymentMethods[paymentMethod] || paymentMethod;
-    }
-}
-
-// Imprimir ticket
-function printReceipt() {
-    const receiptContent = document.getElementById('printableReceipt').innerHTML;
-    const originalContent = document.body.innerHTML;
-    
-    // Crear ventana de impresión
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(`
-        <!DOCTYPE html>
-        <html lang="es">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Ticket de Compra - StyleHub</title>
-            <style>
-                body {
-                    font-family: Arial, sans-serif;
-                    font-size: 12px;
-                    line-height: 1.4;
-                    color: #000;
-                    margin: 0;
-                    padding: 20px;
-                }
-                .receipt {
-                    max-width: 300px;
-                    margin: 0 auto;
-                    border: 1px solid #ccc;
-                    padding: 15px;
-                }
-                .receipt-header {
-                    text-align: center;
-                    border-bottom: 1px dashed #ccc;
-                    padding-bottom: 10px;
-                    margin-bottom: 15px;
-                }
-                .receipt-header h3 {
-                    margin: 0;
-                    font-size: 16px;
-                    color: #f1356d;
-                }
-                table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin: 15px 0;
-                }
-                th {
-                    text-align: left;
-                    border-bottom: 1px solid #ccc;
-                    padding: 5px 0;
-                    font-weight: bold;
-                }
-                td {
-                    padding: 5px 0;
-                    border-bottom: 1px solid #eee;
-                }
-                .summary-row {
-                    display: flex;
-                    justify-content: space-between;
-                    margin: 5px 0;
-                }
-                .summary-row.total {
-                    font-weight: bold;
-                    border-top: 1px solid #ccc;
-                    padding-top: 10px;
-                    margin-top: 10px;
-                }
-                .receipt-footer {
-                    text-align: center;
-                    margin-top: 15px;
-                    padding-top: 10px;
-                    border-top: 1px dashed #ccc;
-                    font-size: 10px;
-                }
-                @media print {
-                    @page {
-                        margin: 0;
-                        size: auto;
-                    }
-                    body {
-                        margin: 0;
-                        padding: 10px;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-            ${receiptContent}
-        </body>
-        </html>
-    `);
-    
-    printWindow.document.close();
-    printWindow.focus();
-    
-    // Esperar a que se cargue el contenido antes de imprimir
-    setTimeout(() => {
-        printWindow.print();
-        printWindow.close();
-    }, 250);
-}
-
-// Mostrar notificación
-function showNotification(message) {
-    // Crear elemento de notificación
-    const notification = document.createElement('div');
-    notification.className = 'notification';
-    notification.innerHTML = `
-        <i class="fas fa-check-circle"></i>
-        <span>${message}</span>
-    `;
-    
-    // Estilos para la notificación
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background-color: #4CAF50;
-        color: white;
-        padding: 15px 25px;
-        border-radius: 5px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        z-index: 10000;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s;
-    `;
-    
-    // Añadir estilos de animación
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
-    `;
-    
-    document.head.appendChild(style);
-    document.body.appendChild(notification);
-    
-    // Eliminar la notificación después de 3 segundos
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.parentNode.removeChild(notification);
-        }
-    }, 3000);
+    });
 }
