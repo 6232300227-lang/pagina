@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Camisetas para Hombre - StyleHub</title>
-    <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -34,12 +33,36 @@
             font-family: 'Poppins', sans-serif;
             color: var(--text);
             line-height: 1.6;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 0 30px;
+        }
+
+        /* ===== UTILIDADES ===== */
+        .btn {
+            display: inline-block;
+            padding: 16px 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: var(--transition);
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(255, 51, 102, 0.3);
         }
 
         /* ===== TOP BAR ===== */
@@ -149,7 +172,6 @@
         }
 
         .logo span {
-            color: var(--primary);
             background: linear-gradient(45deg, var(--primary), var(--accent));
             -webkit-background-clip: text;
             background-clip: text;
@@ -252,22 +274,6 @@
             box-shadow: 0 4px 10px rgba(255, 51, 102, 0.3);
         }
 
-        .user-badge {
-            position: absolute;
-            bottom: -5px;
-            right: -5px;
-            background: var(--success);
-            color: white;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            border: 2px solid white;
-        }
-
         nav {
             background: white;
             border-top: 2px solid var(--gray);
@@ -325,7 +331,7 @@
             width: 70%;
         }
 
-        /* ===== DROPDOWNS PREMIUM ===== */
+        /* ===== DROPDOWNS ===== */
         .dropdown {
             position: relative;
         }
@@ -417,7 +423,6 @@
             border-radius: var(--border-radius);
             position: relative;
             overflow: hidden;
-            animation: fadeInUp 0.8s forwards;
         }
 
         .category-header::before {
@@ -459,7 +464,6 @@
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             margin-bottom: 40px;
-            animation: fadeInUp 0.8s forwards;
         }
 
         .filter-sort {
@@ -553,15 +557,7 @@
             transition: var(--transition);
             position: relative;
             border: 1px solid #f0f0f0;
-            animation: fadeInUp 0.6s forwards;
         }
-        .product-card:nth-child(2) { animation-delay: 0.1s; }
-        .product-card:nth-child(3) { animation-delay: 0.2s; }
-        .product-card:nth-child(4) { animation-delay: 0.3s; }
-        .product-card:nth-child(5) { animation-delay: 0.4s; }
-        .product-card:nth-child(6) { animation-delay: 0.5s; }
-        .product-card:nth-child(7) { animation-delay: 0.6s; }
-        .product-card:nth-child(8) { animation-delay: 0.7s; }
 
         .product-card:hover {
             transform: translateY(-15px) scale(1.02);
@@ -885,7 +881,6 @@
             background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
         }
 
-        /* ===== ANIMACIONES ===== */
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
@@ -910,6 +905,22 @@
         @keyframes float {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-20px); }
+        }
+
+        .product-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        .product-card:nth-child(2) { animation-delay: 0.1s; }
+        .product-card:nth-child(3) { animation-delay: 0.2s; }
+        .product-card:nth-child(4) { animation-delay: 0.3s; }
+        .product-card:nth-child(5) { animation-delay: 0.4s; }
+        .product-card:nth-child(6) { animation-delay: 0.5s; }
+        .product-card:nth-child(7) { animation-delay: 0.6s; }
+        .product-card:nth-child(8) { animation-delay: 0.7s; }
+        
+        .logo i {
+            animation: float 3s ease-in-out infinite;
         }
 
         /* ===== RESPONSIVE ===== */
@@ -1040,14 +1051,13 @@
     </style>
 </head>
 <body>
-    <!-- Top Bar -->
+    <!-- Top Bar - SIN MI CUENTA -->
     <div class="top-bar">
         <div class="container top-bar-content">
             <div class="top-message">¡Envío gratis en pedidos superiores a $49.99!</div>
             <div class="top-links">
-                <a href="#"><i class="fas fa-question-circle"></i> Ayuda</a>
-                <a href="#"><i class="fas fa-shipping-fast"></i> Seguimiento</a>
-                <a href="usuarios.html" id="topAccountLink"><i class="fas fa-user"></i> Mi cuenta</a>
+                <a href="ayuda.html"><i class="fas fa-question-circle"></i> Ayuda</a>
+                <a href="seguimiento.html"><i class="fas fa-shipping-fast"></i> Seguimiento</a>
                 <a href="#" class="language-selector"><i class="fas fa-globe"></i> ES</a>
             </div>
         </div>
@@ -1091,7 +1101,7 @@
             </div>
         </div>
         
-        <!-- Navigation Premium con Dropdowns -->
+        <!-- Navigation con Dropdowns -->
         <nav>
             <div class="container">
                 <ul class="nav-links">
@@ -1123,7 +1133,7 @@
                             <a href="camisas.html"><i class="fas fa-tshirt"></i> Camisas</a>
                             <a href="pantalones-hombre.html"><i class="fas fa-tshirt"></i> Pantalones</a>
                             <a href="chaquetas.html"><i class="fas fa-tshirt"></i> Chaquetas</a>
-                            <a href="Trajes.html"><i class="fas fa-tshirt"></i> Trajes</a>
+                            <a href="trajes.html"><i class="fas fa-tshirt"></i> Trajes</a>
                             <div class="dropdown-header">ACCESORIOS</div>
                             <a href="zapatos-hombre.html"><i class="fas fa-shoe-prints"></i> Zapatos</a>
                             <a href="relojes.html"><i class="fas fa-clock"></i> Relojes</a>
@@ -1168,7 +1178,7 @@
     <section class="category-filters">
         <div class="container">
             <div class="filter-sort">
-                <div class="products-count" id="productsCount">Mostrando 7 de 7 productos</div>
+                <div class="products-count" id="productsCount">Mostrando 9 de 9 productos</div>
                 <select class="sort-select" id="sortSelect">
                     <option value="featured">Ordenar por: Destacados</option>
                     <option value="price-asc">Precio: menor a mayor</option>
@@ -1182,9 +1192,10 @@
                 <h3>Precio</h3>
                 <div class="filter-options">
                     <button class="filter-btn active" data-price="all">Todos</button>
-                    <button class="filter-btn" data-price="0-50">$0 - $50</button>
-                    <button class="filter-btn" data-price="50-80">$50 - $80</button>
-                    <button class="filter-btn" data-price="80+">$80+</button>
+                    <button class="filter-btn" data-price="0-30">$0 - $30</button>
+                    <button class="filter-btn" data-price="30-50">$30 - $50</button>
+                    <button class="filter-btn" data-price="50-70">$50 - $70</button>
+                    <button class="filter-btn" data-price="70+">$70+</button>
                 </div>
             </div>
         </div>
@@ -1193,9 +1204,7 @@
     <!-- Products -->
     <section class="category-products">
         <div class="container">
-            <div class="product-grid-category" id="productsGrid">
-                <!-- Los productos se cargarán aquí mediante JavaScript -->
-            </div>
+            <div class="product-grid-category" id="productsGrid"></div>
             
             <div class="pagination">
                 <button class="page-btn active">1</button>
@@ -1263,108 +1272,56 @@
     </footer>
 
     <script>
-        // --- Funciones auxiliares (showNotification, updateUserInterface, logout, updateCartCount) ---
+        // Función para mostrar notificaciones
         function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
-            notification.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i><span>${message}</span>`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            `;
             document.body.appendChild(notification);
-            setTimeout(() => { if (notification.parentNode) notification.parentNode.removeChild(notification); }, 3000);
-        }
-        
-        function updateUserInterface() {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            const accountLink = document.getElementById('accountLink');
-            const accountText = document.getElementById('accountText');
-            const topAccountLink = document.getElementById('topAccountLink');
-            
-            if (currentUser) {
-                const firstName = currentUser.fullName ? currentUser.fullName.split(' ')[0] : 'Usuario';
-                
-                if (accountLink) {
-                    accountLink.href = '#';
-                    accountText.textContent = firstName;
-                    
-                    const accountIcon = accountLink.querySelector('i');
-                    if (accountIcon && !document.querySelector('.user-badge')) {
-                        const badge = document.createElement('span');
-                        badge.className = 'user-badge';
-                        badge.innerHTML = '✓';
-                        accountIcon.style.position = 'relative';
-                        accountIcon.appendChild(badge);
-                    }
-                    
-                    accountLink.onclick = function(e) {
-                        e.preventDefault();
-                        if (confirm(`¿Cerrar sesión ${currentUser.fullName}?`)) {
-                            logout();
-                        }
-                    };
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
                 }
-                
-                if (topAccountLink) {
-                    topAccountLink.innerHTML = `<i class="fas fa-user-circle"></i> ${firstName}`;
-                    topAccountLink.href = '#';
-                    topAccountLink.onclick = function(e) {
-                        e.preventDefault();
-                        if (confirm(`¿Cerrar sesión ${currentUser.fullName}?`)) {
-                            logout();
-                        }
-                    };
-                }
-            } else {
-                if (accountLink) {
-                    accountLink.href = 'usuarios.html';
-                    accountText.textContent = 'Mi cuenta';
-                    
-                    const badge = document.querySelector('.user-badge');
-                    if (badge) badge.remove();
-                    
-                    accountLink.onclick = null;
-                }
-                
-                if (topAccountLink) {
-                    topAccountLink.innerHTML = '<i class="fas fa-user"></i> Mi cuenta';
-                    topAccountLink.href = 'usuarios.html';
-                    topAccountLink.onclick = null;
-                }
-            }
+            }, 3000);
         }
 
-        function logout() {
-            localStorage.removeItem('currentUser');
-            localStorage.removeItem('token');
-            updateUserInterface();
-            showNotification('Has cerrado sesión correctamente', 'info');
-        }
-
+        // Función para actualizar el contador del carrito
         function updateCartCount() {
             const cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
             const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
             const cartCountElement = document.getElementById('cartCount');
-            if (cartCountElement) cartCountElement.textContent = totalItems;
+            if (cartCountElement) {
+                cartCountElement.textContent = totalItems;
+                
+                // Animación
+                cartCountElement.style.transform = 'scale(1.3)';
+                setTimeout(() => {
+                    cartCountElement.style.transform = 'scale(1)';
+                }, 300);
+            }
         }
 
-        // Datos de productos de camisetas para hombres
-        const camisetasData = [
-            { id: 201, name: "Camisa de vestir", price: 25.99, originalPrice: 37.99, discount: 32, image: "https://manchester.com.mx/cdn/shop/files/ML033000-02_AZUL_01_2048x.jpg?v=1762883954", rating: 3.5, reviews: 244, badge: "Más vendido" },
-            { id: 202, name: "Camisa Informal", price: 34.99, originalPrice: 38.99, discount: 10, image: "https://m.media-amazon.com/images/I/41+V3RqkQrS._AC_.jpg", rating: 3.0, reviews: 144, badge: "Nuevo" },
-            { id: 203, name: "Camisa Guayabera", price: 25.99, originalPrice: 37.99, discount: 32, image: "https://m.media-amazon.com/images/I/61lfEsmKZcL._AC_SX522_.jpg", rating: 4.5, reviews: 324, badge: "Tradicional" },
-            { id: 204, name: "Camisa Oxford", price: 25.99, originalPrice: 37.99, discount: 32, image: "https://m.media-amazon.com/images/I/718GqFfqpHL._AC_SX425_.jpg", rating: 3.5, reviews: 155, badge: "Clásica" },
-            { id: 205, name: "Camisa Hawaiana", price: 45.99, originalPrice: 52.99, discount: 13, image: "https://i.etsystatic.com/19374361/r/il/d4b78a/2843656095/il_570xN.2843656095_nt4u.jpg", rating: 4.0, reviews: 244, badge: "Verano" },
-            { id: 206, name: "Camisa de Lino", price: 65.99, originalPrice: 77.99, discount: 15, image: "https://www.chidomarca.com/cdn/shop/files/84.png?v=1752456834", rating: 3.5, reviews: 244, badge: "Premium" },
-            { id: 207, name: "Camisa Manga Corta Clásica", price: 66.99, originalPrice: 77.99, discount: 14, image: "https://manchester.com.mx/cdn/shop/files/manchester-camisa-casual-de-cuadros-clasica-cuello-abotonado-manga-corta-8783818.png?v=1763679957", rating: 4.0, reviews: 311, badge: "Más vendido" },
-            { id: 208, name: "Camisa Estampada", price: 75.99, originalPrice: 88.99, discount: 15, image: "https://costavana.com.mx/cdn/shop/files/camisa_estampada_hombre_casual_Mahi.jpg?v=1757348143", rating: 5.0, reviews: 444, badge: "Exclusivo" },
-            { id: 209, name: "Camisa con Cuello Mao", price: 66.99, originalPrice: 77.99, discount: 14, image: "https://uniformesroger.com/WebRoot/Store/Shops/UniformesRoger/6585/6CCF/A1EE/B6F8/BFF6/2E10/8536/5EF9/991225032XL.png", rating: 5.0, reviews: 344, badge: "Elegante" }
+        // Datos de productos de camisetas
+        const productsData = [
+            { id: 301, name: "Camiseta Básica Negra", price: 19.99, originalPrice: 29.99, discount: 33, image: "https://m.media-amazon.com/images/I/61lUj+LrFXL._AC_SY679_.jpg", rating: 4.5, reviews: 1230, badge: "Esencial" },
+            { id: 302, name: "Camiseta Estampada Gráfica", price: 29.99, originalPrice: 39.99, discount: 25, image: "https://i.ebayimg.com/images/g/z3sAAOSw9N1i7~Y9/s-l1600.jpg", rating: 4.8, reviews: 856, badge: "Nuevo diseño" },
+            { id: 303, name: "Camiseta Manga Larga", price: 34.99, originalPrice: 44.99, discount: 22, image: "https://contents.mediadecathlon.com/p2389711/k$bd6bdfc370e0af4a7c3d12e1a79f0da2/manga-larga-hombre.jpg?format=auto&f=800x0", rating: 4.2, reviews: 432, badge: "Térmica" },
+            { id: 304, name: "Camiseta Deportiva", price: 24.99, originalPrice: 34.99, discount: 29, image: "https://www.dhresource.com/0x0/f2/albu/g9/M00/3A/48/rBVaVV0bN1SAHxKBAADkO1K-6EY402.jpg", rating: 4.3, reviews: 567, badge: "Transpirable" },
+            { id: 305, name: "Camiseta Polo", price: 39.99, originalPrice: 49.99, discount: 20, image: "https://http2.mlstatic.com/D_NQ_NP_672362-MLM49317543954_032022-O.webp", rating: 4.6, reviews: 345, badge: "Elegante" },
+            { id: 306, name: "Camiseta de Algodón", price: 22.99, originalPrice: 32.99, discount: 30, image: "https://media.istockphoto.com/id/1281127383/es/foto/primer-plano-de-una-playera-blanca-aislada-en-blanco.jpg?s=612x612&w=0&k=20&c=u02sPl7EaZ8zmG6l0A2w0MawII33Om3J91sO6N28BdI=", rating: 4.4, reviews: 789, badge: "Suave" },
+            { id: 307, name: "Camiseta Estampada Florar", price: 32.99, originalPrice: 42.99, discount: 23, image: "https://m.media-amazon.com/images/I/71RRb7lzqXL._AC_SY741_.jpg", rating: 4.1, reviews: 234, badge: "Verano" },
+            { id: 308, name: "Camiseta Cuello V", price: 21.99, originalPrice: 31.99, discount: 31, image: "https://media.istockphoto.com/id/1273408248/es/foto/camiseta-negra-aislada-sobre-fondo-blanco.jpg?s=612x612&w=0&k=20&c=-gymCHyYYmgKvQlMN6O3Tj9PMd_J9enj_3oHlQOwr6E=", rating: 4.7, reviews: 654, badge: "Clásica" },
+            { id: 309, name: "Camiseta Oversize", price: 27.99, originalPrice: 37.99, discount: 26, image: "https://http2.mlstatic.com/D_NQ_NP_683771-MLM51548735593_092022-O.webp", rating: 4.9, reviews: 432, badge: "Tendencia" }
         ];
 
         // Estado de la aplicación
-        let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
         let currentPriceFilter = 'all';
         let currentSort = 'featured';
 
         document.addEventListener('DOMContentLoaded', function() {
-            updateUserInterface();
             updateCartCount();
             loadProducts();
             setupFilters();
@@ -1377,16 +1334,17 @@
             const productsGrid = document.getElementById('productsGrid');
             if (!productsGrid) return;
             
-            let filteredProducts = [...camisetasData];
+            let filteredProducts = [...productsData];
             
             // Aplicar filtro de precio
             if (currentPriceFilter !== 'all') {
                 filteredProducts = filteredProducts.filter(p => {
                     const price = p.price;
                     switch(currentPriceFilter) {
-                        case '0-50': return price <= 50;
-                        case '50-80': return price > 50 && price <= 80;
-                        case '80+': return price > 80;
+                        case '0-30': return price <= 30;
+                        case '30-50': return price > 30 && price <= 50;
+                        case '50-70': return price > 50 && price <= 70;
+                        case '70+': return price > 70;
                         default: return true;
                     }
                 });
@@ -1398,7 +1356,7 @@
             // Actualizar contador de productos
             const productsCount = document.querySelector('.products-count');
             if (productsCount) {
-                productsCount.textContent = `Mostrando ${filteredProducts.length} de ${camisetasData.length} productos`;
+                productsCount.textContent = `Mostrando ${filteredProducts.length} de ${productsData.length} productos`;
             }
             
             productsGrid.innerHTML = '';
@@ -1418,6 +1376,7 @@
             const stars = generateStarRating(product.rating);
             
             // Verificar si el producto ya está en el carrito
+            const cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
             const inCart = cart.some(item => item.id === product.id);
             const buttonText = inCart ? '✓ En el carrito' : 'Añadir al carrito';
             const buttonClass = inCart ? 'added-to-cart-btn' : 'add-to-cart-btn';
@@ -1516,7 +1475,7 @@
                 e.preventDefault();
                 
                 const productId = parseInt(button.dataset.id);
-                const product = camisetasData.find(p => p.id === productId);
+                const product = productsData.find(p => p.id === productId);
                 
                 if (product) {
                     addToCart(product);
@@ -1529,7 +1488,7 @@
         }
 
         function addToCart(product) {
-            cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+            let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
             const existingItem = cart.find(item => item.id === product.id);
             
             if (existingItem) {
@@ -1550,9 +1509,16 @@
             if (menuToggle && navLinks) {
                 menuToggle.addEventListener('click', () => {
                     navLinks.classList.toggle('active');
-                    menuToggle.innerHTML = navLinks.classList.contains('active') 
-                        ? '<i class="fas fa-times"></i>' 
-                        : '<i class="fas fa-bars"></i>';
+                    const icon = menuToggle.querySelector('i');
+                    if (icon) {
+                        if (navLinks.classList.contains('active')) {
+                            icon.classList.remove('fa-bars');
+                            icon.classList.add('fa-times');
+                        } else {
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    }
                 });
             }
             
@@ -1569,7 +1535,5 @@
             });
         }
     </script>
-    <script src="js/script.js"></script>
-    <script src="js/carrito.js"></script>
 </body>
 </html>

@@ -3,23 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> chaquetas-niño - StyleHub</title>
+    <title>Chaquetas para niño - StyleHub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ===== VARIABLES ===== */
+        /* ===== RESET Y VARIABLES ===== */
         :root {
             --primary: #ff3366;
             --primary-dark: #e62e5c;
-            --secondary: #1a1a1a;
+            --secondary: #2c3e50;
             --accent: #ffcc00;
-            --light: #ffffff;
-            --gray: #f5f5f5;
-            --dark-gray: #777;
             --text: #333;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --dark-gray: #666;
+            --gray: #f5f5f5;
+            --success: #4CAF50;
+            --danger: #f44336;
             --border-radius: 20px;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
         }
 
         * {
@@ -31,18 +32,18 @@
         body {
             font-family: 'Poppins', sans-serif;
             color: var(--text);
-            line-height: 1.7;
+            line-height: 1.6;
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             min-height: 100vh;
         }
 
         .container {
-            width: 100%;
             max-width: 1400px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 30px;
         }
 
+        /* ===== UTILIDADES ===== */
         .btn {
             display: inline-block;
             padding: 16px 40px;
@@ -56,8 +57,6 @@
             text-decoration: none;
             transition: var(--transition);
             text-align: center;
-            position: relative;
-            overflow: hidden;
             letter-spacing: 0.5px;
         }
 
@@ -169,10 +168,10 @@
         .logo i {
             color: var(--primary);
             font-size: 2rem;
+            animation: float 3s ease-in-out infinite;
         }
 
         .logo span {
-            color: var(--primary);
             background: linear-gradient(45deg, var(--primary), var(--accent));
             -webkit-background-clip: text;
             background-clip: text;
@@ -239,6 +238,7 @@
             padding: 10px 15px;
             border-radius: 15px;
             min-width: 80px;
+            position: relative;
         }
 
         .account-link:hover, .wishlist-link:hover, .cart-link:hover {
@@ -331,7 +331,7 @@
             width: 70%;
         }
 
-        /* ===== DROPDOWNS PREMIUM ===== */
+        /* ===== DROPDOWNS ===== */
         .dropdown {
             position: relative;
         }
@@ -852,6 +852,77 @@
             margin: 0 5px;
         }
 
+        /* ===== NOTIFICACIONES ===== */
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            padding: 20px 30px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 10000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.4s ease, fadeOut 0.4s ease 2.6s;
+            font-weight: 500;
+            color: white;
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, var(--success) 0%, #45a049 100%);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+        }
+
+        .notification.info {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .product-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        .product-card:nth-child(2) { animation-delay: 0.1s; }
+        .product-card:nth-child(3) { animation-delay: 0.2s; }
+        .product-card:nth-child(4) { animation-delay: 0.3s; }
+        .product-card:nth-child(5) { animation-delay: 0.4s; }
+        .product-card:nth-child(6) { animation-delay: 0.5s; }
+        .product-card:nth-child(7) { animation-delay: 0.6s; }
+        .product-card:nth-child(8) { animation-delay: 0.7s; }
+        
+        .logo i {
+            animation: float 3s ease-in-out infinite;
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 1200px) {
             .category-header h1 {
@@ -977,40 +1048,16 @@
                 font-size: 0.9rem;
             }
         }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .product-card {
-            animation: fadeInUp 0.6s ease forwards;
-        }
-        
-        .product-card:nth-child(2) { animation-delay: 0.1s; }
-        .product-card:nth-child(3) { animation-delay: 0.2s; }
-        .product-card:nth-child(4) { animation-delay: 0.3s; }
-        .product-card:nth-child(5) { animation-delay: 0.4s; }
-        .product-card:nth-child(6) { animation-delay: 0.5s; }
-        .product-card:nth-child(7) { animation-delay: 0.6s; }
-        .product-card:nth-child(8) { animation-delay: 0.7s; }
     </style>
 </head>
 <body>
-    <!-- Top Bar -->
+    <!-- Top Bar - SIN MI CUENTA -->
     <div class="top-bar">
         <div class="container top-bar-content">
             <div class="top-message">¡Envío gratis en pedidos superiores a $49.99!</div>
             <div class="top-links">
-                <a href="#"><i class="fas fa-question-circle"></i> Ayuda</a>
-                <a href="#"><i class="fas fa-shipping-fast"></i> Seguimiento</a>
-                <a href="#"><i class="fas fa-user"></i> Mi cuenta</a>
+                <a href="ayuda.html"><i class="fas fa-question-circle"></i> Ayuda</a>
+                <a href="seguimiento.html"><i class="fas fa-shipping-fast"></i> Seguimiento</a>
                 <a href="#" class="language-selector"><i class="fas fa-globe"></i> ES</a>
             </div>
         </div>
@@ -1035,9 +1082,9 @@
                 </div>
                 
                 <div class="user-actions">
-                    <a href="#" class="account-link">
+                    <a href="usuarios.html" class="account-link" id="accountLink">
                         <i class="fas fa-user-circle"></i>
-                        <span>Mi cuenta</span>
+                        <span id="accountText">Mi cuenta</span>
                     </a>
                     <a href="#" class="wishlist-link">
                         <i class="fas fa-heart"></i>
@@ -1054,7 +1101,7 @@
             </div>
         </div>
         
-        <!-- Navigation Premium con Dropdowns -->
+        <!-- Navigation con Dropdowns -->
         <nav>
             <div class="container">
                 <ul class="nav-links">
@@ -1062,12 +1109,12 @@
                     
                     <!-- Dropdown Mujer -->
                     <li class="dropdown">
-                        <a href="#" class="nav-link active"><i class="fas fa-female"></i> Mujer <i class="fas fa-chevron-down"></i></a>
+                        <a href="#" class="nav-link"><i class="fas fa-female"></i> Mujer <i class="fas fa-chevron-down"></i></a>
                         <div class="dropdown-content">
                             <div class="dropdown-header">ROPA DE MUJER</div>
                             <a href="vestidos.html"><i class="fas fa-tshirt"></i> Vestidos</a>
                             <a href="tops.html"><i class="fas fa-tshirt"></i> Tops y Blusas</a>
-                            <a href="pantalones-mujer.html" class="active"><i class="fas fa-tshirt"></i> Pantalones</a>
+                            <a href="pantalones-mujer.html"><i class="fas fa-tshirt"></i> Pantalones</a>
                             <a href="faldas.html"><i class="fas fa-tshirt"></i> Faldas</a>
                             <a href="chaquetas-mujer.html"><i class="fas fa-tshirt"></i> Chaquetas</a>
                             <div class="dropdown-header">ACCESORIOS</div>
@@ -1085,7 +1132,7 @@
                             <a href="camisetas.html"><i class="fas fa-tshirt"></i> Camisetas</a>
                             <a href="camisas.html"><i class="fas fa-tshirt"></i> Camisas</a>
                             <a href="pantalones-hombre.html"><i class="fas fa-tshirt"></i> Pantalones</a>
-                            <a href="chaquetas-hombre.html"><i class="fas fa-tshirt"></i> Chaquetas</a>
+                            <a href="chaquetas.html"><i class="fas fa-tshirt"></i> Chaquetas</a>
                             <a href="trajes.html"><i class="fas fa-tshirt"></i> Trajes</a>
                             <div class="dropdown-header">ACCESORIOS</div>
                             <a href="zapatos-hombre.html"><i class="fas fa-shoe-prints"></i> Zapatos</a>
@@ -1094,18 +1141,18 @@
                         </div>
                     </li>
                     
-                    <!-- Dropdown Niños -->
+                    <!-- Dropdown Niños - ACTIVO -->
                     <li class="dropdown">
-                        <a href="#" class="nav-link"><i class="fas fa-child"></i> Niños <i class="fas fa-chevron-down"></i></a>
+                        <a href="#" class="nav-link active"><i class="fas fa-child"></i> Niños <i class="fas fa-chevron-down"></i></a>
                         <div class="dropdown-content">
                             <div class="dropdown-header">NIÑAS</div>
                             <a href="ninas-vestidos.html"><i class="fas fa-tshirt"></i> Vestidos</a>
                             <a href="ninas-tops.html"><i class="fas fa-tshirt"></i> Tops</a>
                             <a href="ninas-pantalones.html"><i class="fas fa-tshirt"></i> Pantalones</a>
                             <div class="dropdown-header">NIÑOS</div>
-                            <a href="ninos-camisetas.html"><i class="fas fa-tshirt"></i> Camisetas</a>
-                            <a href="ninos-pantalones.html"><i class="fas fa-tshirt"></i> Pantalones</a>
-                            <a href="ninos-chaquetas.html"><i class="fas fa-tshirt"></i> Chaquetas</a>
+                            <a href="camisetas-niños.html"><i class="fas fa-tshirt"></i> Camisetas</a>
+                            <a href="pantalones-niño.html"><i class="fas fa-tshirt"></i> Pantalones</a>
+                            <a href="chaquetas-niño.html" class="active"><i class="fas fa-tshirt"></i> Chaquetas</a>
                             <div class="dropdown-header">BEBÉS</div>
                             <a href="bebes.html"><i class="fas fa-baby"></i> Ropa de bebé</a>
                         </div>
@@ -1122,8 +1169,8 @@
     <!-- Category Header -->
     <section class="category-header">
         <div class="container">
-            <h1>Pantalones de Mujer</h1>
-            <p>Descubre nuestra colección de pantalones: jeans, palazzo, cargo y más. Todos los estilos para cada ocasión.</p>
+            <h1>Chaquetas para Niños</h1>
+            <p>Abrígalos con estilo. Chaquetas, cazadoras y abrigos para todas las estaciones. Calidad y diseño premium.</p>
         </div>
     </section>
 
@@ -1131,7 +1178,7 @@
     <section class="category-filters">
         <div class="container">
             <div class="filter-sort">
-                <div class="products-count">Mostrando 8 de 16 productos</div>
+                <div class="products-count" id="productsCount">Mostrando 8 de 8 productos</div>
                 <select class="sort-select" id="sortSelect">
                     <option value="featured">Ordenar por: Destacados</option>
                     <option value="price-asc">Precio: menor a mayor</option>
@@ -1142,47 +1189,12 @@
             </div>
             
             <div class="filter-group">
-                <h3>Tipo de Pantalón</h3>
-                <div class="filter-options">
-                    <button class="filter-btn active" data-filter="all">Todos</button>
-                    <button class="filter-btn" data-filter="jeans">Jeans</button>
-                    <button class="filter-btn" data-filter="palazzo">Palazzo</button>
-                    <button class="filter-btn" data-filter="cargo">Cargo</button>
-                    <button class="filter-btn" data-filter="deportivos">Deportivos</button>
-                </div>
-            </div>
-            
-            <div class="filter-group">
                 <h3>Precio</h3>
                 <div class="filter-options">
                     <button class="filter-btn active" data-price="all">Todos</button>
                     <button class="filter-btn" data-price="0-25">$0 - $25</button>
-                    <button class="filter-btn" data-price="25-50">$25 - $50</button>
-                    <button class="filter-btn" data-price="50-100">$50 - $100</button>
-                    <button class="filter-btn" data-price="100+">$100+</button>
-                </div>
-            </div>
-            
-            <div class="filter-group">
-                <h3>Talla</h3>
-                <div class="filter-options">
-                    <button class="filter-btn" data-size="xs">XS</button>
-                    <button class="filter-btn" data-size="s">S</button>
-                    <button class="filter-btn" data-size="m">M</button>
-                    <button class="filter-btn" data-size="l">L</button>
-                    <button class="filter-btn" data-size="xl">XL</button>
-                    <button class="filter-btn" data-size="xxl">XXL</button>
-                </div>
-            </div>
-            
-            <div class="filter-group">
-                <h3>Color</h3>
-                <div class="filter-options">
-                    <button class="filter-btn" data-color="negro">Negro</button>
-                    <button class="filter-btn" data-color="azul">Azul</button>
-                    <button class="filter-btn" data-color="beige">Beige</button>
-                    <button class="filter-btn" data-color="blanco">Blanco</button>
-                    <button class="filter-btn" data-color="gris">Gris</button>
+                    <button class="filter-btn" data-price="25-35">$25 - $35</button>
+                    <button class="filter-btn" data-price="35+">$35+</button>
                 </div>
             </div>
         </div>
@@ -1191,9 +1203,7 @@
     <!-- Products -->
     <section class="category-products">
         <div class="container">
-            <div class="product-grid-category" id="productsGrid">
-                <!-- Los productos se cargarán aquí mediante JavaScript -->
-            </div>
+            <div class="product-grid-category" id="productsGrid"></div>
             
             <div class="pagination">
                 <button class="page-btn active">1</button>
@@ -1261,158 +1271,148 @@
     </footer>
 
     <script>
+        // Función para mostrar notificaciones
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
+        }
+
+        // Función para actualizar el contador del carrito
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+            const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+            const cartCountElement = document.getElementById('cartCount');
+            if (cartCountElement) {
+                cartCountElement.textContent = totalItems;
+                
+                // Animación
+                cartCountElement.style.transform = 'scale(1.3)';
+                setTimeout(() => {
+                    cartCountElement.style.transform = 'scale(1)';
+                }, 300);
+            }
+        }
+
         // Datos de productos de chaquetas para niño
-        const pantalonesData = [
+        const productsData = [
             {
                 id: 201,
-                name: "cazadora vaquera",
+                name: "Cazadora Vaquera",
                 price: 35.99,
                 originalPrice: 47.99,
-                discount: 60,
+                discount: 25,
                 image: "https://shop.mango.com/assets/rcs/pics/static/T2/fotos/S/27054404_TM_B.jpg?ts=1768831543831",
                 rating: 3.5,
                 reviews: 244,
-                badge: "Más vendido",
-                category: "jeans",
-                color: "azul"
+                badge: "Más vendido"
             },
-
             {
                 id: 202,
                 name: "Cazadora Bomber",
                 price: 24.99,
                 originalPrice: 37.99,
-                discount: 60,
+                discount: 34,
                 image: "https://assets.theplace.com/image/upload/t_pdp_img_m,f_auto,q_auto/v1/ecom/assets/products/tcp/3014016/3014016_397.jpg",
                 rating: 3.5,
                 reviews: 244,
-                badge: "mas vendido",
-                category: "jeans",
-                color: "azul"
+                badge: "Más vendido"
             },
-
             {
                 id: 203,
                 name: "Sudadera con Capucha",
                 price: 32.99,
                 originalPrice: 40.99,
-                discount: 60,
+                discount: 20,
                 image: "https://m.media-amazon.com/images/I/312hzCoR6xL._AC_SY1000_.jpg",
                 rating: 3.5,
                 reviews: 244,
-                badge: "Más vendido",
-                category: "jeans",
-                color: "azul"
+                badge: "Más vendido"
             },
-
             {
                 id: 204,
                 name: "Chaqueta de Pana",
                 price: 22.99,
                 originalPrice: 37.99,
-                discount: 60,
+                discount: 39,
                 image: "https://m.media-amazon.com/images/I/41zbBn5JtPL._AC_SY1000_.jpg",
                 rating: 3.5,
                 reviews: 244,
-                badge: "Más vendido",
-                category: "jeans",
-                color: "azul"
+                badge: "Más vendido"
             },
-
             {
                 id: 205,
                 name: "Chubasquero",
                 price: 30.99,
                 originalPrice: 53.99,
-                discount: 60,
+                discount: 43,
                 image: "https://m.media-amazon.com/images/I/4182QolVl9L._AC_.jpg",
                 rating: 3.5,
                 reviews: 344,
-                badge: "Más vendido",
-                category: "jeans",
-                color: "azul"
+                badge: "Más vendido"
             },
-
             {
                 id: 206,
                 name: "Chaqueta Cortavientos",
                 price: 35.99,
                 originalPrice: 43.99,
-                discount: 60,
+                discount: 18,
                 image: "https://m.media-amazon.com/images/I/41elveWTHeL._AC_SY1000_.jpg",
                 rating: 3.5,
                 reviews: 314,
-                badge: "Más vendido",
-                category: "jeans",
-                color: "azul"
+                badge: "Más vendido"
             },
-
             {
                 id: 207,
                 name: "Chaqueta Acolchada",
                 price: 35.99,
                 originalPrice: 43.99,
-                discount: 60,
+                discount: 18,
                 image: "https://www.petitelune.com.mx/cdn/shop/files/chaqueta-acolchada-ultraligera-nino-clorofila-XL-4.jpg?v=1709480370&width=1445",
                 rating: 3.5,
                 reviews: 314,
-                badge: "Más vendido",
-                category: "jeans",
-                color: "azul"
+                badge: "Más vendido"
             },
-
             {
                 id: 208,
                 name: "Forro Polar",
                 price: 35.99,
                 originalPrice: 43.99,
-                discount: 60,
+                discount: 18,
                 image: "https://m.media-amazon.com/images/I/41SXS7YgfYL._AC_SY350_.jpg",
                 rating: 3.5,
                 reviews: 314,
-                badge: "Más vendido",
-                category: "jeans",
-                color: "azul"
+                badge: "Más vendido"
             }
-
         ];
 
         // Estado de la aplicación
-        let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
-        let currentFilter = 'all';
         let currentPriceFilter = 'all';
         let currentSort = 'featured';
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Cargar productos
-            loadProducts();
-            
-            // Actualizar contador del carrito
             updateCartCount();
-            
-            // Configurar filtros
+            loadProducts();
             setupFilters();
-            
-            // Configurar ordenamiento
             setupSorting();
-            
-            // Configurar menú móvil
-            setupMobileMenu();
-            
-            // Configurar botones de añadir al carrito
             setupAddToCart();
+            setupMobileMenu();
         });
 
         function loadProducts() {
             const productsGrid = document.getElementById('productsGrid');
             if (!productsGrid) return;
             
-            let filteredProducts = [...pantalonesData];
-            
-            // Aplicar filtro de categoría
-            if (currentFilter !== 'all') {
-                filteredProducts = filteredProducts.filter(p => p.category === currentFilter);
-            }
+            let filteredProducts = [...productsData];
             
             // Aplicar filtro de precio
             if (currentPriceFilter !== 'all') {
@@ -1420,9 +1420,8 @@
                     const price = p.price;
                     switch(currentPriceFilter) {
                         case '0-25': return price <= 25;
-                        case '25-50': return price > 25 && price <= 50;
-                        case '50-100': return price > 50 && price <= 100;
-                        case '100+': return price > 100;
+                        case '25-35': return price > 25 && price <= 35;
+                        case '35+': return price > 35;
                         default: return true;
                     }
                 });
@@ -1434,7 +1433,7 @@
             // Actualizar contador de productos
             const productsCount = document.querySelector('.products-count');
             if (productsCount) {
-                productsCount.textContent = `Mostrando ${filteredProducts.length} de ${pantalonesData.length} productos`;
+                productsCount.textContent = `Mostrando ${filteredProducts.length} de ${productsData.length} productos`;
             }
             
             productsGrid.innerHTML = '';
@@ -1454,6 +1453,7 @@
             const stars = generateStarRating(product.rating);
             
             // Verificar si el producto ya está en el carrito
+            const cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
             const inCart = cart.some(item => item.id === product.id);
             const buttonText = inCart ? '✓ En el carrito' : 'Añadir al carrito';
             const buttonClass = inCart ? 'added-to-cart-btn' : 'add-to-cart-btn';
@@ -1461,7 +1461,7 @@
             productCard.innerHTML = `
                 ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
                 <div class="product-image">
-                    <img src="${product.image}" alt="${product.name}">
+                    <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/300x400?text=Sin+Imagen'">
                 </div>
                 <div class="product-info">
                     <h3 class="product-title">${product.name}</h3>
@@ -1522,17 +1522,6 @@
         }
 
         function setupFilters() {
-            // Filtros de categoría
-            const categoryFilters = document.querySelectorAll('[data-filter]');
-            categoryFilters.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    categoryFilters.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    currentFilter = this.dataset.filter;
-                    loadProducts();
-                });
-            });
-            
             // Filtros de precio
             const priceFilters = document.querySelectorAll('[data-price]');
             priceFilters.forEach(btn => {
@@ -1541,22 +1530,6 @@
                     this.classList.add('active');
                     currentPriceFilter = this.dataset.price;
                     loadProducts();
-                });
-            });
-            
-            // Filtros de talla
-            const sizeFilters = document.querySelectorAll('[data-size]');
-            sizeFilters.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    this.classList.toggle('active');
-                });
-            });
-            
-            // Filtros de color
-            const colorFilters = document.querySelectorAll('[data-color]');
-            colorFilters.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    this.classList.toggle('active');
                 });
             });
         }
@@ -1579,7 +1552,7 @@
                 e.preventDefault();
                 
                 const productId = parseInt(button.dataset.id);
-                const product = pantalonesData.find(p => p.id === productId);
+                const product = productsData.find(p => p.id === productId);
                 
                 if (product) {
                     addToCart(product);
@@ -1592,79 +1565,18 @@
         }
 
         function addToCart(product) {
+            let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
             const existingItem = cart.find(item => item.id === product.id);
             
             if (existingItem) {
-                existingItem.quantity += 1;
+                existingItem.quantity = (existingItem.quantity || 1) + 1;
             } else {
-                cart.push({
-                    ...product,
-                    quantity: 1
-                });
+                cart.push({ ...product, quantity: 1 });
             }
             
             localStorage.setItem('shoppingCart', JSON.stringify(cart));
             updateCartCount();
             showNotification(`${product.name} se ha añadido al carrito`);
-        }
-
-        function updateCartCount() {
-            const cartCountElement = document.getElementById('cartCount');
-            if (cartCountElement) {
-                const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-                cartCountElement.textContent = totalItems;
-                
-                cartCountElement.style.transform = 'scale(1.3)';
-                setTimeout(() => {
-                    cartCountElement.style.transform = 'scale(1)';
-                }, 300);
-            }
-        }
-
-        function showNotification(message) {
-            const notification = document.createElement('div');
-            notification.innerHTML = `
-                <i class="fas fa-check-circle"></i>
-                <span>${message}</span>
-            `;
-            
-            notification.style.cssText = `
-                position: fixed;
-                top: 30px;
-                right: 30px;
-                background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-                color: white;
-                padding: 20px 30px;
-                border-radius: 15px;
-                display: flex;
-                align-items: center;
-                gap: 15px;
-                z-index: 10000;
-                box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
-                animation: slideIn 0.4s ease, fadeOut 0.4s ease 2.6s;
-                font-weight: 500;
-            `;
-            
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes slideIn {
-                    from { transform: translateX(100%); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
-                }
-                @keyframes fadeOut {
-                    from { opacity: 1; }
-                    to { opacity: 0; }
-                }
-            `;
-            
-            document.head.appendChild(style);
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            }, 3000);
         }
 
         function setupMobileMenu() {
@@ -1674,9 +1586,16 @@
             if (menuToggle && navLinks) {
                 menuToggle.addEventListener('click', () => {
                     navLinks.classList.toggle('active');
-                    menuToggle.innerHTML = navLinks.classList.contains('active') 
-                        ? '<i class="fas fa-times"></i>' 
-                        : '<i class="fas fa-bars"></i>';
+                    const icon = menuToggle.querySelector('i');
+                    if (icon) {
+                        if (navLinks.classList.contains('active')) {
+                            icon.classList.remove('fa-bars');
+                            icon.classList.add('fa-times');
+                        } else {
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    }
                 });
             }
             
