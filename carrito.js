@@ -67,6 +67,9 @@ document.addEventListener('DOMContentLoaded', function() {
             e.target.value = e.target.value.replace(/\D/g, '');
         });
     }
+
+    // Actualizar UI de usuario
+    updateUserInterface();
 });
 
 // Función para mostrar notificaciones
@@ -184,10 +187,10 @@ function setupEventListeners() {
         applyPromoBtn.addEventListener('click', applyPromoCode);
     }
     
-    // Botón para proceder al pago
-    const checkoutBtn = document.getElementById('checkoutBtn');
-    if (checkoutBtn) {
-        checkoutBtn.addEventListener('click', function() {
+    // Botón para proceder a información
+    const proceedBtn = document.getElementById('proceedToInfo');
+    if (proceedBtn) {
+        proceedBtn.addEventListener('click', function() {
             goToStep(2);
         });
     }
@@ -203,8 +206,7 @@ function updateCartDisplay() {
 // Actualizar items del carrito
 function updateCartItems() {
     const cartItemsContainer = document.getElementById('cartItemsContainer');
-    const emptyCartMessage = document.getElementById('emptyCartMessage');
-    const cartItemsCount = document.getElementById('cart-items-count');
+    const cartItemsCount = document.getElementById('cartItemsCount');
     const proceedBtn = document.getElementById('proceedToInfo');
     
     if (!cartItemsContainer) return;
@@ -217,7 +219,7 @@ function updateCartItems() {
                 </div>
                 <h3>Tu carrito está vacío</h3>
                 <p>Agrega productos desde la tienda para comenzar tu compra</p>
-                <a href="index.html" class="btn" style="display: inline-block; padding: 15px 40px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; text-decoration: none; border-radius: 50px; font-weight: 700;">Explorar Productos</a>
+                <a href="index.html" class="btn" style="display: inline-block; padding: 15px 40px; background: linear-gradient(135deg, #ff3366 0%, #e62e5c 100%); color: white; text-decoration: none; border-radius: 50px; font-weight: 700;">Explorar Productos</a>
             </div>
         `;
         if (proceedBtn) proceedBtn.disabled = true;
@@ -227,7 +229,8 @@ function updateCartItems() {
         let subtotal = 0;
         
         cart.forEach((item, index) => {
-            const itemTotal = item.price * (item.quantity || 1);
+            const quantity = item.quantity || 1;
+            const itemTotal = item.price * quantity;
             subtotal += itemTotal;
             
             html += `
@@ -244,11 +247,11 @@ function updateCartItems() {
                         <div class="cart-item-actions">
                             <div class="quantity-controls">
                                 <button class="quantity-btn decrease-btn" onclick="updateQuantity(${index}, -1)">-</button>
-                                <span class="quantity-display">${item.quantity || 1}</span>
+                                <span class="quantity-display">${quantity}</span>
                                 <button class="quantity-btn increase-btn" onclick="updateQuantity(${index}, 1)">+</button>
                             </div>
                             <button class="remove-btn" onclick="removeFromCart(${index})">
-                                <i class="fas fa-trash"></i> Eliminar
+                                <i class="fas fa-trash-alt"></i> Eliminar
                             </button>
                         </div>
                     </div>
@@ -265,8 +268,6 @@ function updateCartItems() {
         const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
         if (cartItemsCount) cartItemsCount.textContent = `(${totalItems} ${totalItems === 1 ? 'producto' : 'productos'})`;
     }
-    
-    updateCartCount();
 }
 
 // Actualizar cantidad de un item
@@ -286,10 +287,11 @@ function updateQuantity(index, change) {
 
 // Remover item del carrito
 function removeFromCart(index) {
+    const productName = cart[index].name;
     cart.splice(index, 1);
     saveCartToStorage();
     updateCartDisplay();
-    showNotification('Producto eliminado del carrito', 'success');
+    showNotification(`${productName} eliminado del carrito`, 'success');
 }
 
 // Vaciar todo el carrito
@@ -344,6 +346,12 @@ function updateCartCount() {
     if (cartCountElement) {
         const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
         cartCountElement.textContent = totalItems;
+        
+        // Animación al actualizar
+        cartCountElement.style.transform = 'scale(1.3)';
+        setTimeout(() => {
+            cartCountElement.style.transform = 'scale(1)';
+        }, 300);
     }
 }
 
@@ -367,8 +375,11 @@ function applyPromoCode() {
         showNotification(`¡Código ${code} aplicado! Descuento del ${discountAmount * 100}%`);
         
         promoCodeInput.disabled = true;
-        document.querySelector('.apply-promo-btn').disabled = true;
-        document.querySelector('.apply-promo-btn').textContent = 'Aplicado';
+        const applyBtn = document.querySelector('.apply-promo-btn');
+        if (applyBtn) {
+            applyBtn.disabled = true;
+            applyBtn.textContent = 'Aplicado';
+        }
     } else {
         showNotification('Código promocional inválido', 'error');
         promoCodeInput.value = '';
@@ -377,11 +388,10 @@ function applyPromoCode() {
 
 // Función para navegar entre pasos
 function goToStep(step) {
-    if (step === 2) {
-        if (cart.length === 0) {
-            showNotification('Tu carrito está vacío', 'error');
-            return;
-        }
+    // Validar que el carrito no esté vacío
+    if (step > 1 && cart.length === 0) {
+        showNotification('Tu carrito está vacío', 'error');
+        return;
     }
     
     for (let i = 1; i <= 4; i++) {
@@ -421,12 +431,24 @@ function validateAndGoToPayment() {
 
 // Función para validar información de envío
 function validateInfo() {
-    const fullName = document.getElementById('fullName').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const address = document.getElementById('address').value.trim();
-    const city = document.getElementById('city').value.trim();
-    const zipCode = document.getElementById('zipCode').value.trim();
+    const fullName = document.getElementById('fullName');
+    const email = document.getElementById('email');
+    const phone = document.getElementById('phone');
+    const address = document.getElementById('address');
+    const city = document.getElementById('city');
+    const zipCode = document.getElementById('zipCode');
+    
+    if (!fullName || !email || !phone || !address || !city || !zipCode) {
+        showNotification('Error al cargar el formulario', 'error');
+        return false;
+    }
+    
+    const fullNameValue = fullName.value.trim();
+    const emailValue = email.value.trim();
+    const phoneValue = phone.value.trim();
+    const addressValue = address.value.trim();
+    const cityValue = city.value.trim();
+    const zipCodeValue = zipCode.value.trim();
     
     document.querySelectorAll('.form-control').forEach(input => {
         input.classList.remove('error');
@@ -434,33 +456,33 @@ function validateInfo() {
     
     let isValid = true;
     
-    if (!fullName) {
-        document.getElementById('fullName').classList.add('error');
+    if (!fullNameValue) {
+        fullName.classList.add('error');
         isValid = false;
     }
     
-    if (!email || !email.includes('@') || !email.includes('.')) {
-        document.getElementById('email').classList.add('error');
+    if (!emailValue || !emailValue.includes('@') || !emailValue.includes('.')) {
+        email.classList.add('error');
         isValid = false;
     }
     
-    if (!phone || phone.length < 9) {
-        document.getElementById('phone').classList.add('error');
+    if (!phoneValue || phoneValue.length < 9) {
+        phone.classList.add('error');
         isValid = false;
     }
     
-    if (!address) {
-        document.getElementById('address').classList.add('error');
+    if (!addressValue) {
+        address.classList.add('error');
         isValid = false;
     }
     
-    if (!city) {
-        document.getElementById('city').classList.add('error');
+    if (!cityValue) {
+        city.classList.add('error');
         isValid = false;
     }
     
-    if (!zipCode || zipCode.length < 5) {
-        document.getElementById('zipCode').classList.add('error');
+    if (!zipCodeValue || zipCodeValue.length < 5) {
+        zipCode.classList.add('error');
         isValid = false;
     }
     
@@ -470,7 +492,12 @@ function validateInfo() {
     }
     
     orderData.shippingInfo = {
-        fullName, email, phone, address, city, zipCode
+        fullName: fullNameValue,
+        email: emailValue,
+        phone: phoneValue,
+        address: addressValue,
+        city: cityValue,
+        zipCode: zipCodeValue
     };
     
     return true;
@@ -487,55 +514,64 @@ function selectPaymentMethod(method, element) {
     element.classList.add('selected');
     
     const cardDetails = document.getElementById('cardDetails');
-    if (method === 'card') {
-        cardDetails.style.display = 'block';
-    } else {
-        cardDetails.style.display = 'none';
+    if (cardDetails) {
+        if (method === 'card') {
+            cardDetails.style.display = 'block';
+        } else {
+            cardDetails.style.display = 'none';
+        }
     }
 }
 
 // Función para validar tarjeta de crédito
 function validateCard() {
-    const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
-    const expiryDate = document.getElementById('expiryDate').value;
-    const cvv = document.getElementById('cvv').value;
-    const cardHolder = document.getElementById('cardHolder').value.trim();
+    const cardNumber = document.getElementById('cardNumber');
+    const expiryDate = document.getElementById('expiryDate');
+    const cvv = document.getElementById('cvv');
+    const cardHolder = document.getElementById('cardHolder');
+    
+    if (!cardNumber || !expiryDate || !cvv || !cardHolder) return false;
+    
+    const cardNumberValue = cardNumber.value.replace(/\s/g, '');
+    const expiryDateValue = expiryDate.value;
+    const cvvValue = cvv.value;
+    const cardHolderValue = cardHolder.value.trim();
     
     let isValid = true;
     
-    if (!cardNumber || cardNumber.length < 16) {
-        document.getElementById('cardNumber').classList.add('error');
+    if (!cardNumberValue || cardNumberValue.length < 16) {
+        cardNumber.classList.add('error');
         isValid = false;
     } else {
-        document.getElementById('cardNumber').classList.remove('error');
+        cardNumber.classList.remove('error');
     }
     
-    if (!expiryDate || expiryDate.length < 5) {
-        document.getElementById('expiryDate').classList.add('error');
+    if (!expiryDateValue || expiryDateValue.length < 5) {
+        expiryDate.classList.add('error');
         isValid = false;
     } else {
-        document.getElementById('expiryDate').classList.remove('error');
+        expiryDate.classList.remove('error');
     }
     
-    if (!cvv || cvv.length < 3) {
-        document.getElementById('cvv').classList.add('error');
+    if (!cvvValue || cvvValue.length < 3) {
+        cvv.classList.add('error');
         isValid = false;
     } else {
-        document.getElementById('cvv').classList.remove('error');
+        cvv.classList.remove('error');
     }
     
-    if (!cardHolder) {
-        document.getElementById('cardHolder').classList.add('error');
+    if (!cardHolderValue) {
+        cardHolder.classList.add('error');
         isValid = false;
     } else {
-        document.getElementById('cardHolder').classList.remove('error');
+        cardHolder.classList.remove('error');
     }
     
     return isValid;
 }
 
 // Procesar el pago
-async function processPayment() {
+function processPayment() {
     if (selectedPaymentMethod === 'card') {
         if (!validateCard()) {
             showNotification('Datos de tarjeta inválidos', 'error');
@@ -550,7 +586,12 @@ async function processPayment() {
 
     orderData.paymentMethod = selectedPaymentMethod;
 
-    const generatedNumber = '#SH-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+    // Generar número de orden
+    const date = new Date();
+    const year = date.getFullYear();
+    const random = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+    const generatedNumber = `#SH-${year}-${random}`;
+    
     const orderNumberEl = document.getElementById('orderNumber');
     if (orderNumberEl) orderNumberEl.textContent = generatedNumber;
 
@@ -559,20 +600,27 @@ async function processPayment() {
     const discount = promoCodeApplied ? subtotal * discountAmount : 0;
     const total = subtotal + shipping - discount;
 
-    const payload = {
-        numero_pedido: generatedNumber,
-        shippingInfo: orderData.shippingInfo || {},
-        productos: cart.map(i => ({ id: i.id ?? null, name: i.name, price: i.price, quantity: i.quantity || 1 })),
-        subtotal: subtotal,
-        shipping: shipping,
-        discount: discount,
-        total: total,
-        paymentMethod: selectedPaymentMethod,
-        promoCode: document.getElementById('promoCode') ? document.getElementById('promoCode').value : ''
-    };
-
-    showNotification('Enviando pedido...', 'info');
-
+    // Simulación de procesamiento exitoso
+    showNotification('Procesando pago...', 'info');
+    
+    // Simular un retraso de procesamiento
+    setTimeout(() => {
+        // Vaciar carrito después de pago exitoso
+        cart = [];
+        promoCodeApplied = false;
+        discountAmount = 0;
+        saveCartToStorage();
+        updateCartCount();
+        
+        // Mostrar confirmación
+        goToStep(4);
+        loadConfirmationDetails();
+        
+        showNotification('¡Pago realizado con éxito!', 'success');
+    }, 1500);
+    
+    /* 
+    // Código para cuando tengas el backend listo:
     try {
         const resp = await fetch('api/procesar_pedido.php', {
             method: 'POST',
@@ -582,7 +630,7 @@ async function processPayment() {
 
         const result = await resp.json();
         if (resp.ok && result && result.success) {
-            showNotification('Pedido guardado (ID: ' + (result.pedido_id || '-') + ')', 'success');
+            showNotification('Pedido guardado exitosamente', 'success');
 
             cart = [];
             promoCodeApplied = false;
@@ -593,14 +641,15 @@ async function processPayment() {
             goToStep(4);
             loadConfirmationDetails();
         } else {
-            const msg = (result && result.message) ? result.message : 'Error al guardar el pedido';
+            const msg = (result && result.message) ? result.message : 'Error al procesar el pedido';
             showNotification(msg, 'error');
-            console.error('procesar_pedido error:', result);
+            console.error('Error:', result);
         }
     } catch (err) {
-        showNotification('Error de red al enviar el pedido', 'error');
-        console.error('Fetch error:', err);
+        showNotification('Error de conexión al procesar el pago', 'error');
+        console.error('Error:', err);
     }
+    */
 }
 
 // Cargar detalles en la sección de confirmación
@@ -615,14 +664,42 @@ function loadConfirmationDetails() {
     const tot = orderData.total || (subt + sh - disc);
 
     container.innerHTML = `
-        <div class="detail-row"><div class="detail-label">Nombre</div><div class="detail-value">${info.fullName || ''}</div></div>
-        <div class="detail-row"><div class="detail-label">Email</div><div class="detail-value">${info.email || ''}</div></div>
-        <div class="detail-row"><div class="detail-label">Dirección</div><div class="detail-value">${info.address || ''}, ${info.city || ''} ${info.zipCode || ''}</div></div>
-        <div class="detail-row"><div class="detail-label">Subtotal</div><div class="detail-value">$${Number(subt).toFixed(2)}</div></div>
-        <div class="detail-row"><div class="detail-label">Envío</div><div class="detail-value">${sh === 0 ? 'Gratis' : '$' + Number(sh).toFixed(2)}</div></div>
-        <div class="detail-row"><div class="detail-label">Descuento</div><div class="detail-value">-$${Number(disc).toFixed(2)}</div></div>
-        <div class="detail-row"><div class="detail-label">Total</div><div class="detail-value">$${Number(tot).toFixed(2)}</div></div>
-        <div class="detail-row"><div class="detail-label">Método de pago</div><div class="detail-value">${selectedPaymentMethod === 'card' ? 'Tarjeta de Crédito/Débito' : 'PayPal'}</div></div>
+        <div class="detail-row">
+            <span class="detail-label">Nombre:</span>
+            <span class="detail-value">${info.fullName || ''}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Email:</span>
+            <span class="detail-value">${info.email || ''}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Dirección:</span>
+            <span class="detail-value">${info.address || ''}, ${info.city || ''} ${info.zipCode || ''}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Teléfono:</span>
+            <span class="detail-value">${info.phone || ''}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Subtotal:</span>
+            <span class="detail-value">$${Number(subt).toFixed(2)}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Envío:</span>
+            <span class="detail-value">${sh === 0 ? 'Gratis' : '$' + Number(sh).toFixed(2)}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Descuento:</span>
+            <span class="detail-value">-$${Number(disc).toFixed(2)}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Total:</span>
+            <span class="detail-value" style="font-weight: 800; color: #ff3366;">$${Number(tot).toFixed(2)}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Método de pago:</span>
+            <span class="detail-value">${selectedPaymentMethod === 'card' ? 'Tarjeta de Crédito/Débito' : 'PayPal'}</span>
+        </div>
     `;
 }
 
@@ -634,9 +711,16 @@ function setupMobileMenu() {
     if (menuToggle && navLinks) {
         menuToggle.addEventListener('click', () => {
             navLinks.classList.toggle('active');
-            menuToggle.innerHTML = navLinks.classList.contains('active') 
-                ? '<i class="fas fa-times"></i>' 
-                : '<i class="fas fa-bars"></i>';
+            const icon = menuToggle.querySelector('i');
+            if (icon) {
+                if (navLinks.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            }
         });
     }
     
