@@ -615,6 +615,18 @@
             font-size: 1.1rem;
         }
 
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .button-group .btn {
+            padding: 12px 20px;
+            font-size: 0.9rem;
+        }
+
         /* ===== FOOTER PREMIUM ===== */
         footer {
             background: linear-gradient(135deg, var(--secondary) 0%, #222 100%);
@@ -1043,8 +1055,8 @@
                             <a href="camisetas.html"><i class="fas fa-tshirt"></i> Camisetas</a>
                             <a href="camisas.html"><i class="fas fa-tshirt"></i> Camisas</a>
                             <a href="pantalones-hombre.html"><i class="fas fa-tshirt"></i> Pantalones</a>
-                            <a href="chaquetas.html"><i class="fas fa-tshirt"></i> Chaquetas</a>
-                            <a href="Trajes.html"><i class="fas fa-tshirt"></i> Trajes</a>
+                            <a href="chaquetas-hombre.html"><i class="fas fa-tshirt"></i> Chaquetas</a>
+                            <a href="trajes.html"><i class="fas fa-tshirt"></i> Trajes</a>
                             <div class="dropdown-header">ACCESORIOS</div>
                             <a href="zapatos-hombre.html"><i class="fas fa-shoe-prints"></i> Zapatos</a>
                             <a href="relojes.html"><i class="fas fa-clock"></i> Relojes</a>
@@ -1052,18 +1064,19 @@
                         </div>
                     </li>
                     
-                    <!-- Dropdown Niños -->
+                    <!-- Dropdown Niños - CON TODOS LOS ENLACES SOLICITADOS -->
                     <li class="dropdown">
                         <a href="#" class="nav-link"><i class="fas fa-child"></i> Niños <i class="fas fa-chevron-down"></i></a>
                         <div class="dropdown-content">
                             <div class="dropdown-header">NIÑAS</div>
-                            <a href="ninas-vestidos.html"><i class="fas fa-tshirt"></i> Vestidos</a>
-                            <a href="ninas-tops.html"><i class="fas fa-tshirt"></i> Tops</a>
-                            <a href="ninas-pantalones.html"><i class="fas fa-tshirt"></i> Pantalones</a>
+                            <a href="tops-niña.html"><i class="fas fa-tshirt"></i> Tops para niñas</a>
+                            <a href="pantalones-niña.html"><i class="fas fa-tshirt"></i> Pantalones para niñas</a>
+                            
                             <div class="dropdown-header">NIÑOS</div>
-                            <a href="ninos-camisetas.html"><i class="fas fa-tshirt"></i> Camisetas</a>
-                            <a href="ninos-pantalones.html"><i class="fas fa-tshirt"></i> Pantalones</a>
-                            <a href="ninos-chaquetas.html"><i class="fas fa-tshirt"></i> Chaquetas</a>
+                            <a href="camisetas-niños.html"><i class="fas fa-tshirt"></i> Camisetas para niños</a>
+                            <a href="pantalones-niño.html"><i class="fas fa-tshirt"></i> Pantalones para niño</a>
+                            <a href="chaquetas-niño.html"><i class="fas fa-tshirt"></i> Chaquetas para niño</a>
+                            
                             <div class="dropdown-header">BEBÉS</div>
                             <a href="bebes.html"><i class="fas fa-baby"></i> Ropa de bebé</a>
                         </div>
@@ -1123,28 +1136,53 @@
         </div>
     </section>
 
-    <!-- Próximamente Section -->
+    <!-- Próximamente Section - CON ENLACES A TODA LA ROPA INFANTIL -->
     <section class="products">
         <div class="container">
             <h2 class="section-title">Descubre Nuestras Colecciones</h2>
             <div class="product-grid--three">
                 <div class="product-card--center">
-                    <i class="fas fa-tshirt product-icon-large"></i>
+                    <i class="fas fa-female product-icon-large"></i>
                     <h3 class="product-heading-large">Moda Mujer</h3>
                     <p class="product-desc">Descubre las últimas tendencias en moda femenina</p>
                     <a href="vestidos.html" class="btn">Explorar</a>
                 </div>
                 <div class="product-card--center">
-                    <i class="fas fa-tshirt product-icon-large"></i>
+                    <i class="fas fa-male product-icon-large"></i>
                     <h3 class="product-heading-large">Moda Hombre</h3>
                     <p class="product-desc">Estilo y elegancia para el hombre moderno</p>
                     <a href="camisetas.html" class="btn">Explorar</a>
                 </div>
                 <div class="product-card--center">
                     <i class="fas fa-child product-icon-large"></i>
-                    <h3 class="product-heading-large">Moda Infantil</h3>
-                    <p class="product-desc">Para los más pequeños de la casa</p>
-                    <a href="ninos.html" class="btn">Explorar</a>
+                    <h3 class="product-heading-large">Moda Niñas</h3>
+                    <p class="product-desc">Tops y pantalones para las más pequeñas</p>
+                    <div class="button-group">
+                        <a href="tops-niña.html" class="btn">Tops</a>
+                        <a href="pantalones-niña.html" class="btn">Pantalones</a>
+                    </div>
+                </div>
+                <div class="product-card--center">
+                    <i class="fas fa-child product-icon-large"></i>
+                    <h3 class="product-heading-large">Moda Niños</h3>
+                    <p class="product-desc">Camisetas, pantalones y chaquetas para ellos</p>
+                    <div class="button-group">
+                        <a href="camisetas-niños.html" class="btn">Camisetas</a>
+                        <a href="pantalones-niño.html" class="btn">Pantalones</a>
+                        <a href="chaquetas-niño.html" class="btn">Chaquetas</a>
+                    </div>
+                </div>
+                <div class="product-card--center">
+                    <i class="fas fa-baby product-icon-large"></i>
+                    <h3 class="product-heading-large">Colección Bebés</h3>
+                    <p class="product-desc">Ropa cómoda y adorable para los más pequeños</p>
+                    <a href="bebes.html" class="btn">Ver más</a>
+                </div>
+                <div class="product-card--center">
+                    <i class="fas fa-tag product-icon-large"></i>
+                    <h3 class="product-heading-large">Ofertas Especiales</h3>
+                    <p class="product-desc">Descuentos exclusivos en toda la tienda</p>
+                    <a href="ofertas.html" class="btn">Comprar ahora</a>
                 </div>
             </div>
         </div>
@@ -1213,8 +1251,30 @@
             if (mobileToggle) {
                 mobileToggle.addEventListener('click', function() {
                     navLinks.classList.toggle('active');
+                    
+                    // Cambiar el ícono del menú
+                    const icon = mobileToggle.querySelector('i');
+                    if (navLinks.classList.contains('active')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
                 });
             }
+            
+            // Manejar dropdowns en móvil
+            const dropdowns = document.querySelectorAll('.dropdown > .nav-link');
+            dropdowns.forEach(dropdown => {
+                dropdown.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 992) {
+                        e.preventDefault();
+                        const parent = this.parentElement;
+                        parent.classList.toggle('active');
+                    }
+                });
+            });
         });
     </script>
 </body>
