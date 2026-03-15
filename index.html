@@ -160,7 +160,7 @@
             color: transparent;
         }
 
-        /* ===== SEARCH BAR MEJORADA ===== */
+        /* ===== SEARCH BAR ===== */
         .search-bar {
             flex: 1;
             max-width: 700px;
@@ -231,7 +231,6 @@
             animation: slideDown 0.3s ease;
         }
 
-        /* Encabezado de sugerencias */
         .suggestions-header {
             padding: 15px 20px;
             background: linear-gradient(135deg, #f8f8f8, #ffffff);
@@ -255,7 +254,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Grupo de sugerencias por categoría */
         .suggestion-group {
             padding: 10px 0;
             border-bottom: 1px solid #f0f0f0;
@@ -357,7 +355,6 @@
             text-decoration: underline;
         }
 
-        /* Mensaje de no resultados */
         .no-suggestions {
             padding: 40px 20px;
             text-align: center;
@@ -573,11 +570,11 @@
             margin-bottom: 8px;
         }
 
-        .cart-wrapper {
+        .cart-wrapper, .wishlist-wrapper {
             position: relative;
         }
 
-        .cart-count {
+        .cart-count, .wishlist-count {
             position: absolute;
             top: -8px;
             right: 0;
@@ -595,24 +592,7 @@
             box-shadow: 0 4px 10px rgba(255, 51, 102, 0.3);
         }
 
-        /* ===== BADGE DE USUARIO LOGUEADO ===== */
-        .user-badge {
-            position: absolute;
-            bottom: -5px;
-            right: -5px;
-            background: var(--success);
-            color: white;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            border: 2px solid white;
-        }
-
-        /* ===== NAVEGACIÓN PREMIUM CON DROPDOWNS MEJORADOS ===== */
+        /* ===== NAVEGACIÓN PREMIUM CON DROPDOWNS ===== */
         nav {
             background: white;
             border-top: 2px solid var(--gray);
@@ -694,13 +674,10 @@
             transition: var(--transition);
             padding: 15px 0;
             border: 1px solid #f0f0f0;
-            
-            /* Estilos personalizados para la barra de desplazamiento */
             scrollbar-width: thin;
             scrollbar-color: var(--primary) var(--gray);
         }
 
-        /* Estilos para WebKit (Chrome, Safari, Edge) */
         .dropdown-content::-webkit-scrollbar {
             width: 6px;
         }
@@ -713,11 +690,6 @@
         .dropdown-content::-webkit-scrollbar-thumb {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             border-radius: 10px;
-            border: 1px solid var(--gray);
-        }
-
-        .dropdown-content::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
         }
 
         .dropdown:hover .dropdown-content {
@@ -726,7 +698,6 @@
             transform: translateY(0) scale(1);
         }
 
-        /* Estilos para los items del dropdown */
         .dropdown-content a {
             display: block;
             padding: 12px 25px;
@@ -763,10 +734,6 @@
             border-bottom: 1px solid var(--gray);
             margin-bottom: 8px;
             background: linear-gradient(90deg, rgba(255, 51, 102, 0.03), transparent);
-        }
-
-        .dropdown-content .dropdown-header:not(:first-child) {
-            margin-top: 15px;
         }
 
         /* ===== MENÚ MÓVIL ===== */
@@ -933,8 +900,8 @@
             color: var(--accent);
         }
 
-        /* ===== PRODUCTOS ===== */
-        .products {
+        /* ===== PRODUCTOS DESTACADOS ===== */
+        .featured-products {
             padding: 80px 0;
             background: white;
             border-radius: var(--border-radius);
@@ -942,57 +909,184 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
         }
 
-        .product-grid--three {
+        .product-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 30px;
         }
 
-        .product-card--center {
+        .product-card {
             background: white;
             border-radius: var(--border-radius);
             overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            box-shadow: var(--shadow);
             transition: var(--transition);
             position: relative;
             border: 1px solid #f0f0f0;
-            text-align: center;
-            padding: 40px;
         }
 
-        .product-card--center:hover {
+        .product-card:hover {
             transform: translateY(-10px) scale(1.02);
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary);
         }
 
-        .product-icon-large {
-            font-size: 4rem;
+        .product-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            z-index: 2;
+            box-shadow: 0 5px 15px rgba(255, 51, 102, 0.3);
+        }
+
+        .favorite-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
             color: var(--primary);
-            margin-bottom: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 2;
+            border: none;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .product-heading-large {
-            font-size: 1.8rem;
+        .favorite-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .favorite-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .product-image {
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
+        }
+
+        .product-info {
+            padding: 25px;
+        }
+
+        .product-title {
+            font-size: 1.2rem;
+            font-weight: 700;
             margin-bottom: 15px;
+            line-height: 1.4;
             color: var(--secondary);
         }
 
-        .product-desc {
-            color: var(--dark-gray);
-            margin-bottom: 30px;
-            font-size: 1.1rem;
-        }
-
-        .button-group {
+        .product-price {
             display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
-        .button-group .btn {
-            padding: 12px 20px;
+        .current-price {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .original-price {
+            font-size: 1.1rem;
+            color: var(--dark-gray);
+            text-decoration: line-through;
+        }
+
+        .discount {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            color: #d32f2f;
+            padding: 5px 12px;
+            border-radius: 20px;
             font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .product-rating i {
+            color: var(--accent);
+            font-size: 1rem;
+        }
+
+        .product-rating span {
+            font-size: 0.95rem;
+            color: var(--dark-gray);
+            font-weight: 500;
+        }
+
+        .add-to-cart-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--secondary) 0%, #333 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: var(--transition);
+        }
+
+        .add-to-cart-btn:hover {
+            background: linear-gradient(135deg, #333 0%, #444 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .added-to-cart-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: default;
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         /* ===== FOOTER ===== */
@@ -1227,21 +1321,10 @@
                 display: none;
                 width: 100%;
                 max-height: none;
-                overflow-y: visible;
             }
             .dropdown.active .dropdown-content {
                 display: block;
             }
-            
-            /* Resetear estilos de scroll para móvil */
-            .dropdown-content::-webkit-scrollbar {
-                display: none;
-            }
-            
-            .dropdown-content {
-                scrollbar-width: none;
-            }
-            
             .banner h1 {
                 font-size: 3.2rem;
             }
@@ -1251,7 +1334,7 @@
             .section-title {
                 font-size: 2.8rem;
             }
-            .product-grid--three {
+            .product-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
             .search-modal-content {
@@ -1295,7 +1378,7 @@
             .category-grid {
                 grid-template-columns: 1fr;
             }
-            .product-grid--three {
+            .product-grid {
                 grid-template-columns: 1fr;
             }
             .footer-content {
@@ -1329,7 +1412,7 @@
                 padding: 14px 30px;
                 font-size: 0.95rem;
             }
-            .cart-count {
+            .cart-count, .wishlist-count {
                 width: 20px;
                 height: 20px;
                 font-size: 0.75rem;
@@ -1407,28 +1490,31 @@
                         <i class="fas fa-user-circle"></i>
                         <span id="accountText">Mi cuenta</span>
                     </a>
-                    <a href="favoritos.html" class="wishlist-link">
-                        <i class="fas fa-heart"></i>
-                        <span>Favoritos</span>
-                    </a>
+                    <div class="wishlist-wrapper">
+                        <a href="favoritos.html" class="wishlist-link">
+                            <i class="fas fa-heart"></i>
+                            <span>Favoritos</span>
+                        </a>
+                        <span class="wishlist-count" id="wishlistCount">0</span>
+                    </div>
                     <div class="cart-wrapper">
                         <a href="carrito.html" class="cart-link">
                             <i class="fas fa-shopping-bag"></i>
                             <span>Carrito</span>
                         </a>
-                        <div class="cart-count" id="cartCount">0</div>
+                        <span class="cart-count" id="cartCount">0</span>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Navigation Premium con Dropdowns y scroll -->
+        <!-- Navigation Premium con Dropdowns -->
         <nav>
             <div class="container">
                 <ul class="nav-links">
                     <li><a href="index.html" class="nav-link active"><i class="fas fa-home"></i> Inicio</a></li>
                     
-                    <!-- Dropdown Mujer con scroll -->
+                    <!-- Dropdown Mujer -->
                     <li class="dropdown">
                         <a href="#" class="nav-link"><i class="fas fa-female"></i> Mujer <i class="fas fa-chevron-down"></i></a>
                         <div class="dropdown-content">
@@ -1445,7 +1531,7 @@
                         </div>
                     </li>
                     
-                    <!-- Dropdown Hombre con scroll -->
+                    <!-- Dropdown Hombre -->
                     <li class="dropdown">
                         <a href="#" class="nav-link"><i class="fas fa-male"></i> Hombre <i class="fas fa-chevron-down"></i></a>
                         <div class="dropdown-content">
@@ -1462,7 +1548,7 @@
                         </div>
                     </li>
                     
-                    <!-- Dropdown Niños con scroll y ENLACES CORREGIDOS -->
+                    <!-- Dropdown Niños -->
                     <li class="dropdown">
                         <a href="#" class="nav-link"><i class="fas fa-child"></i> Niños <i class="fas fa-chevron-down"></i></a>
                         <div class="dropdown-content">
@@ -1523,66 +1609,22 @@
                         <p>Diseños únicos</p>
                     </div>
                 </a>
-                <a href="novedades.html" class="category-card">
-                    <img src="https://placehold.co/600x400/ff3366/ffffff?text=Tendencias" alt="Tendencias">
+                <a href="favoritos.html" class="category-card">
+                    <img src="https://placehold.co/600x400/ff3366/ffffff?text=Favoritos" alt="Favoritos">
                     <div class="overlay">
-                        <h3>Últimas Tendencias</h3>
-                        <p>Verano 2024</p>
+                        <h3>Mis Favoritos</h3>
+                        <p>Guarda tus productos</p>
                     </div>
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- Próximamente Section - CON ENLACES A TODA LA ROPA INFANTIL -->
-    <section class="products">
+    <!-- Featured Products -->
+    <section class="featured-products">
         <div class="container">
-            <h2 class="section-title">Descubre Nuestras Colecciones</h2>
-            <div class="product-grid--three">
-                <div class="product-card--center">
-                    <i class="fas fa-female product-icon-large"></i>
-                    <h3 class="product-heading-large">Moda Mujer</h3>
-                    <p class="product-desc">Descubre las últimas tendencias en moda femenina</p>
-                    <a href="vestidos.html" class="btn">Explorar</a>
-                </div>
-                <div class="product-card--center">
-                    <i class="fas fa-male product-icon-large"></i>
-                    <h3 class="product-heading-large">Moda Hombre</h3>
-                    <p class="product-desc">Estilo y elegancia para el hombre moderno</p>
-                    <a href="camisetas.html" class="btn">Explorar</a>
-                </div>
-                <div class="product-card--center">
-                    <i class="fas fa-child product-icon-large"></i>
-                    <h3 class="product-heading-large">Moda Niñas</h3>
-                    <p class="product-desc">Tops y pantalones para las más pequeñas</p>
-                    <div class="button-group">
-                        <a href="tops-niña.html" class="btn">Tops</a>
-                        <a href="pantalones-niña.html" class="btn">Pantalones</a>
-                    </div>
-                </div>
-                <div class="product-card--center">
-                    <i class="fas fa-child product-icon-large"></i>
-                    <h3 class="product-heading-large">Moda Niños</h3>
-                    <p class="product-desc">Camisetas, pantalones y chaquetas para ellos</p>
-                    <div class="button-group">
-                        <a href="camisetas-niños.html" class="btn">Camisetas</a>
-                        <a href="pantalones-niño.html" class="btn">Pantalones</a>
-                        <a href="chaquetas-niño.html" class="btn">Chaquetas</a>
-                    </div>
-                </div>
-                <div class="product-card--center">
-                    <i class="fas fa-baby product-icon-large"></i>
-                    <h3 class="product-heading-large">Colección Bebés</h3>
-                    <p class="product-desc">Ropa cómoda y adorable para los más pequeños</p>
-                    <a href="bebes.html" class="btn">Ver más</a>
-                </div>
-                <div class="product-card--center">
-                    <i class="fas fa-tag product-icon-large"></i>
-                    <h3 class="product-heading-large">Ofertas Especiales</h3>
-                    <p class="product-desc">Descuentos exclusivos en toda la tienda</p>
-                    <a href="ofertas.html" class="btn">Comprar ahora</a>
-                </div>
-            </div>
+            <h2 class="section-title">Productos Destacados</h2>
+            <div class="product-grid" id="featuredProductsGrid"></div>
         </div>
     </section>
 
@@ -1653,6 +1695,28 @@
     </footer>
 
     <script>
+        // ===== VARIABLES GLOBALES =====
+        let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+        // Productos destacados
+        const featuredProducts = [
+            // Mujer
+            { id: 101, name: "Vestido Floral Midi", price: 59.99, originalPrice: 119.99, discount: 50, image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80", rating: 4.8, reviews: 428, badge: "Nuevo", category: "Mujer", subcategory: "Vestidos" },
+            { id: 102, name: "Blusa de Seda Negra", price: 39.99, originalPrice: 79.99, discount: 50, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsCD2puMlTNi6bvbkZmZxXiP2vohDJJWGxYA&s", rating: 4.5, reviews: 234, badge: "Premium", category: "Mujer", subcategory: "Tops" },
+            { id: 103, name: "Pantalones Palazzo", price: 44.99, originalPrice: 89.99, discount: 50, image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80", rating: 4.6, reviews: 156, badge: "Nuevo", category: "Mujer", subcategory: "Pantalones" },
+            
+            // Hombre
+            { id: 201, name: "Camiseta Básica", price: 19.99, originalPrice: 39.99, discount: 50, image: "https://m.media-amazon.com/images/I/61lUj+LrFXL._AC_SY679_.jpg", rating: 4.5, reviews: 1230, badge: "Esencial", category: "Hombre", subcategory: "Camisetas" },
+            { id: 202, name: "Camisa Oxford", price: 34.99, originalPrice: 69.99, discount: 50, image: "https://m.media-amazon.com/images/I/41+V3RqkQrS._AC_.jpg", rating: 4.3, reviews: 567, badge: "Clásica", category: "Hombre", subcategory: "Camisas" },
+            { id: 203, name: "Pantalón Chino", price: 42.99, originalPrice: 85.99, discount: 50, image: "https://static2.goldengoose.com/public/Style/ECOMM/GKP01396.P001072-55159-9.jpg?im=Resize=(1200)", rating: 4.4, reviews: 432, badge: "Más vendido", category: "Hombre", subcategory: "Pantalones" },
+            
+            // Niños
+            { id: 301, name: "Tops para niñas", price: 25.99, originalPrice: 51.99, discount: 50, image: "https://assets.theplace.com/image/upload/l_ecom:assets:static:badge:pack8,g_west,w_0.22,fl_relative/t_pdp_img_m,f_auto,q_auto/v1/ecom/assets/products/tcp/3029905/3029905_376.jpg", rating: 4.2, reviews: 89, badge: "Nuevo", category: "Niños", subcategory: "Tops" },
+            { id: 302, name: "Pantalones niño", price: 27.99, originalPrice: 55.99, discount: 50, image: "https://m.media-amazon.com/images/I/31Dg4DvU1HL._AC_.jpg", rating: 4.3, reviews: 134, badge: "Cómodo", category: "Niños", subcategory: "Pantalones" },
+            { id: 303, name: "Camisetas niños", price: 22.99, originalPrice: 45.99, discount: 50, image: "https://m.media-amazon.com/images/I/312D+ESANWL.jpg", rating: 4.5, reviews: 203, badge: "Más vendido", category: "Niños", subcategory: "Camisetas" }
+        ];
+
         // Base de datos de productos para búsqueda
         const productDatabase = [
             // Mujer
@@ -1689,7 +1753,183 @@
             { name: 'Colecciones', category: 'Página', subcategory: 'Diseños exclusivos', icon: 'fa-palette', url: 'colecciones.html' }
         ];
 
-        // Función de búsqueda
+        // ===== FUNCIONES DE INICIALIZACIÓN =====
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFeaturedProducts();
+            updateCartCount();
+            updateWishlistCount();
+            setupMobileMenu();
+            setupSearch();
+        });
+
+        // ===== FUNCIONES DE PRODUCTOS =====
+        function loadFeaturedProducts() {
+            const grid = document.getElementById('featuredProductsGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = '';
+            featuredProducts.forEach(product => {
+                const card = createProductCard(product);
+                grid.appendChild(card);
+            });
+        }
+
+        function createProductCard(product) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.dataset.id = product.id;
+            
+            const stars = generateStarRating(product.rating);
+            const inCart = cart.some(item => item.id === product.id);
+            const inFavorites = favorites.some(item => item.id === product.id);
+            
+            card.innerHTML = `
+                ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
+                <button class="favorite-btn ${inFavorites ? 'active' : ''}" onclick="toggleFavorite(${product.id})">
+                    <i class="fas fa-heart"></i>
+                </button>
+                <div class="product-image" onclick="window.location.href='${getProductUrl(product)}'">
+                    <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/300x400?text=Sin+Imagen'">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">${product.name}</h3>
+                    <div class="product-price">
+                        <span class="current-price">$${product.price.toFixed(2)}</span>
+                        ${product.originalPrice ? `<span class="original-price">$${product.originalPrice.toFixed(2)}</span>` : ''}
+                        ${product.discount ? `<span class="discount">-${product.discount}%</span>` : ''}
+                    </div>
+                    <div class="product-rating">
+                        ${stars}
+                        <span>(${product.reviews})</span>
+                    </div>
+                    <button class="${inCart ? 'added-to-cart-btn' : 'add-to-cart-btn'}" onclick="addToCart(${product.id})">
+                        <i class="fas fa-shopping-bag"></i> ${inCart ? 'En el carrito' : 'Añadir al carrito'}
+                    </button>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        function generateStarRating(rating) {
+            let stars = '';
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 !== 0;
+            
+            for (let i = 0; i < fullStars; i++) {
+                stars += '<i class="fas fa-star"></i>';
+            }
+            
+            if (hasHalfStar) {
+                stars += '<i class="fas fa-star-half-alt"></i>';
+            }
+            
+            const emptyStars = 5 - Math.ceil(rating);
+            for (let i = 0; i < emptyStars; i++) {
+                stars += '<i class="far fa-star"></i>';
+            }
+            
+            return stars;
+        }
+
+        function getProductUrl(product) {
+            if (product.category === 'Mujer') {
+                if (product.subcategory === 'Vestidos') return 'vestidos.html';
+                if (product.subcategory === 'Tops') return 'tops.html';
+                if (product.subcategory === 'Pantalones') return 'pantalones-mujer.html';
+            } else if (product.category === 'Hombre') {
+                if (product.subcategory === 'Camisetas') return 'camisetas.html';
+                if (product.subcategory === 'Camisas') return 'camisas.html';
+                if (product.subcategory === 'Pantalones') return 'pantalones-hombre.html';
+            } else if (product.category === 'Niños') {
+                if (product.subcategory === 'Tops') return 'tops-niña.html';
+                if (product.subcategory === 'Pantalones') return 'pantalones-niño.html';
+                if (product.subcategory === 'Camisetas') return 'camisetas-niños.html';
+            }
+            return 'index.html';
+        }
+
+        // ===== FUNCIONES DE FAVORITOS =====
+        window.toggleFavorite = function(productId) {
+            const product = featuredProducts.find(p => p.id === productId);
+            if (!product) return;
+            
+            favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+            const existingIndex = favorites.findIndex(item => item.id === productId);
+            
+            if (existingIndex >= 0) {
+                favorites.splice(existingIndex, 1);
+                showNotification(`${product.name} eliminado de favoritos`, 'info');
+            } else {
+                favorites.push(product);
+                showNotification(`${product.name} añadido a favoritos`, 'success');
+            }
+            
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            updateWishlistCount();
+            
+            // Actualizar el botón
+            const button = document.querySelector(`.product-card[data-id="${productId}"] .favorite-btn`);
+            if (button) {
+                button.classList.toggle('active');
+            }
+        }
+
+        function updateWishlistCount() {
+            const wishlistCount = document.getElementById('wishlistCount');
+            if (wishlistCount) {
+                wishlistCount.textContent = favorites.length;
+                
+                // Animación
+                wishlistCount.style.transform = 'scale(1.3)';
+                setTimeout(() => {
+                    wishlistCount.style.transform = 'scale(1)';
+                }, 300);
+            }
+        }
+
+        // ===== FUNCIONES DEL CARRITO =====
+        window.addToCart = function(productId) {
+            const product = featuredProducts.find(p => p.id === productId);
+            if (!product) return;
+            
+            cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity = (existingItem.quantity || 1) + 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+            
+            localStorage.setItem('shoppingCart', JSON.stringify(cart));
+            updateCartCount();
+            showNotification(`${product.name} se ha añadido al carrito`, 'success');
+            
+            // Actualizar el botón
+            const button = document.querySelector(`.product-card[data-id="${productId}"] button`);
+            if (button && button.classList.contains('add-to-cart-btn')) {
+                button.innerHTML = '<i class="fas fa-check"></i> En el carrito';
+                button.classList.remove('add-to-cart-btn');
+                button.classList.add('added-to-cart-btn');
+            }
+        }
+
+        function updateCartCount() {
+            const cartCount = document.getElementById('cartCount');
+            if (cartCount) {
+                const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+                cartCount.textContent = totalItems;
+                
+                // Animación
+                cartCount.style.transform = 'scale(1.3)';
+                setTimeout(() => {
+                    cartCount.style.transform = 'scale(1)';
+                }, 300);
+            }
+        }
+
+        // ===== FUNCIONES DE BÚSQUEDA =====
         function searchProducts(query) {
             if (!query || query.trim() === '') {
                 return [];
@@ -1704,24 +1944,19 @@
             });
         }
 
-        // Función para agrupar resultados por categoría
         function groupByCategory(results) {
             const groups = {};
-            
             results.forEach(product => {
                 if (!groups[product.category]) {
                     groups[product.category] = [];
                 }
                 groups[product.category].push(product);
             });
-            
             return groups;
         }
 
-        // Función para mostrar sugerencias mejoradas
         function showSuggestions(results) {
             const suggestionsDiv = document.getElementById('searchSuggestions');
-            
             if (!suggestionsDiv) return;
             
             if (results.length === 0) {
@@ -1743,7 +1978,6 @@
                 return;
             }
             
-            // Agrupar resultados por categoría
             const groupedResults = groupByCategory(results);
             const categories = Object.keys(groupedResults);
             
@@ -1754,7 +1988,6 @@
                 </div>
             `;
             
-            // Mostrar máximo 3 categorías y 3 productos por categoría
             categories.slice(0, 3).forEach(category => {
                 const products = groupedResults[category].slice(0, 3);
                 
@@ -1815,15 +2048,12 @@
             suggestionsDiv.innerHTML = html;
             suggestionsDiv.classList.add('active');
             
-            // Añadir event listeners a las sugerencias
             document.querySelectorAll('.suggestion-item[data-url]').forEach(item => {
                 item.addEventListener('click', function() {
-                    const url = this.dataset.url;
-                    window.location.href = url;
+                    window.location.href = this.dataset.url;
                 });
             });
             
-            // Añadir event listener para "Ver todos los resultados"
             const viewAllBtn = document.getElementById('viewAllResults');
             if (viewAllBtn) {
                 viewAllBtn.addEventListener('click', function() {
@@ -1832,20 +2062,8 @@
                     suggestionsDiv.classList.remove('active');
                 });
             }
-            
-            // Añadir event listener para "Ver más de categoría"
-            document.querySelectorAll('.view-more').forEach(item => {
-                item.addEventListener('click', function() {
-                    const category = this.dataset.category;
-                    const query = document.getElementById('searchInput').value;
-                    // Aquí podrías filtrar por categoría específica
-                    showSearchResults(query + ' ' + category);
-                    suggestionsDiv.classList.remove('active');
-                });
-            });
         }
 
-        // Función para mostrar resultados completos en modal
         function showSearchResults(query) {
             const results = searchProducts(query);
             const modal = document.getElementById('searchModal');
@@ -1854,7 +2072,6 @@
             
             if (!modal || !statsDiv || !resultsGrid) return;
             
-            // Actualizar estadísticas
             statsDiv.innerHTML = `Se encontraron <strong>${results.length}</strong> resultados para "<strong>${query}</strong>"`;
             
             if (results.length === 0) {
@@ -1876,67 +2093,28 @@
                     `;
                 }).join('');
                 
-                // Añadir event listeners a los resultados
                 document.querySelectorAll('.search-result-card').forEach(card => {
                     card.addEventListener('click', function() {
-                        const url = this.dataset.url;
-                        window.location.href = url;
+                        window.location.href = this.dataset.url;
                     });
                 });
             }
             
-            // Mostrar modal
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', function() {
+        function setupSearch() {
             const searchInput = document.getElementById('searchInput');
             const searchButton = document.getElementById('searchButton');
             const suggestionsDiv = document.getElementById('searchSuggestions');
             const closeModal = document.getElementById('closeSearchModal');
             const modal = document.getElementById('searchModal');
             
-            // Menú móvil
-            const mobileToggle = document.querySelector('.mobile-menu-toggle');
-            const navLinks = document.querySelector('.nav-links');
-            
-            if (mobileToggle) {
-                mobileToggle.addEventListener('click', function() {
-                    navLinks.classList.toggle('active');
-                    
-                    // Cambiar el ícono del menú
-                    const icon = mobileToggle.querySelector('i');
-                    if (navLinks.classList.contains('active')) {
-                        icon.classList.remove('fa-bars');
-                        icon.classList.add('fa-times');
-                    } else {
-                        icon.classList.remove('fa-times');
-                        icon.classList.add('fa-bars');
-                    }
-                });
-            }
-            
-            // Manejar dropdowns en móvil
-            const dropdowns = document.querySelectorAll('.dropdown');
-            dropdowns.forEach(dropdown => {
-                const link = dropdown.querySelector('.nav-link');
-                if (link) {
-                    link.addEventListener('click', function(e) {
-                        if (window.innerWidth <= 992) {
-                            e.preventDefault();
-                            dropdown.classList.toggle('active');
-                        }
-                    });
-                }
-            });
-            
-            // Búsqueda en tiempo real (sugerencias mejoradas)
             if (searchInput) {
                 searchInput.addEventListener('input', function(e) {
                     const query = e.target.value;
-                    if (query.trim().length >= 2) { // Mostrar sugerencias después de 2 caracteres
+                    if (query.trim().length >= 2) {
                         const results = searchProducts(query);
                         showSuggestions(results);
                     } else {
@@ -1944,14 +2122,12 @@
                     }
                 });
                 
-                // Cerrar sugerencias al hacer clic fuera
                 document.addEventListener('click', function(e) {
                     if (!searchInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
                         suggestionsDiv.classList.remove('active');
                     }
                 });
                 
-                // Búsqueda al presionar Enter
                 searchInput.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
@@ -1964,7 +2140,6 @@
                 });
             }
             
-            // Búsqueda al hacer clic en el botón
             if (searchButton) {
                 searchButton.addEventListener('click', function() {
                     const query = searchInput.value;
@@ -1975,7 +2150,6 @@
                 });
             }
             
-            // Cerrar modal
             if (closeModal) {
                 closeModal.addEventListener('click', function() {
                     modal.classList.remove('active');
@@ -1983,7 +2157,6 @@
                 });
             }
             
-            // Cerrar modal al hacer clic fuera
             if (modal) {
                 modal.addEventListener('click', function(e) {
                     if (e.target === modal) {
@@ -1993,32 +2166,72 @@
                 });
             }
             
-            // Cerrar modal con tecla ESC
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && modal && modal.classList.contains('active')) {
                     modal.classList.remove('active');
                     document.body.style.overflow = '';
                 }
             });
-            
-            // Actualizar contador del carrito desde localStorage
-            function updateCartCount() {
-                const cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
-                const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
-                const cartCountElement = document.getElementById('cartCount');
-                if (cartCountElement) {
-                    cartCountElement.textContent = totalItems;
+        }
+
+        // ===== FUNCIONES AUXILIARES =====
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
                 }
+            }, 3000);
+        }
+
+        function setupMobileMenu() {
+            const menuToggle = document.querySelector('.mobile-menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (menuToggle && navLinks) {
+                menuToggle.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                    const icon = menuToggle.querySelector('i');
+                    if (icon) {
+                        if (navLinks.classList.contains('active')) {
+                            icon.classList.remove('fa-bars');
+                            icon.classList.add('fa-times');
+                        } else {
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    }
+                });
             }
             
-            updateCartCount();
-            
-            // Escuchar cambios en el localStorage (para cuando se añaden productos desde otras páginas)
-            window.addEventListener('storage', function(e) {
-                if (e.key === 'shoppingCart') {
-                    updateCartCount();
-                }
+            const dropdowns = document.querySelectorAll('.dropdown > .nav-link');
+            dropdowns.forEach(dropdown => {
+                dropdown.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 992) {
+                        e.preventDefault();
+                        const parent = this.parentElement;
+                        parent.classList.toggle('active');
+                    }
+                });
             });
+        }
+
+        // Escuchar cambios en localStorage
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'shoppingCart') {
+                cart = JSON.parse(e.newValue) || [];
+                updateCartCount();
+            }
+            if (e.key === 'favorites') {
+                favorites = JSON.parse(e.newValue) || [];
+                updateWishlistCount();
+            }
         });
     </script>
 </body>
