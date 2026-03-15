@@ -2012,6 +2012,13 @@
             }
             
             updateCartCount();
+            
+            // Escuchar cambios en el localStorage (para cuando se añaden productos desde otras páginas)
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'shoppingCart') {
+                    updateCartCount();
+                }
+            });
         });
     </script>
 </body>
