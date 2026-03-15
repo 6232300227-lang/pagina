@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pantalones de Mujer - StyleHub</title>
-    <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -34,12 +33,36 @@
             font-family: 'Poppins', sans-serif;
             color: var(--text);
             line-height: 1.6;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 0 30px;
+        }
+
+        /* ===== UTILIDADES ===== */
+        .btn {
+            display: inline-block;
+            padding: 16px 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: var(--transition);
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(255, 51, 102, 0.3);
         }
 
         /* ===== TOP BAR ===== */
@@ -149,7 +172,6 @@
         }
 
         .logo span {
-            color: var(--primary);
             background: linear-gradient(45deg, var(--primary), var(--accent));
             -webkit-background-clip: text;
             background-clip: text;
@@ -252,22 +274,6 @@
             box-shadow: 0 4px 10px rgba(255, 51, 102, 0.3);
         }
 
-        .user-badge {
-            position: absolute;
-            bottom: -5px;
-            right: -5px;
-            background: var(--success);
-            color: white;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            border: 2px solid white;
-        }
-
         nav {
             background: white;
             border-top: 2px solid var(--gray);
@@ -325,7 +331,7 @@
             width: 70%;
         }
 
-        /* ===== DROPDOWNS PREMIUM ===== */
+        /* ===== DROPDOWNS ===== */
         .dropdown {
             position: relative;
         }
@@ -417,7 +423,6 @@
             border-radius: var(--border-radius);
             position: relative;
             overflow: hidden;
-            animation: fadeInUp 0.8s forwards;
         }
 
         .category-header::before {
@@ -459,7 +464,6 @@
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             margin-bottom: 40px;
-            animation: fadeInUp 0.8s forwards;
         }
 
         .filter-sort {
@@ -553,17 +557,7 @@
             transition: var(--transition);
             position: relative;
             border: 1px solid #f0f0f0;
-            animation: fadeInUp 0.6s forwards;
         }
-        .product-card:nth-child(2) { animation-delay: 0.1s; }
-        .product-card:nth-child(3) { animation-delay: 0.2s; }
-        .product-card:nth-child(4) { animation-delay: 0.3s; }
-        .product-card:nth-child(5) { animation-delay: 0.4s; }
-        .product-card:nth-child(6) { animation-delay: 0.5s; }
-        .product-card:nth-child(7) { animation-delay: 0.6s; }
-        .product-card:nth-child(8) { animation-delay: 0.7s; }
-        .product-card:nth-child(9) { animation-delay: 0.8s; }
-        .product-card:nth-child(10) { animation-delay: 0.9s; }
 
         .product-card:hover {
             transform: translateY(-15px) scale(1.02);
@@ -887,7 +881,6 @@
             background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
         }
 
-        /* ===== ANIMACIONES ===== */
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
@@ -912,6 +905,22 @@
         @keyframes float {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-20px); }
+        }
+
+        .product-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        .product-card:nth-child(2) { animation-delay: 0.1s; }
+        .product-card:nth-child(3) { animation-delay: 0.2s; }
+        .product-card:nth-child(4) { animation-delay: 0.3s; }
+        .product-card:nth-child(5) { animation-delay: 0.4s; }
+        .product-card:nth-child(6) { animation-delay: 0.5s; }
+        .product-card:nth-child(7) { animation-delay: 0.6s; }
+        .product-card:nth-child(8) { animation-delay: 0.7s; }
+        
+        .logo i {
+            animation: float 3s ease-in-out infinite;
         }
 
         /* ===== RESPONSIVE ===== */
@@ -1042,14 +1051,13 @@
     </style>
 </head>
 <body>
-    <!-- Top Bar -->
+    <!-- Top Bar - SIN MI CUENTA -->
     <div class="top-bar">
         <div class="container top-bar-content">
             <div class="top-message">¡Envío gratis en pedidos superiores a $49.99!</div>
             <div class="top-links">
-                <a href="#"><i class="fas fa-question-circle"></i> Ayuda</a>
-                <a href="#"><i class="fas fa-shipping-fast"></i> Seguimiento</a>
-                <a href="usuarios.html" id="topAccountLink"><i class="fas fa-user"></i> Mi cuenta</a>
+                <a href="ayuda.html"><i class="fas fa-question-circle"></i> Ayuda</a>
+                <a href="seguimiento.html"><i class="fas fa-shipping-fast"></i> Seguimiento</a>
                 <a href="#" class="language-selector"><i class="fas fa-globe"></i> ES</a>
             </div>
         </div>
@@ -1093,7 +1101,7 @@
             </div>
         </div>
         
-        <!-- Navigation Premium con Dropdowns -->
+        <!-- Navigation con Dropdowns -->
         <nav>
             <div class="container">
                 <ul class="nav-links">
@@ -1124,7 +1132,7 @@
                             <a href="camisetas.html"><i class="fas fa-tshirt"></i> Camisetas</a>
                             <a href="camisas.html"><i class="fas fa-tshirt"></i> Camisas</a>
                             <a href="pantalones-hombre.html"><i class="fas fa-tshirt"></i> Pantalones</a>
-                            <a href="chaquetas-hombre.html"><i class="fas fa-tshirt"></i> Chaquetas</a>
+                            <a href="chaquetas.html"><i class="fas fa-tshirt"></i> Chaquetas</a>
                             <a href="trajes.html"><i class="fas fa-tshirt"></i> Trajes</a>
                             <div class="dropdown-header">ACCESORIOS</div>
                             <a href="zapatos-hombre.html"><i class="fas fa-shoe-prints"></i> Zapatos</a>
@@ -1201,38 +1209,13 @@
                     <button class="filter-btn" data-price="100+">$100+</button>
                 </div>
             </div>
-            
-            <div class="filter-group">
-                <h3>Talla</h3>
-                <div class="filter-options">
-                    <button class="filter-btn" data-size="xs">XS</button>
-                    <button class="filter-btn" data-size="s">S</button>
-                    <button class="filter-btn" data-size="m">M</button>
-                    <button class="filter-btn" data-size="l">L</button>
-                    <button class="filter-btn" data-size="xl">XL</button>
-                    <button class="filter-btn" data-size="xxl">XXL</button>
-                </div>
-            </div>
-            
-            <div class="filter-group">
-                <h3>Color</h3>
-                <div class="filter-options">
-                    <button class="filter-btn" data-color="negro">Negro</button>
-                    <button class="filter-btn" data-color="azul">Azul</button>
-                    <button class="filter-btn" data-color="beige">Beige</button>
-                    <button class="filter-btn" data-color="blanco">Blanco</button>
-                    <button class="filter-btn" data-color="gris">Gris</button>
-                </div>
-            </div>
         </div>
     </section>
 
     <!-- Products -->
     <section class="category-products">
         <div class="container">
-            <div class="product-grid-category" id="productsGrid">
-                <!-- Los productos se cargarán aquí mediante JavaScript -->
-            </div>
+            <div class="product-grid-category" id="productsGrid"></div>
             
             <div class="pagination">
                 <button class="page-btn active">1</button>
@@ -1300,90 +1283,40 @@
     </footer>
 
     <script>
-        // --- Funciones auxiliares (showNotification, updateUserInterface, logout, updateCartCount) ---
+        // Función para mostrar notificaciones
         function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
-            notification.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i><span>${message}</span>`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            `;
             document.body.appendChild(notification);
-            setTimeout(() => { if (notification.parentNode) notification.parentNode.removeChild(notification); }, 3000);
-        }
-        
-        function updateUserInterface() {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            const accountLink = document.getElementById('accountLink');
-            const accountText = document.getElementById('accountText');
-            const topAccountLink = document.getElementById('topAccountLink');
-            
-            if (currentUser) {
-                const firstName = currentUser.fullName ? currentUser.fullName.split(' ')[0] : 'Usuario';
-                
-                if (accountLink) {
-                    accountLink.href = '#';
-                    accountText.textContent = firstName;
-                    
-                    const accountIcon = accountLink.querySelector('i');
-                    if (accountIcon && !document.querySelector('.user-badge')) {
-                        const badge = document.createElement('span');
-                        badge.className = 'user-badge';
-                        badge.innerHTML = '✓';
-                        accountIcon.style.position = 'relative';
-                        accountIcon.appendChild(badge);
-                    }
-                    
-                    accountLink.onclick = function(e) {
-                        e.preventDefault();
-                        if (confirm(`¿Cerrar sesión ${currentUser.fullName}?`)) {
-                            logout();
-                        }
-                    };
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
                 }
-                
-                if (topAccountLink) {
-                    topAccountLink.innerHTML = `<i class="fas fa-user-circle"></i> ${firstName}`;
-                    topAccountLink.href = '#';
-                    topAccountLink.onclick = function(e) {
-                        e.preventDefault();
-                        if (confirm(`¿Cerrar sesión ${currentUser.fullName}?`)) {
-                            logout();
-                        }
-                    };
-                }
-            } else {
-                if (accountLink) {
-                    accountLink.href = 'usuarios.html';
-                    accountText.textContent = 'Mi cuenta';
-                    
-                    const badge = document.querySelector('.user-badge');
-                    if (badge) badge.remove();
-                    
-                    accountLink.onclick = null;
-                }
-                
-                if (topAccountLink) {
-                    topAccountLink.innerHTML = '<i class="fas fa-user"></i> Mi cuenta';
-                    topAccountLink.href = 'usuarios.html';
-                    topAccountLink.onclick = null;
-                }
-            }
+            }, 3000);
         }
 
-        function logout() {
-            localStorage.removeItem('currentUser');
-            localStorage.removeItem('token');
-            updateUserInterface();
-            showNotification('Has cerrado sesión correctamente', 'info');
-        }
-
+        // Función para actualizar el contador del carrito
         function updateCartCount() {
             const cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
             const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
             const cartCountElement = document.getElementById('cartCount');
-            if (cartCountElement) cartCountElement.textContent = totalItems;
+            if (cartCountElement) {
+                cartCountElement.textContent = totalItems;
+                
+                // Animación
+                cartCountElement.style.transform = 'scale(1.3)';
+                setTimeout(() => {
+                    cartCountElement.style.transform = 'scale(1)';
+                }, 300);
+            }
         }
 
-        // Datos de productos de pantalones
-        const pantalonesData = [
+        // Datos de productos de pantalones de mujer
+        const productsData = [
             { id: 201, name: "Jeans Rectos Tiro Alto Azul", price: 39.99, originalPrice: 79.99, discount: 50, image: "https://julio.com/media/catalog/product/e/5/jeans-rectos-tiro-alto-azul-medio.jpg?quality=80&bg-color=255,255,255&height=638&width=508&canvas=508:638", rating: 4.8, reviews: 342, badge: "Más vendido", category: "jeans", color: "azul" },
             { id: 202, name: "Pantalones Palazzo de Lino Beige", price: 44.99, originalPrice: 89.99, discount: 50, image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80", rating: 4.5, reviews: 156, badge: "Nuevo", category: "palazzo", color: "beige" },
             { id: 203, name: "Jeans Skinny Negro Elásticos", price: 34.99, originalPrice: 69.99, discount: 50, image: "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/N38300s5.jpg?im=Resize,width=750", rating: 4.6, reviews: 289, badge: null, category: "jeans", color: "negro" },
@@ -1397,13 +1330,11 @@
         ];
 
         // Estado de la aplicación
-        let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
         let currentFilter = 'all';
         let currentPriceFilter = 'all';
         let currentSort = 'featured';
 
         document.addEventListener('DOMContentLoaded', function() {
-            updateUserInterface();
             updateCartCount();
             loadProducts();
             setupFilters();
@@ -1416,7 +1347,7 @@
             const productsGrid = document.getElementById('productsGrid');
             if (!productsGrid) return;
             
-            let filteredProducts = [...pantalonesData];
+            let filteredProducts = [...productsData];
             
             // Aplicar filtro de categoría
             if (currentFilter !== 'all') {
@@ -1443,7 +1374,7 @@
             // Actualizar contador de productos
             const productsCount = document.querySelector('.products-count');
             if (productsCount) {
-                productsCount.textContent = `Mostrando ${filteredProducts.length} de ${pantalonesData.length} productos`;
+                productsCount.textContent = `Mostrando ${filteredProducts.length} de ${productsData.length} productos`;
             }
             
             productsGrid.innerHTML = '';
@@ -1463,6 +1394,7 @@
             const stars = generateStarRating(product.rating);
             
             // Verificar si el producto ya está en el carrito
+            const cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
             const inCart = cart.some(item => item.id === product.id);
             const buttonText = inCart ? '✓ En el carrito' : 'Añadir al carrito';
             const buttonClass = inCart ? 'added-to-cart-btn' : 'add-to-cart-btn';
@@ -1552,22 +1484,6 @@
                     loadProducts();
                 });
             });
-            
-            // Filtros de talla (solo UI)
-            const sizeFilters = document.querySelectorAll('[data-size]');
-            sizeFilters.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    this.classList.toggle('active');
-                });
-            });
-            
-            // Filtros de color (solo UI)
-            const colorFilters = document.querySelectorAll('[data-color]');
-            colorFilters.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    this.classList.toggle('active');
-                });
-            });
         }
 
         function setupSorting() {
@@ -1588,7 +1504,7 @@
                 e.preventDefault();
                 
                 const productId = parseInt(button.dataset.id);
-                const product = pantalonesData.find(p => p.id === productId);
+                const product = productsData.find(p => p.id === productId);
                 
                 if (product) {
                     addToCart(product);
@@ -1601,7 +1517,7 @@
         }
 
         function addToCart(product) {
-            cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+            let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
             const existingItem = cart.find(item => item.id === product.id);
             
             if (existingItem) {
@@ -1622,9 +1538,16 @@
             if (menuToggle && navLinks) {
                 menuToggle.addEventListener('click', () => {
                     navLinks.classList.toggle('active');
-                    menuToggle.innerHTML = navLinks.classList.contains('active') 
-                        ? '<i class="fas fa-times"></i>' 
-                        : '<i class="fas fa-bars"></i>';
+                    const icon = menuToggle.querySelector('i');
+                    if (icon) {
+                        if (navLinks.classList.contains('active')) {
+                            icon.classList.remove('fa-bars');
+                            icon.classList.add('fa-times');
+                        } else {
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    }
                 });
             }
             
@@ -1641,7 +1564,5 @@
             });
         }
     </script>
-    <script src="js/script.js"></script>
-    <script src="js/carrito.js"></script>
 </body>
 </html>

@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - StyleHub Premium</title>
-    <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -34,6 +33,8 @@
             font-family: 'Poppins', sans-serif;
             color: var(--text);
             line-height: 1.6;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
         }
 
         .container {
@@ -146,7 +147,6 @@
         }
 
         .logo span {
-            color: var(--primary);
             background: linear-gradient(45deg, var(--primary), var(--accent));
             -webkit-background-clip: text;
             background-clip: text;
@@ -565,14 +565,13 @@
     </style>
 </head>
 <body>
-    <!-- Top Bar -->
+    <!-- Top Bar - SIN MI CUENTA -->
     <div class="top-bar">
         <div class="container top-bar-content">
             <div class="top-message">¡Envío gratis en pedidos superiores a $49.99!</div>
             <div class="top-links">
-                <a href="#"><i class="fas fa-question-circle"></i> Ayuda</a>
-                <a href="#"><i class="fas fa-shipping-fast"></i> Seguimiento</a>
-                <a href="registro.html" id="topAccountLink"><i class="fas fa-user"></i> Mi cuenta</a>
+                <a href="ayuda.html"><i class="fas fa-question-circle"></i> Ayuda</a>
+                <a href="seguimiento.html"><i class="fas fa-shipping-fast"></i> Seguimiento</a>
                 <a href="#" class="language-selector"><i class="fas fa-globe"></i> ES</a>
             </div>
         </div>
@@ -672,52 +671,43 @@
     </section>
 
     <!-- Footer simplificado -->
-    <footer class="site-footer" style="background: var(--secondary); color: white; padding: 40px 0; margin-top: 60px;">
+    <footer style="background: var(--secondary); color: white; padding: 40px 0; margin-top: 60px;">
         <div class="container">
-            <div class="copyright text-center" style="text-align: center;">
+            <div class="copyright" style="text-align: center;">
                 <p>&copy; 2024 StyleHub Premium. Todos los derechos reservados.</p>
-                <p>Desarrollado con <i class="fas fa-heart"></i> para los amantes de la moda premium</p>
+                <p>Desarrollado con <i class="fas fa-heart" style="color: var(--primary);"></i> para los amantes de la moda premium</p>
             </div>
         </div>
     </footer>
 
     <script>
-        // --- Funciones auxiliares (showNotification, updateUserInterface, logout) ---
+        // Función para mostrar notificaciones
         function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
-            notification.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i><span>${message}</span>`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            `;
             document.body.appendChild(notification);
-            setTimeout(() => { if (notification.parentNode) notification.parentNode.removeChild(notification); }, 3000);
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
         }
-        
+
+        // Función para actualizar la UI según el estado del usuario
         function updateUserInterface() {
             const currentUser = JSON.parse(localStorage.getItem('currentUser'));
             const topAccountLink = document.getElementById('topAccountLink');
             
-            if (currentUser) {
+            if (currentUser && topAccountLink) {
                 const firstName = currentUser.fullName ? currentUser.fullName.split(' ')[0] : 'Usuario';
-                if (topAccountLink) {
-                    topAccountLink.innerHTML = `<i class="fas fa-user-circle"></i> ${firstName}`;
-                    topAccountLink.href = 'usuarios.html';
-                }
-            } else {
-                if (topAccountLink) {
-                    topAccountLink.innerHTML = '<i class="fas fa-user"></i> Mi cuenta';
-                    topAccountLink.href = 'registro.html';
-                }
+                topAccountLink.innerHTML = `<i class="fas fa-user-circle"></i> ${firstName}`;
+                topAccountLink.href = 'usuarios.html';
             }
         }
-
-        function logout() {
-            localStorage.removeItem('currentUser');
-            localStorage.removeItem('token');
-            updateUserInterface();
-            showNotification('Has cerrado sesión correctamente', 'info');
-        }
-
-        // Constantes
-        const API_URL = 'http://localhost:3000/api';
 
         // Medidor de fortaleza de contraseña
         document.getElementById('password').addEventListener('input', function() {
@@ -755,8 +745,8 @@
             }
         });
 
-        // Manejar el registro con backend
-        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+        // Manejar el registro (simulado - guarda en localStorage)
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const fullName = document.getElementById('fullName').value.trim();
@@ -797,39 +787,27 @@
             registerBtn.disabled = true;
             registerBtn.innerHTML = '<span><i class="fas fa-spinner fa-spin"></i> Registrando...</span>';
             
-            try {
-                const response = await fetch(`${API_URL}/auth/register`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ fullName, email, phone, password })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('currentUser', JSON.stringify(data.user));
-                    
-                    showNotification(`¡Bienvenido/a ${fullName}! Registro exitoso.`);
-                    
-                    updateUserInterface();
-                    
-                    setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 1500);
-                } else {
-                    showNotification(data.message || 'Error en el registro', 'error');
-                    
-                    registerBtn.disabled = false;
-                    registerBtn.innerHTML = '<span><i class="fas fa-user-check"></i> Crear Cuenta</span>';
-                }
-            } catch (error) {
-                showNotification('Error de conexión con el servidor', 'error');
-                console.error('Error en registro:', error);
+            // Simular registro exitoso (guardar en localStorage)
+            setTimeout(() => {
+                // Crear usuario simulado
+                const newUser = {
+                    id: Date.now(),
+                    fullName: fullName,
+                    email: email,
+                    phone: phone,
+                    password: password // En un caso real, esto estaría hasheado
+                };
                 
-                registerBtn.disabled = false;
-                registerBtn.innerHTML = '<span><i class="fas fa-user-check"></i> Crear Cuenta</span>';
-            }
+                // Guardar en localStorage
+                localStorage.setItem('currentUser', JSON.stringify(newUser));
+                localStorage.setItem('token', 'simulated-token-' + Date.now());
+                
+                showNotification(`¡Bienvenido/a ${fullName}! Registro exitoso.`);
+                
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            }, 1000);
         });
 
         // Verificar si ya hay sesión iniciada
@@ -861,7 +839,5 @@
             showNotification('Redirigiendo a Facebook...', 'info');
         });
     </script>
-    <script src="js/script.js"></script>
-    <script src="js/carrito.js"></script>
 </body>
 </html>
