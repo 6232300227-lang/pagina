@@ -43,6 +43,28 @@
             padding: 0 30px;
         }
 
+        /* ===== UTILIDADES ===== */
+        .btn {
+            display: inline-block;
+            padding: 16px 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: var(--transition);
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(255, 51, 102, 0.3);
+        }
+
         /* ===== TOP BAR ===== */
         .top-bar {
             background: linear-gradient(135deg, var(--secondary) 0%, #333 100%);
@@ -157,71 +179,406 @@
         }
 
         .search-bar {
-            display: flex;
             flex: 1;
-            max-width: 650px;
-            margin: 0 25px;
+            max-width: 700px;
+            position: relative;
         }
 
         .search-bar input {
-            flex: 1;
+            width: 100%;
             padding: 18px 25px;
-            border: 2px solid var(--gray);
-            border-radius: 50px 0 0 50px;
-            font-size: 1rem;
-            border-right: none;
-            font-family: 'Poppins', sans-serif;
+            border: 3px solid transparent;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, #f8f8f8, #ffffff);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
             transition: var(--transition);
-            background: #fafafa;
+            padding-right: 70px;
         }
 
         .search-bar input:focus {
             outline: none;
             border-color: var(--primary);
-            background: white;
-            box-shadow: 0 0 0 3px rgba(255, 51, 102, 0.1);
+            box-shadow: 0 10px 30px rgba(255, 51, 102, 0.15);
         }
 
         .search-bar button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border: none;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
             color: white;
-            border: 2px solid var(--primary);
-            border-left: none;
-            padding: 18px 35px;
-            border-radius: 0 50px 50px 0;
             cursor: pointer;
-            font-size: 1.1rem;
             transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
         }
 
         .search-bar button:hover {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, #d42a54 100%);
-            transform: translateX(5px);
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 5px 20px rgba(255, 51, 102, 0.4);
         }
 
-        .user-actions {
+        /* ===== SUGERENCIAS DE BÚSQUEDA ===== */
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 20px;
+            margin-top: 10px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            max-height: 450px;
+            overflow-y: auto;
+            display: none;
+            border: 1px solid #f0f0f0;
+        }
+
+        .search-suggestions.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .suggestions-header {
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #f8f8f8, #ffffff);
+            border-bottom: 1px solid var(--gray);
+            font-weight: 600;
+            color: var(--secondary);
             display: flex;
             align-items: center;
+            gap: 10px;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .suggestions-header i {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .suggestions-header span {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .suggestion-group {
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .suggestion-group:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-group-title {
+            padding: 8px 20px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--dark-gray);
+            letter-spacing: 0.5px;
+            background: rgba(255, 51, 102, 0.02);
+        }
+
+        .suggestion-item {
+            padding: 12px 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .suggestion-item:hover {
+            background: linear-gradient(90deg, rgba(255, 51, 102, 0.05), transparent);
+            border-left-color: var(--primary);
+            padding-left: 30px;
+        }
+
+        .suggestion-item i {
+            color: var(--primary);
+            font-size: 1.2rem;
+            width: 25px;
+            text-align: center;
+        }
+
+        .suggestion-info {
+            flex: 1;
+        }
+
+        .suggestion-name {
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 2px;
+        }
+
+        .suggestion-category {
+            font-size: 0.75rem;
+            color: var(--dark-gray);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .suggestion-category i {
+            font-size: 0.7rem;
+            color: var(--primary);
+            width: auto;
+        }
+
+        .suggestion-badge {
+            background: var(--primary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 20px;
+            margin-left: 10px;
+            white-space: nowrap;
+        }
+
+        .suggestion-footer {
+            padding: 15px 20px;
+            background: #f8f8f8;
+            border-top: 1px solid var(--gray);
+            border-radius: 0 0 20px 20px;
+            text-align: center;
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+
+        .suggestion-footer i {
+            color: var(--primary);
+            margin: 0 5px;
+            font-size: 0.8rem;
+        }
+
+        .suggestion-footer strong {
+            color: var(--primary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .suggestion-footer strong:hover {
+            text-decoration: underline;
+        }
+
+        .no-suggestions {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--dark-gray);
+        }
+
+        .no-suggestions i {
+            font-size: 3rem;
+            color: var(--primary);
+            opacity: 0.3;
+            margin-bottom: 15px;
+        }
+
+        .no-suggestions p {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .no-suggestions small {
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== MODAL DE BÚSQUEDA ===== */
+        .search-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+
+        .search-modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .search-modal-content {
+            background: white;
+            border-radius: 30px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 40px;
+            position: relative;
+            animation: scaleIn 0.3s ease;
+        }
+
+        .search-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--gray);
+        }
+
+        .search-modal-header h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--secondary);
+            font-size: 2rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--dark-gray);
+            transition: var(--transition);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            background: var(--gray);
+            color: var(--primary);
+            transform: rotate(90deg);
+        }
+
+        .search-stats {
+            background: linear-gradient(135deg, #f8f8f8, #ffffff);
+            padding: 15px 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            color: var(--dark-gray);
+            font-weight: 500;
+            border-left: 4px solid var(--primary);
+        }
+
+        .search-results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 25px;
         }
 
-        .account-link, .wishlist-link, .cart-link {
+        .search-result-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #f0f0f0;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .search-result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 51, 102, 0.15);
+            border-color: var(--primary);
+        }
+
+        .search-result-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .search-result-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--secondary);
+        }
+
+        .search-result-category {
+            font-size: 0.85rem;
+            color: var(--dark-gray);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--dark-gray);
+        }
+
+        .no-results i {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .no-results h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: var(--secondary);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* ===== USER ACTIONS ===== */
+        .user-actions {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .user-actions a {
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: var(--text);
             text-decoration: none;
-            font-size: 0.85rem;
+            color: var(--secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
             transition: var(--transition);
-            padding: 10px 15px;
-            border-radius: 15px;
-            min-width: 80px;
             position: relative;
         }
 
-        .account-link:hover, .wishlist-link:hover, .cart-link:hover {
+        .user-actions a:hover {
             color: var(--primary);
-            background: rgba(255, 51, 102, 0.05);
             transform: translateY(-5px);
         }
 
@@ -230,11 +587,11 @@
             margin-bottom: 8px;
         }
 
-        .cart-wrapper {
+        .cart-wrapper, .wishlist-wrapper {
             position: relative;
         }
 
-        .cart-count {
+        .cart-count, .wishlist-count {
             position: absolute;
             top: -8px;
             right: 0;
@@ -320,6 +677,8 @@
             left: 0;
             background: white;
             min-width: 280px;
+            max-height: 400px;
+            overflow-y: auto;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
             border-radius: var(--border-radius);
             z-index: 1000;
@@ -327,8 +686,24 @@
             visibility: hidden;
             transform: translateY(15px) scale(0.95);
             transition: var(--transition);
-            padding: 20px 0;
+            padding: 15px 0;
             border: 1px solid #f0f0f0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--gray);
+        }
+
+        .dropdown-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .dropdown-content::-webkit-scrollbar-track {
+            background: var(--gray);
+            border-radius: 10px;
+        }
+
+        .dropdown-content::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 10px;
         }
 
         .dropdown:hover .dropdown-content {
@@ -339,20 +714,20 @@
 
         .dropdown-content a {
             display: block;
-            padding: 15px 30px;
+            padding: 12px 25px;
             color: var(--text);
             text-decoration: none;
             font-size: 0.95rem;
-            transition: var(--transition);
+            transition: all 0.2s ease;
             border-left: 3px solid transparent;
             font-weight: 500;
         }
 
         .dropdown-content a:hover {
-            background: linear-gradient(90deg, rgba(255, 51, 102, 0.05), transparent);
+            background: linear-gradient(90deg, rgba(255, 51, 102, 0.08), transparent);
             color: var(--primary);
             border-left-color: var(--primary);
-            padding-left: 40px;
+            padding-left: 35px;
         }
 
         .dropdown-content a i {
@@ -360,17 +735,19 @@
             color: var(--primary);
             font-size: 1rem;
             width: 20px;
+            text-align: center;
         }
 
         .dropdown-content .dropdown-header {
-            padding: 10px 30px;
+            padding: 10px 25px 8px;
             font-weight: 700;
             color: var(--secondary);
-            font-size: 1rem;
+            font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             border-bottom: 1px solid var(--gray);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, rgba(255, 51, 102, 0.03), transparent);
         }
 
         .mobile-menu-toggle {
@@ -1434,6 +1811,10 @@
             50% { transform: translateY(-20px); }
         }
 
+        .logo i {
+            animation: float 3s ease-in-out infinite;
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 1200px) {
             .cart-layout {
@@ -1492,6 +1873,7 @@
                 margin-top: 10px;
                 display: none;
                 width: 100%;
+                max-height: none;
             }
             .dropdown.active .dropdown-content {
                 display: block;
@@ -1569,11 +1951,26 @@
             .social-icons {
                 justify-content: center;
             }
+            .search-modal-content {
+                width: 95%;
+                padding: 25px;
+            }
+            .search-results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .cart-count, .wishlist-count {
+                width: 20px;
+                height: 20px;
+                font-size: 0.75rem;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Top Bar - SIN MI CUENTA -->
+    <!-- Top Bar -->
     <div class="top-bar">
         <div class="container top-bar-content">
             <div class="top-message">¡Envío gratis en pedidos superiores a $49.99!</div>
@@ -1593,42 +1990,46 @@
                     <i class="fas fa-crown"></i>
                     Style<span>Hub</span>
                 </a>
-                
+
                 <button class="mobile-menu-toggle">
                     <i class="fas fa-bars"></i>
                 </button>
-                
+
                 <div class="search-bar">
-                    <input type="text" placeholder="Buscar productos, marcas y más...">
-                    <button type="submit"><i class="fas fa-search"></i></button>
+                    <input type="text" id="searchInput" placeholder="Buscar productos, marcas y más...">
+                    <button type="submit" id="searchButton"><i class="fas fa-search"></i></button>
+                    <div class="search-suggestions" id="searchSuggestions"></div>
                 </div>
-                
+
                 <div class="user-actions">
                     <a href="usuarios.html" class="account-link" id="accountLink">
                         <i class="fas fa-user-circle"></i>
                         <span id="accountText">Mi cuenta</span>
                     </a>
-                    <a href="favoritos.html" class="wishlist-link">
-                        <i class="fas fa-heart"></i>
-                        <span>Favoritos</span>
-                    </a>
+                    <div class="wishlist-wrapper">
+                        <a href="favoritos.html" class="wishlist-link">
+                            <i class="fas fa-heart"></i>
+                            <span>Favoritos</span>
+                        </a>
+                        <span class="wishlist-count" id="wishlistCount">0</span>
+                    </div>
                     <div class="cart-wrapper">
                         <a href="carrito.html" class="cart-link">
                             <i class="fas fa-shopping-bag"></i>
                             <span>Carrito</span>
                         </a>
-                        <div class="cart-count" id="cartCount">0</div>
+                        <span class="cart-count" id="cartCount">0</span>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <!-- Navigation con Dropdowns - TODOS LOS ENLACES CORREGIDOS -->
+
+        <!-- Navigation con Dropdowns -->
         <nav>
             <div class="container">
                 <ul class="nav-links">
                     <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Inicio</a></li>
-                    
+
                     <!-- Dropdown Mujer -->
                     <li class="dropdown">
                         <a href="#" class="nav-link"><i class="fas fa-female"></i> Mujer <i class="fas fa-chevron-down"></i></a>
@@ -1645,7 +2046,7 @@
                             <a href="zapatos-mujer.html"><i class="fas fa-shoe-prints"></i> Zapatos</a>
                         </div>
                     </li>
-                    
+
                     <!-- Dropdown Hombre -->
                     <li class="dropdown">
                         <a href="#" class="nav-link"><i class="fas fa-male"></i> Hombre <i class="fas fa-chevron-down"></i></a>
@@ -1662,26 +2063,25 @@
                             <a href="cinturones.html"><i class="fas fa-belt"></i> Cinturones</a>
                         </div>
                     </li>
-                    
-                    <!-- Dropdown Niños - CON TODOS LOS ENLACES CORREGIDOS -->
+
+                    <!-- Dropdown Niños -->
                     <li class="dropdown">
                         <a href="#" class="nav-link"><i class="fas fa-child"></i> Niños <i class="fas fa-chevron-down"></i></a>
                         <div class="dropdown-content">
                             <div class="dropdown-header">NIÑAS</div>
-                            <a href="ninas-vestidos.html"><i class="fas fa-tshirt"></i> Vestidos</a>
-                            <a href="tops-niña.html"><i class="fas fa-tshirt"></i> Tops</a>
-                            <a href="pantalones-niña.html"><i class="fas fa-tshirt"></i> Pantalones</a>
-                            
+                            <a href="tops-niña.html"><i class="fas fa-tshirt"></i> Tops para niñas</a>
+                            <a href="pantalones-niña.html"><i class="fas fa-tshirt"></i> Pantalones para niñas</a>
+
                             <div class="dropdown-header">NIÑOS</div>
-                            <a href="camisetas-niños.html"><i class="fas fa-tshirt"></i> Camisetas</a>
-                            <a href="pantalones-niño.html"><i class="fas fa-tshirt"></i> Pantalones</a>
-                            <a href="chaquetas-niño.html"><i class="fas fa-tshirt"></i> Chaquetas</a>
-                            
+                            <a href="camisetas-niños.html"><i class="fas fa-tshirt"></i> Camisetas para niños</a>
+                            <a href="pantalones-niño.html"><i class="fas fa-tshirt"></i> Pantalones para niño</a>
+                            <a href="chaquetas-niño.html"><i class="fas fa-tshirt"></i> Chaquetas para niño</a>
+
                             <div class="dropdown-header">BEBÉS</div>
                             <a href="bebes.html"><i class="fas fa-baby"></i> Ropa de bebé</a>
                         </div>
                     </li>
-                    
+
                     <li><a href="novedades.html" class="nav-link"><i class="fas fa-star"></i> Novedades</a></li>
                     <li><a href="ofertas.html" class="nav-link"><i class="fas fa-tag"></i> Ofertas</a></li>
                     <li><a href="colecciones.html" class="nav-link"><i class="fas fa-palette"></i> Colecciones</a></li>
@@ -1735,17 +2135,17 @@
                                 <i class="fas fa-trash-alt"></i> Vaciar Carrito
                             </button>
                         </div>
-                        
+
                         <div class="cart-items-container" id="cartItemsContainer">
                             <!-- Los productos se cargarán dinámicamente -->
                         </div>
                     </div>
-                    
+
                     <!-- Order Summary -->
                     <div class="order-summary-section">
                         <div class="order-summary">
                             <h2><i class="fas fa-receipt"></i> Resumen del Pedido</h2>
-                            
+
                             <div class="summary-details">
                                 <div class="summary-row">
                                     <span>Subtotal</span>
@@ -1764,7 +2164,7 @@
                                     <span id="total">$0.00</span>
                                 </div>
                             </div>
-                            
+
                             <!-- Promo Code -->
                             <div class="promo-section">
                                 <h4><i class="fas fa-gift"></i> ¿Tienes un código promocional?</h4>
@@ -1773,12 +2173,12 @@
                                     <button class="apply-promo-btn" onclick="applyPromoCode()">Aplicar</button>
                                 </div>
                             </div>
-                            
+
                             <!-- Navigation Buttons -->
                             <button class="checkout-btn" onclick="goToStep(2)" id="proceedToInfo">
                                 <i class="fas fa-arrow-right"></i> Continuar con Información
                             </button>
-                            
+
                             <button class="continue-shopping-btn" onclick="window.location.href='index.html'">
                                 <i class="fas fa-arrow-left"></i> Seguir Comprando
                             </button>
@@ -1791,7 +2191,7 @@
             <div class="step-container" id="step2">
                 <div class="checkout-form">
                     <h2 class="form-title"><i class="fas fa-user"></i> Información de Envío</h2>
-                    
+
                     <div class="form-grid">
                         <div class="form-group">
                             <label class="form-label">Nombre Completo *</label>
@@ -1818,7 +2218,7 @@
                             <input type="text" class="form-control" id="zipCode" placeholder="28001">
                         </div>
                     </div>
-                    
+
                     <div class="navigation-buttons">
                         <button class="nav-btn prev" onclick="goToStep(1)">
                             <i class="fas fa-arrow-left"></i> Volver al Carrito
@@ -1834,7 +2234,7 @@
             <div class="step-container" id="step3">
                 <div class="checkout-form">
                     <h2 class="form-title"><i class="fas fa-credit-card"></i> Método de Pago</h2>
-                    
+
                     <div class="payment-methods">
                         <div class="payment-method selected" onclick="selectPaymentMethod('card', this)">
                             <i class="fas fa-credit-card"></i>
@@ -1845,7 +2245,7 @@
                             <span>PayPal</span>
                         </div>
                     </div>
-                    
+
                     <div id="cardDetails" class="card-details">
                         <div class="form-group">
                             <label class="form-label">Número de Tarjeta</label>
@@ -1866,7 +2266,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="navigation-buttons">
                         <button class="nav-btn prev" onclick="goToStep(2)">
                             <i class="fas fa-arrow-left"></i> Volver a Información
@@ -1890,11 +2290,11 @@
                         Hemos enviado los detalles de tu compra a tu correo electrónico.
                         Tu pedido será procesado y enviado en las próximas 24-48 horas.
                     </p>
-                    
+
                     <div class="order-details-confirm" id="confirmationDetails">
                         <!-- Los detalles se llenarán dinámicamente -->
                     </div>
-                    
+
                     <div class="action-buttons">
                         <button class="btn btn-outline" onclick="window.location.href='index.html'">
                             <i class="fas fa-home"></i> Volver al Inicio
@@ -1907,6 +2307,18 @@
             </div>
         </div>
     </main>
+
+    <!-- Modal de Resultados de Búsqueda -->
+    <div class="search-modal" id="searchModal">
+        <div class="search-modal-content">
+            <div class="search-modal-header">
+                <h2>Resultados de búsqueda</h2>
+                <button class="close-modal" id="closeSearchModal">&times;</button>
+            </div>
+            <div class="search-stats" id="searchStats"></div>
+            <div class="search-results-grid" id="searchResultsGrid"></div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer>
@@ -1923,7 +2335,7 @@
                         <a href="#"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
-                
+
                 <div class="footer-column">
                     <h3>Ayuda Premium</h3>
                     <ul>
@@ -1934,7 +2346,7 @@
                         <li><a href="devoluciones.html"><i class="fas fa-undo-alt"></i> Devoluciones premium</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-column">
                     <h3>Acerca de</h3>
                     <ul>
@@ -1944,7 +2356,7 @@
                         <li><a href="privacidad.html"><i class="fas fa-shield-alt"></i> Privacidad</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-column">
                     <h3>Contacto Premium</h3>
                     <ul>
@@ -1954,7 +2366,7 @@
                     </ul>
                 </div>
             </div>
-            
+
             <div class="copyright">
                 <p>&copy; 2024 StyleHub Premium. Todos los derechos reservados.</p>
                 <p>Desarrollado con <i class="fas fa-heart"></i> para los amantes de la moda premium</p>
@@ -1965,11 +2377,12 @@
     <script>
         // ===== VARIABLES GLOBALES =====
         let cart = [];
+        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
         let promoCodeApplied = false;
         let discountAmount = 0;
         let currentStep = 1;
         let selectedPaymentMethod = 'card';
-        
+
         const SHIPPING_COST = 5.99;
         const SHIPPING_FREE_THRESHOLD = 29.99;
         const VALID_PROMO_CODES = {
@@ -1978,22 +2391,315 @@
             'STYLE10': 0.10
         };
 
+        // Base de datos de productos para búsqueda
+        const productDatabase = [
+            // Mujer
+            { name: 'Vestido Floral', category: 'Mujer', subcategory: 'Vestidos', icon: 'fa-tshirt', url: 'vestidos.html' },
+            { name: 'Blusa de Seda', category: 'Mujer', subcategory: 'Tops y Blusas', icon: 'fa-tshirt', url: 'tops.html' },
+            { name: 'Pantalón Palazzo', category: 'Mujer', subcategory: 'Pantalones', icon: 'fa-tshirt', url: 'pantalones-mujer.html' },
+            { name: 'Falda Plisada', category: 'Mujer', subcategory: 'Faldas', icon: 'fa-tshirt', url: 'faldas.html' },
+            { name: 'Chaqueta de Cuero', category: 'Mujer', subcategory: 'Chaquetas', icon: 'fa-tshirt', url: 'chaquetas-mujer.html' },
+            { name: 'Bolso de Mano', category: 'Mujer', subcategory: 'Bolsos', icon: 'fa-shopping-bag', url: 'bolsos.html' },
+            { name: 'Collar de Plata', category: 'Mujer', subcategory: 'Joyería', icon: 'fa-gem', url: 'joyeria.html' },
+            { name: 'Tacones', category: 'Mujer', subcategory: 'Zapatos', icon: 'fa-shoe-prints', url: 'zapatos-mujer.html' },
+
+            // Hombre
+            { name: 'Camiseta Básica', category: 'Hombre', subcategory: 'Camisetas', icon: 'fa-tshirt', url: 'camisetas.html' },
+            { name: 'Camisa Oxford', category: 'Hombre', subcategory: 'Camisas', icon: 'fa-tshirt', url: 'camisas.html' },
+            { name: 'Pantalón Chino', category: 'Hombre', subcategory: 'Pantalones', icon: 'fa-tshirt', url: 'pantalones-hombre.html' },
+            { name: 'Chaqueta Bomber', category: 'Hombre', subcategory: 'Chaquetas', icon: 'fa-tshirt', url: 'chaquetas.html' },
+            { name: 'Traje Azul Marino', category: 'Hombre', subcategory: 'Trajes', icon: 'fa-tshirt', url: 'trajes.html' },
+            { name: 'Zapatos Derby', category: 'Hombre', subcategory: 'Zapatos', icon: 'fa-shoe-prints', url: 'zapatos-hombre.html' },
+            { name: 'Reloj Cronógrafo', category: 'Hombre', subcategory: 'Relojes', icon: 'fa-clock', url: 'relojes.html' },
+            { name: 'Cinturón de Cuero', category: 'Hombre', subcategory: 'Cinturones', icon: 'fa-belt', url: 'cinturones.html' },
+
+            // Niños
+            { name: 'Tops para niñas', category: 'Niños', subcategory: 'Tops', icon: 'fa-tshirt', url: 'tops-niña.html' },
+            { name: 'Pantalones para niñas', category: 'Niños', subcategory: 'Pantalones', icon: 'fa-tshirt', url: 'pantalones-niña.html' },
+            { name: 'Camisetas para niños', category: 'Niños', subcategory: 'Camisetas', icon: 'fa-tshirt', url: 'camisetas-niños.html' },
+            { name: 'Pantalones para niño', category: 'Niños', subcategory: 'Pantalones', icon: 'fa-tshirt', url: 'pantalones-niño.html' },
+            { name: 'Chaquetas para niño', category: 'Niños', subcategory: 'Chaquetas', icon: 'fa-tshirt', url: 'chaquetas-niño.html' },
+
+            // Páginas generales
+            { name: 'Novedades', category: 'Página', subcategory: 'Colección 2024', icon: 'fa-star', url: 'novedades.html' },
+            { name: 'Ofertas', category: 'Página', subcategory: 'Descuentos', icon: 'fa-tag', url: 'ofertas.html' },
+            { name: 'Colecciones', category: 'Página', subcategory: 'Diseños exclusivos', icon: 'fa-palette', url: 'colecciones.html' }
+        ];
+
         // ===== FUNCIONES DE INICIALIZACIÓN =====
         document.addEventListener('DOMContentLoaded', function() {
             loadCartFromStorage();
             updateCartDisplay();
             updateCartCount();
+            updateWishlistCount();
             setupEventListeners();
             setupMobileMenu();
+            setupSearch();
             updateUserInterface();
         });
+
+        // ===== FUNCIONES DE BÚSQUEDA =====
+        function searchProducts(query) {
+            if (!query || query.trim() === '') {
+                return [];
+            }
+
+            const searchTerm = query.toLowerCase().trim();
+
+            return productDatabase.filter(product => {
+                return product.name.toLowerCase().includes(searchTerm) ||
+                       product.category.toLowerCase().includes(searchTerm) ||
+                       product.subcategory.toLowerCase().includes(searchTerm);
+            });
+        }
+
+        function groupByCategory(results) {
+            const groups = {};
+            results.forEach(product => {
+                if (!groups[product.category]) {
+                    groups[product.category] = [];
+                }
+                groups[product.category].push(product);
+            });
+            return groups;
+        }
+
+        function showSuggestions(results) {
+            const suggestionsDiv = document.getElementById('searchSuggestions');
+            if (!suggestionsDiv) return;
+
+            if (results.length === 0) {
+                suggestionsDiv.innerHTML = `
+                    <div class="suggestions-header">
+                        <i class="fas fa-search"></i>
+                        <span>BÚSQUEDA</span>
+                    </div>
+                    <div class="no-suggestions">
+                        <i class="fas fa-box-open"></i>
+                        <p>No se encontraron productos</p>
+                        <small>Intenta con otras palabras</small>
+                    </div>
+                    <div class="suggestion-footer">
+                        <i class="fas fa-arrow-up"></i> Presiona Enter para buscar <i class="fas fa-arrow-down"></i>
+                    </div>
+                `;
+                suggestionsDiv.classList.add('active');
+                return;
+            }
+
+            const groupedResults = groupByCategory(results);
+            const categories = Object.keys(groupedResults);
+
+            let html = `
+                <div class="suggestions-header">
+                    <i class="fas fa-search"></i>
+                    <span>SUGERENCIAS (${results.length} resultados)</span>
+                </div>
+            `;
+
+            categories.slice(0, 3).forEach(category => {
+                const products = groupedResults[category].slice(0, 3);
+
+                html += `
+                    <div class="suggestion-group">
+                        <div class="suggestion-group-title">
+                            <i class="fas fa-tag"></i> ${category}
+                        </div>
+                `;
+
+                products.forEach(product => {
+                    html += `
+                        <div class="suggestion-item" data-url="${product.url}">
+                            <i class="fas ${product.icon}"></i>
+                            <div class="suggestion-info">
+                                <div class="suggestion-name">${product.name}</div>
+                                <div class="suggestion-category">
+                                    <i class="fas fa-angle-right"></i>
+                                    ${product.subcategory}
+                                </div>
+                            </div>
+                            <span class="suggestion-badge">${product.category}</span>
+                        </div>
+                    `;
+                });
+
+                if (groupedResults[category].length > 3) {
+                    html += `
+                        <div class="suggestion-item view-more" data-category="${category}">
+                            <i class="fas fa-plus-circle"></i>
+                            <div class="suggestion-info">
+                                <div class="suggestion-name">Ver más de ${category}</div>
+                                <div class="suggestion-category">${groupedResults[category].length - 3} productos más</div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                html += `</div>`;
+            });
+
+            if (results.length > 9) {
+                html += `
+                    <div class="suggestion-footer">
+                        <i class="fas fa-search"></i> 
+                        Mostrando 9 de ${results.length} resultados. 
+                        <strong id="viewAllResults">Ver todos los resultados</strong>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="suggestion-footer">
+                        <i class="fas fa-arrow-up"></i> Presiona Enter para buscar <i class="fas fa-arrow-down"></i>
+                    </div>
+                `;
+            }
+
+            suggestionsDiv.innerHTML = html;
+            suggestionsDiv.classList.add('active');
+
+            document.querySelectorAll('.suggestion-item[data-url]').forEach(item => {
+                item.addEventListener('click', function() {
+                    window.location.href = this.dataset.url;
+                });
+            });
+
+            const viewAllBtn = document.getElementById('viewAllResults');
+            if (viewAllBtn) {
+                viewAllBtn.addEventListener('click', function() {
+                    const query = document.getElementById('searchInput').value;
+                    showSearchResults(query);
+                    suggestionsDiv.classList.remove('active');
+                });
+            }
+        }
+
+        function showSearchResults(query) {
+            const results = searchProducts(query);
+            const modal = document.getElementById('searchModal');
+            const statsDiv = document.getElementById('searchStats');
+            const resultsGrid = document.getElementById('searchResultsGrid');
+
+            if (!modal || !statsDiv || !resultsGrid) return;
+
+            statsDiv.innerHTML = `Se encontraron <strong>${results.length}</strong> resultados para "<strong>${query}</strong>"`;
+
+            if (results.length === 0) {
+                resultsGrid.innerHTML = `
+                    <div class="no-results" style="grid-column: 1 / -1;">
+                        <i class="fas fa-search"></i>
+                        <h3>No se encontraron resultados</h3>
+                        <p>Intenta con otras palabras clave</p>
+                    </div>
+                `;
+            } else {
+                resultsGrid.innerHTML = results.map(product => {
+                    return `
+                        <div class="search-result-card" data-url="${product.url}">
+                            <i class="fas ${product.icon} search-result-icon"></i>
+                            <div class="search-result-title">${product.name}</div>
+                            <div class="search-result-category">${product.category} - ${product.subcategory}</div>
+                        </div>
+                    `;
+                }).join('');
+
+                document.querySelectorAll('.search-result-card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        window.location.href = this.dataset.url;
+                    });
+                });
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            const suggestionsDiv = document.getElementById('searchSuggestions');
+            const closeModal = document.getElementById('closeSearchModal');
+            const modal = document.getElementById('searchModal');
+
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    const query = e.target.value;
+                    if (query.trim().length >= 2) {
+                        const results = searchProducts(query);
+                        showSuggestions(results);
+                    } else {
+                        suggestionsDiv.classList.remove('active');
+                    }
+                });
+
+                document.addEventListener('click', function(e) {
+                    if (!searchInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
+                        suggestionsDiv.classList.remove('active');
+                    }
+                });
+
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const query = e.target.value;
+                        if (query.trim()) {
+                            showSearchResults(query);
+                            suggestionsDiv.classList.remove('active');
+                        }
+                    }
+                });
+            }
+
+            if (searchButton) {
+                searchButton.addEventListener('click', function() {
+                    const query = searchInput.value;
+                    if (query.trim()) {
+                        showSearchResults(query);
+                        suggestionsDiv.classList.remove('active');
+                    }
+                });
+            }
+
+            if (closeModal) {
+                closeModal.addEventListener('click', function() {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            }
+
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                });
+            }
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal && modal.classList.contains('active')) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        }
+
+        // ===== FUNCIONES DE FAVORITOS =====
+        function updateWishlistCount() {
+            const wishlistCount = document.getElementById('wishlistCount');
+            if (wishlistCount) {
+                wishlistCount.textContent = favorites.length;
+                wishlistCount.style.transform = 'scale(1.3)';
+                setTimeout(() => {
+                    wishlistCount.style.transform = 'scale(1)';
+                }, 300);
+            }
+        }
 
         // ===== FUNCIONES DEL CARRITO =====
         function loadCartFromStorage() {
             const savedCart = localStorage.getItem('shoppingCart');
             if (savedCart) {
                 cart = JSON.parse(savedCart);
-                // Asegurar que cada item tenga cantidad
                 cart = cart.map(item => ({
                     ...item,
                     quantity: item.quantity || 1
@@ -2016,9 +2722,9 @@
             const cartItemsContainer = document.getElementById('cartItemsContainer');
             const cartItemsCount = document.getElementById('cartItemsCount');
             const proceedBtn = document.getElementById('proceedToInfo');
-            
+
             if (!cartItemsContainer) return;
-            
+
             if (cart.length === 0) {
                 cartItemsContainer.innerHTML = `
                     <div class="empty-cart">
@@ -2034,11 +2740,11 @@
                 if (cartItemsCount) cartItemsCount.textContent = '(0 productos)';
             } else {
                 let html = '';
-                
+
                 cart.forEach((item, index) => {
                     const quantity = item.quantity || 1;
                     const itemTotal = item.price * quantity;
-                    
+
                     html += `
                         <div class="cart-item" data-index="${index}">
                             <div class="cart-item-image">
@@ -2067,10 +2773,10 @@
                         </div>
                     `;
                 });
-                
+
                 cartItemsContainer.innerHTML = html;
                 if (proceedBtn) proceedBtn.disabled = false;
-                
+
                 const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
                 if (cartItemsCount) cartItemsCount.textContent = `(${totalItems} ${totalItems === 1 ? 'producto' : 'productos'})`;
             }
@@ -2079,11 +2785,11 @@
         function updateQuantity(index, change) {
             if (cart[index]) {
                 cart[index].quantity = (cart[index].quantity || 1) + change;
-                
+
                 if (cart[index].quantity <= 0) {
                     cart.splice(index, 1);
                 }
-                
+
                 saveCartToStorage();
                 updateCartDisplay();
                 updateCartCount();
@@ -2102,7 +2808,7 @@
 
         function clearCart() {
             if (cart.length === 0) return;
-            
+
             if (confirm('¿Estás seguro de que quieres vaciar todo el carrito?')) {
                 cart = [];
                 saveCartToStorage();
@@ -2113,14 +2819,13 @@
         }
 
         function updateCartCount() {
-            const cartCountElement = document.getElementById('cartCount');
-            if (cartCountElement) {
+            const cartCount = document.getElementById('cartCount');
+            if (cartCount) {
                 const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
-                cartCountElement.textContent = totalItems;
-                
-                cartCountElement.style.transform = 'scale(1.3)';
+                cartCount.textContent = totalItems;
+                cartCount.style.transform = 'scale(1.3)';
                 setTimeout(() => {
-                    cartCountElement.style.transform = 'scale(1)';
+                    cartCount.style.transform = 'scale(1)';
                 }, 300);
             }
         }
@@ -2129,18 +2834,18 @@
             const subtotal = cart.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
             const shipping = subtotal >= SHIPPING_FREE_THRESHOLD ? 0 : SHIPPING_COST;
             let discount = 0;
-            
+
             if (promoCodeApplied && subtotal > 0) {
                 discount = subtotal * discountAmount;
             }
-            
+
             const total = subtotal + shipping - discount;
-            
+
             const subtotalElement = document.getElementById('subtotal');
             const shippingElement = document.getElementById('shipping');
             const discountElement = document.getElementById('discount');
             const totalElement = document.getElementById('total');
-            
+
             if (subtotalElement) subtotalElement.textContent = `$${subtotal.toFixed(2)}`;
             if (shippingElement) shippingElement.textContent = shipping === 0 ? 'Gratis' : `$${shipping.toFixed(2)}`;
             if (discountElement) discountElement.textContent = discount > 0 ? `-$${discount.toFixed(2)}` : '$0.00';
@@ -2151,21 +2856,21 @@
         function applyPromoCode() {
             const promoCodeInput = document.getElementById('promoCode');
             if (!promoCodeInput) return;
-            
+
             const code = promoCodeInput.value.trim().toUpperCase();
-            
+
             if (!code) {
                 showNotification('Por favor ingresa un código promocional', 'error');
                 return;
             }
-            
+
             if (VALID_PROMO_CODES[code]) {
                 promoCodeApplied = true;
                 discountAmount = VALID_PROMO_CODES[code];
                 updateOrderSummary();
-                
+
                 showNotification(`¡Código ${code} aplicado! Descuento del ${discountAmount * 100}%`);
-                
+
                 promoCodeInput.disabled = true;
                 const applyBtn = document.querySelector('.apply-promo-btn');
                 if (applyBtn) {
@@ -2184,12 +2889,12 @@
                 showNotification('Tu carrito está vacío', 'error');
                 return;
             }
-            
+
             for (let i = 1; i <= 4; i++) {
                 const circle = document.getElementById(`step${i}Circle`);
                 const label = document.getElementById(`step${i}Label`);
                 const container = document.getElementById(`step${i}`);
-                
+
                 if (i < step) {
                     if (circle) circle.className = 'step-circle completed';
                     if (label) label.className = 'step-label completed';
@@ -2200,14 +2905,14 @@
                     if (circle) circle.className = 'step-circle';
                     if (label) label.className = 'step-label';
                 }
-                
+
                 if (container) {
                     container.className = i === step ? 'step-container active' : 'step-container';
                 }
             }
-            
+
             currentStep = step;
-            
+
             if (step === 4) {
                 loadConfirmationDetails();
             }
@@ -2222,7 +2927,7 @@
         function validateInfo() {
             const fields = ['fullName', 'email', 'phone', 'address', 'city', 'zipCode'];
             let isValid = true;
-            
+
             fields.forEach(id => {
                 const element = document.getElementById(id);
                 if (element) {
@@ -2234,8 +2939,7 @@
                     }
                 }
             });
-            
-            // Validación específica de email
+
             const email = document.getElementById('email');
             if (email && email.value.trim()) {
                 if (!email.value.includes('@') || !email.value.includes('.')) {
@@ -2243,24 +2947,24 @@
                     isValid = false;
                 }
             }
-            
+
             if (!isValid) {
                 showNotification('Por favor completa todos los campos correctamente', 'error');
                 return false;
             }
-            
+
             return true;
         }
 
         function selectPaymentMethod(method, element) {
             selectedPaymentMethod = method;
-            
+
             document.querySelectorAll('.payment-method').forEach(el => {
                 el.classList.remove('selected');
             });
-            
+
             element.classList.add('selected');
-            
+
             const cardDetails = document.getElementById('cardDetails');
             if (cardDetails) {
                 cardDetails.style.display = method === 'card' ? 'block' : 'none';
@@ -2281,24 +2985,24 @@
             }
 
             showNotification('Procesando pago...', 'info');
-            
+
             setTimeout(() => {
                 const date = new Date();
                 const year = date.getFullYear();
                 const random = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
                 const orderNumber = `#SH-${year}-${random}`;
-                
+
                 document.getElementById('orderNumber').textContent = orderNumber;
-                
+
                 cart = [];
                 promoCodeApplied = false;
                 discountAmount = 0;
                 saveCartToStorage();
                 updateCartCount();
-                
+
                 goToStep(4);
                 loadConfirmationDetails();
-                
+
                 showNotification('¡Pago realizado con éxito!', 'success');
             }, 1500);
         }
@@ -2308,44 +3012,44 @@
             const expiryDate = document.getElementById('expiryDate');
             const cvv = document.getElementById('cvv');
             const cardHolder = document.getElementById('cardHolder');
-            
+
             if (!cardNumber || !expiryDate || !cvv || !cardHolder) return false;
-            
+
             const cardNumberValue = cardNumber.value.replace(/\s/g, '');
             const expiryDateValue = expiryDate.value;
             const cvvValue = cvv.value;
             const cardHolderValue = cardHolder.value.trim();
-            
+
             let isValid = true;
-            
+
             if (!cardNumberValue || cardNumberValue.length < 16) {
                 cardNumber.classList.add('error');
                 isValid = false;
             } else {
                 cardNumber.classList.remove('error');
             }
-            
+
             if (!expiryDateValue || expiryDateValue.length < 5) {
                 expiryDate.classList.add('error');
                 isValid = false;
             } else {
                 expiryDate.classList.remove('error');
             }
-            
+
             if (!cvvValue || cvvValue.length < 3) {
                 cvv.classList.add('error');
                 isValid = false;
             } else {
                 cvv.classList.remove('error');
             }
-            
+
             if (!cardHolderValue) {
                 cardHolder.classList.add('error');
                 isValid = false;
             } else {
                 cardHolder.classList.remove('error');
             }
-            
+
             return isValid;
         }
 
@@ -2422,7 +3126,6 @@
         }
 
         function setupEventListeners() {
-            // Formatear número de tarjeta
             const cardNumber = document.getElementById('cardNumber');
             if (cardNumber) {
                 cardNumber.addEventListener('input', function(e) {
@@ -2432,7 +3135,6 @@
                 });
             }
 
-            // Formatear fecha de expiración
             const expiryDate = document.getElementById('expiryDate');
             if (expiryDate) {
                 expiryDate.addEventListener('input', function(e) {
@@ -2444,7 +3146,6 @@
                 });
             }
 
-            // Formatear CVV
             const cvv = document.getElementById('cvv');
             if (cvv) {
                 cvv.addEventListener('input', function(e) {
@@ -2457,7 +3158,7 @@
             const currentUser = JSON.parse(localStorage.getItem('currentUser'));
             const accountLink = document.getElementById('accountLink');
             const accountText = document.getElementById('accountText');
-            
+
             if (currentUser && accountText) {
                 const firstName = currentUser.fullName ? currentUser.fullName.split(' ')[0] : 'Usuario';
                 accountText.textContent = firstName;
@@ -2467,7 +3168,7 @@
         function setupMobileMenu() {
             const menuToggle = document.querySelector('.mobile-menu-toggle');
             const navLinks = document.querySelector('.nav-links');
-            
+
             if (menuToggle && navLinks) {
                 menuToggle.addEventListener('click', () => {
                     navLinks.classList.toggle('active');
@@ -2483,7 +3184,7 @@
                     }
                 });
             }
-            
+
             const dropdowns = document.querySelectorAll('.dropdown > .nav-link');
             dropdowns.forEach(dropdown => {
                 dropdown.addEventListener('click', function(e) {
@@ -2495,6 +3196,19 @@
                 });
             });
         }
+
+        // Escuchar cambios en localStorage
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'shoppingCart') {
+                cart = JSON.parse(e.newValue) || [];
+                updateCartCount();
+                updateCartDisplay();
+            }
+            if (e.key === 'favorites') {
+                favorites = JSON.parse(e.newValue) || [];
+                updateWishlistCount();
+            }
+        });
     </script>
 </body>
 </html>
