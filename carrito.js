@@ -12,6 +12,9 @@ const VALID_PROMO_CODES = {
     'STYLE10': 0.10 // 10% de descuento
 };
 
+// Backend API base (cambia si tu backend corre en otra URL)
+const API_BASE = 'http://localhost:3000';
+
 // Variables globales para el proceso de checkout
 let currentStep = 1;
 let selectedPaymentMethod = 'card';
@@ -571,7 +574,7 @@ function validateCard() {
 }
 
 // Procesar el pago
-function processPayment() {
+async function processPayment() {
     if (selectedPaymentMethod === 'card') {
         if (!validateCard()) {
             showNotification('Datos de tarjeta inválidos', 'error');
@@ -602,54 +605,59 @@ function processPayment() {
 
     // Simulación de procesamiento exitoso
     showNotification('Procesando pago...', 'info');
-    
-    // Simular un retraso de procesamiento
-    setTimeout(() => {
-        // Vaciar carrito después de pago exitoso
+
+    // Construir payloads
+    const userPayload = {
+        name: orderData.shippingInfo.fullName,
+        email: orderData.shippingInfo.email
+    };
+
+    const itemsPayload = cart.map(item => ({
+        productId: item.id || item.productId || '',
+        name: item.name,
+        qty: item.quantity || 1,
+        price: item.price || 0,
+        userEmail: orderData.shippingInfo.email
+    }));
+
+    try {
+        // Crear/asegurar usuario (backend ignorará duplicados por unique en email)
+        await fetch(`${API_BASE}/api/users`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(userPayload)
+        });
+
+        // Enviar items del carrito al backend
+        const promises = itemsPayload.map(it => fetch(`${API_BASE}/api/cart`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(it)
+        }));
+
+        const responses = await Promise.all(promises);
+        const failed = responses.some(r => !r.ok);
+
+        if (failed) {
+            showNotification('Error al guardar el pedido en el servidor', 'error');
+            console.error('Respuestas del servidor:', responses);
+            return;
+        }
+
+        // Si todo OK, vaciar carrito y mostrar confirmación
         cart = [];
         promoCodeApplied = false;
         discountAmount = 0;
         saveCartToStorage();
         updateCartCount();
-        
-        // Mostrar confirmación
+
         goToStep(4);
         loadConfirmationDetails();
-        
-        showNotification('¡Pago realizado con éxito!', 'success');
-    }, 1500);
-    
-    /* 
-    // Código para cuando tengas el backend listo:
-    try {
-        const resp = await fetch('api/procesar_pedido.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-
-        const result = await resp.json();
-        if (resp.ok && result && result.success) {
-            showNotification('Pedido guardado exitosamente', 'success');
-
-            cart = [];
-            promoCodeApplied = false;
-            discountAmount = 0;
-            saveCartToStorage();
-            updateCartCount();
-
-            goToStep(4);
-            loadConfirmationDetails();
-        } else {
-            const msg = (result && result.message) ? result.message : 'Error al procesar el pedido';
-            showNotification(msg, 'error');
-            console.error('Error:', result);
-        }
+        showNotification('¡Pago y pedido guardados con éxito!', 'success');
     } catch (err) {
-        showNotification('Error de conexión al procesar el pago', 'error');
-        console.error('Error:', err);
+        showNotification('Error de conexión al procesar el pedido', 'error');
+        console.error('Error al enviar al backend:', err);
     }
-    */
 }
 
 // Cargar detalles en la sección de confirmación

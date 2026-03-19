@@ -723,6 +723,7 @@
     </footer>
 
     <script>
+        const API_BASE = 'http://localhost:3000';
         // Función para mostrar notificaciones
         function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
@@ -746,8 +747,8 @@
             showNotification('Has cerrado sesión correctamente', 'info');
         }
 
-        // Manejar el login (simulado - usa localStorage)
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        // Manejar el login (envía al backend)
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const email = document.getElementById('email').value.trim();
@@ -763,58 +764,40 @@
             loginBtn.disabled = true;
             loginBtn.innerHTML = '<span><i class="fas fa-spinner fa-spin"></i> Iniciando sesión...</span>';
 
-            // Simular inicio de sesión
-            setTimeout(() => {
-                // Buscar usuario en localStorage (simulado)
-                const storedUser = localStorage.getItem('currentUser');
-                
-                if (storedUser) {
-                    const user = JSON.parse(storedUser);
-                    
-                    // Verificar credenciales (solo para simulación)
-                    if (user.email === email) {
-                        // Actualizar token
-                        localStorage.setItem('token', 'simulated-token-' + Date.now());
-                        
-                        if (rememberMe) {
-                            localStorage.setItem('rememberedUser', email);
-                        } else {
-                            localStorage.removeItem('rememberedUser');
-                        }
+            try {
+                const resp = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
 
-                        showNotification(`¡Bienvenido/a ${user.fullName}!`);
-
-                        setTimeout(() => {
-                            window.location.href = 'index.html';
-                        }, 1500);
-                    } else {
-                        showNotification('Email o contraseña incorrectos', 'error');
-                        loginBtn.disabled = false;
-                        loginBtn.innerHTML = '<span><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</span>';
-                    }
-                } else {
-                    // Si no hay usuario registrado, crear uno de prueba
-                    const testUser = {
-                        id: 1,
-                        fullName: "Usuario de Prueba",
-                        email: email,
-                        password: password
-                    };
-                    
-                    localStorage.setItem('currentUser', JSON.stringify(testUser));
-                    localStorage.setItem('token', 'simulated-token-' + Date.now());
-                    
-                    if (rememberMe) {
-                        localStorage.setItem('rememberedUser', email);
-                    }
-
-                    showNotification(`¡Bienvenido/a Usuario de Prueba!`);
-
-                    setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 1500);
+                const data = await resp.json();
+                if (!resp.ok) {
+                    const msg = data && data.error ? data.error : 'Error al iniciar sesión';
+                    showNotification(msg, 'error');
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = '<span><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</span>';
+                    return;
                 }
-            }, 1000);
+
+                // Guardar token y usuario
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('currentUser', JSON.stringify({ id: data.user.id, fullName: data.user.name, email: data.user.email }));
+
+                if (rememberMe) {
+                    localStorage.setItem('rememberedUser', email);
+                } else {
+                    localStorage.removeItem('rememberedUser');
+                }
+
+                showNotification(`¡Bienvenido/a ${data.user.name}!`);
+                setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+            } catch (err) {
+                console.error('Login error:', err);
+                showNotification('Error de conexión al iniciar sesión', 'error');
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<span><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</span>';
+            }
         });
 
         // Modal de recuperación de contraseña
