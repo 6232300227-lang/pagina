@@ -12,8 +12,13 @@ const VALID_PROMO_CODES = {
     'STYLE10': 0.10 // 10% de descuento
 };
 
+<<<<<<< HEAD
 // Backend API base (apunta al backend desplegado en Render)
 const API_BASE = 'https://pagina-6ygv.onrender.com';
+=======
+// Backend API base (cambia si tu backend corre en otra URL)
+const API_BASE = 'http://localhost:3000';
+>>>>>>> 912846ebab15edf91427d3ca58da481faee54bd9
 
 // Variables globales para el proceso de checkout
 let currentStep = 1;
