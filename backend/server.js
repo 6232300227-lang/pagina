@@ -105,6 +105,28 @@ app.post('/api/cart', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+function startServer(port, attempt = 0) {
+  const server = app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+
+  server.on('error', (err) => {
+    if (err && err.code === 'EADDRINUSE') {
+      console.warn(`Port ${port} is in use.`);
+      if (attempt < 5) {
+        const nextPort = port + 1;
+        console.warn(`Trying port ${nextPort} (attempt ${attempt + 1})`);
+        // give a short delay before retrying to avoid tight loop
+        setTimeout(() => startServer(nextPort, attempt + 1), 250);
+      } else {
+        console.error(`Unable to bind to a port after ${attempt + 1} attempts. Exiting.`);
+        process.exit(1);
+      }
+    } else {
+      console.error('Server error:', err);
+      process.exit(1);
+    }
+  });
+}
+
+startServer(PORT);

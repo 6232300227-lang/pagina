@@ -1,0 +1,834 @@
+// ===== VARIABLES GLOBALES =====
+        let cart = [];
+        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        let promoCodeApplied = false;
+        let discountAmount = 0;
+        let currentStep = 1;
+        let selectedPaymentMethod = 'card';
+
+        const SHIPPING_COST = 5.99;
+        const SHIPPING_FREE_THRESHOLD = 29.99;
+        const VALID_PROMO_CODES = {
+            'VERANO20': 0.20,
+            'BIENVENIDA': 0.15,
+            'STYLE10': 0.10
+        };
+
+        // Base de datos de productos para búsqueda
+        const productDatabase = [
+            // Mujer
+            { name: 'Vestido Floral', category: 'Mujer', subcategory: 'Vestidos', icon: 'fa-tshirt', url: 'vestidos.html' },
+            { name: 'Blusa de Seda', category: 'Mujer', subcategory: 'Tops y Blusas', icon: 'fa-tshirt', url: 'tops.html' },
+            { name: 'Pantalón Palazzo', category: 'Mujer', subcategory: 'Pantalones', icon: 'fa-tshirt', url: 'pantalones-mujer.html' },
+            { name: 'Falda Plisada', category: 'Mujer', subcategory: 'Faldas', icon: 'fa-tshirt', url: 'faldas.html' },
+            { name: 'Chaqueta de Cuero', category: 'Mujer', subcategory: 'Chaquetas', icon: 'fa-tshirt', url: 'chaquetas-mujer.html' },
+            { name: 'Bolso de Mano', category: 'Mujer', subcategory: 'Bolsos', icon: 'fa-shopping-bag', url: 'bolsos.html' },
+            { name: 'Collar de Plata', category: 'Mujer', subcategory: 'Joyería', icon: 'fa-gem', url: 'joyeria.html' },
+            { name: 'Tacones', category: 'Mujer', subcategory: 'Zapatos', icon: 'fa-shoe-prints', url: 'zapatos-mujer.html' },
+
+            // Hombre
+            { name: 'Camiseta Básica', category: 'Hombre', subcategory: 'Camisetas', icon: 'fa-tshirt', url: 'camisetas.html' },
+            { name: 'Camisa Oxford', category: 'Hombre', subcategory: 'Camisas', icon: 'fa-tshirt', url: 'camisas.html' },
+            { name: 'Pantalón Chino', category: 'Hombre', subcategory: 'Pantalones', icon: 'fa-tshirt', url: 'pantalones-hombre.html' },
+            { name: 'Chaqueta Bomber', category: 'Hombre', subcategory: 'Chaquetas', icon: 'fa-tshirt', url: 'chaquetas.html' },
+            { name: 'Traje Azul Marino', category: 'Hombre', subcategory: 'Trajes', icon: 'fa-tshirt', url: 'trajes.html' },
+            { name: 'Zapatos Derby', category: 'Hombre', subcategory: 'Zapatos', icon: 'fa-shoe-prints', url: 'zapatos-hombre.html' },
+            { name: 'Reloj Cronógrafo', category: 'Hombre', subcategory: 'Relojes', icon: 'fa-clock', url: 'relojes.html' },
+            { name: 'Cinturón de Cuero', category: 'Hombre', subcategory: 'Cinturones', icon: 'fa-belt', url: 'cinturones.html' },
+
+            // Niños
+            { name: 'Tops para niñas', category: 'Niños', subcategory: 'Tops', icon: 'fa-tshirt', url: 'tops-niña.html' },
+            { name: 'Pantalones para niñas', category: 'Niños', subcategory: 'Pantalones', icon: 'fa-tshirt', url: 'pantalones-niña.html' },
+            { name: 'Camisetas para niños', category: 'Niños', subcategory: 'Camisetas', icon: 'fa-tshirt', url: 'camisetas-niños.html' },
+            { name: 'Pantalones para niño', category: 'Niños', subcategory: 'Pantalones', icon: 'fa-tshirt', url: 'pantalones-niño.html' },
+            { name: 'Chaquetas para niño', category: 'Niños', subcategory: 'Chaquetas', icon: 'fa-tshirt', url: 'chaquetas-niño.html' },
+
+            // Páginas generales
+            { name: 'Novedades', category: 'Página', subcategory: 'Colección 2024', icon: 'fa-star', url: 'novedades.html' },
+            { name: 'Ofertas', category: 'Página', subcategory: 'Descuentos', icon: 'fa-tag', url: 'ofertas.html' },
+            { name: 'Colecciones', category: 'Página', subcategory: 'Diseños exclusivos', icon: 'fa-palette', url: 'colecciones.html' }
+        ];
+
+        // ===== FUNCIONES DE INICIALIZACIÓN =====
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCartFromStorage();
+            updateCartDisplay();
+            updateCartCount();
+            updateWishlistCount();
+            setupEventListeners();
+            setupMobileMenu();
+            setupSearch();
+            updateUserInterface();
+        });
+
+        // ===== FUNCIONES DE BÚSQUEDA =====
+        function searchProducts(query) {
+            if (!query || query.trim() === '') {
+                return [];
+            }
+
+            const searchTerm = query.toLowerCase().trim();
+
+            return productDatabase.filter(product => {
+                return product.name.toLowerCase().includes(searchTerm) ||
+                       product.category.toLowerCase().includes(searchTerm) ||
+                       product.subcategory.toLowerCase().includes(searchTerm);
+            });
+        }
+
+        function groupByCategory(results) {
+            const groups = {};
+            results.forEach(product => {
+                if (!groups[product.category]) {
+                    groups[product.category] = [];
+                }
+                groups[product.category].push(product);
+            });
+            return groups;
+        }
+
+        function showSuggestions(results) {
+            const suggestionsDiv = document.getElementById('searchSuggestions');
+            if (!suggestionsDiv) return;
+
+            if (results.length === 0) {
+                suggestionsDiv.innerHTML = `
+                    <div class="suggestions-header">
+                        <i class="fas fa-search"></i>
+                        <span>BÚSQUEDA</span>
+                    </div>
+                    <div class="no-suggestions">
+                        <i class="fas fa-box-open"></i>
+                        <p>No se encontraron productos</p>
+                        <small>Intenta con otras palabras</small>
+                    </div>
+                    <div class="suggestion-footer">
+                        <i class="fas fa-arrow-up"></i> Presiona Enter para buscar <i class="fas fa-arrow-down"></i>
+                    </div>
+                `;
+                suggestionsDiv.classList.add('active');
+                return;
+            }
+
+            const groupedResults = groupByCategory(results);
+            const categories = Object.keys(groupedResults);
+
+            let html = `
+                <div class="suggestions-header">
+                    <i class="fas fa-search"></i>
+                    <span>SUGERENCIAS (${results.length} resultados)</span>
+                </div>
+            `;
+
+            categories.slice(0, 3).forEach(category => {
+                const products = groupedResults[category].slice(0, 3);
+
+                html += `
+                    <div class="suggestion-group">
+                        <div class="suggestion-group-title">
+                            <i class="fas fa-tag"></i> ${category}
+                        </div>
+                `;
+
+                products.forEach(product => {
+                    html += `
+                        <div class="suggestion-item" data-url="${product.url}">
+                            <i class="fas ${product.icon}"></i>
+                            <div class="suggestion-info">
+                                <div class="suggestion-name">${product.name}</div>
+                                <div class="suggestion-category">
+                                    <i class="fas fa-angle-right"></i>
+                                    ${product.subcategory}
+                                </div>
+                            </div>
+                            <span class="suggestion-badge">${product.category}</span>
+                        </div>
+                    `;
+                });
+
+                if (groupedResults[category].length > 3) {
+                    html += `
+                        <div class="suggestion-item view-more" data-category="${category}">
+                            <i class="fas fa-plus-circle"></i>
+                            <div class="suggestion-info">
+                                <div class="suggestion-name">Ver más de ${category}</div>
+                                <div class="suggestion-category">${groupedResults[category].length - 3} productos más</div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                html += `</div>`;
+            });
+
+            if (results.length > 9) {
+                html += `
+                    <div class="suggestion-footer">
+                        <i class="fas fa-search"></i> 
+                        Mostrando 9 de ${results.length} resultados. 
+                        <strong id="viewAllResults">Ver todos los resultados</strong>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="suggestion-footer">
+                        <i class="fas fa-arrow-up"></i> Presiona Enter para buscar <i class="fas fa-arrow-down"></i>
+                    </div>
+                `;
+            }
+
+            suggestionsDiv.innerHTML = html;
+            suggestionsDiv.classList.add('active');
+
+            document.querySelectorAll('.suggestion-item[data-url]').forEach(item => {
+                item.addEventListener('click', function() {
+                    window.location.href = this.dataset.url;
+                });
+            });
+
+            const viewAllBtn = document.getElementById('viewAllResults');
+            if (viewAllBtn) {
+                viewAllBtn.addEventListener('click', function() {
+                    const query = document.getElementById('searchInput').value;
+                    showSearchResults(query);
+                    suggestionsDiv.classList.remove('active');
+                });
+            }
+        }
+
+        function showSearchResults(query) {
+            const results = searchProducts(query);
+            const modal = document.getElementById('searchModal');
+            const statsDiv = document.getElementById('searchStats');
+            const resultsGrid = document.getElementById('searchResultsGrid');
+
+            if (!modal || !statsDiv || !resultsGrid) return;
+
+            statsDiv.innerHTML = `Se encontraron <strong>${results.length}</strong> resultados para "<strong>${query}</strong>"`;
+
+            if (results.length === 0) {
+                resultsGrid.innerHTML = `
+                    <div class="no-results" style="grid-column: 1 / -1;">
+                        <i class="fas fa-search"></i>
+                        <h3>No se encontraron resultados</h3>
+                        <p>Intenta con otras palabras clave</p>
+                    </div>
+                `;
+            } else {
+                resultsGrid.innerHTML = results.map(product => {
+                    return `
+                        <div class="search-result-card" data-url="${product.url}">
+                            <i class="fas ${product.icon} search-result-icon"></i>
+                            <div class="search-result-title">${product.name}</div>
+                            <div class="search-result-category">${product.category} - ${product.subcategory}</div>
+                        </div>
+                    `;
+                }).join('');
+
+                document.querySelectorAll('.search-result-card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        window.location.href = this.dataset.url;
+                    });
+                });
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            const suggestionsDiv = document.getElementById('searchSuggestions');
+            const closeModal = document.getElementById('closeSearchModal');
+            const modal = document.getElementById('searchModal');
+
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    const query = e.target.value;
+                    if (query.trim().length >= 2) {
+                        const results = searchProducts(query);
+                        showSuggestions(results);
+                    } else {
+                        suggestionsDiv.classList.remove('active');
+                    }
+                });
+
+                document.addEventListener('click', function(e) {
+                    if (!searchInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
+                        suggestionsDiv.classList.remove('active');
+                    }
+                });
+
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const query = e.target.value;
+                        if (query.trim()) {
+                            showSearchResults(query);
+                            suggestionsDiv.classList.remove('active');
+                        }
+                    }
+                });
+            }
+
+            if (searchButton) {
+                searchButton.addEventListener('click', function() {
+                    const query = searchInput.value;
+                    if (query.trim()) {
+                        showSearchResults(query);
+                        suggestionsDiv.classList.remove('active');
+                    }
+                });
+            }
+
+            if (closeModal) {
+                closeModal.addEventListener('click', function() {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            }
+
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                });
+            }
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal && modal.classList.contains('active')) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        }
+
+        // ===== FUNCIONES DE FAVORITOS =====
+        function updateWishlistCount() {
+            const wishlistCount = document.getElementById('wishlistCount');
+            if (wishlistCount) {
+                wishlistCount.textContent = favorites.length;
+                wishlistCount.style.transform = 'scale(1.3)';
+                setTimeout(() => {
+                    wishlistCount.style.transform = 'scale(1)';
+                }, 300);
+            }
+        }
+
+        // ===== FUNCIONES DEL CARRITO =====
+        function loadCartFromStorage() {
+            const savedCart = localStorage.getItem('shoppingCart');
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+                cart = cart.map(item => ({
+                    ...item,
+                    quantity: item.quantity || 1
+                }));
+            } else {
+                cart = [];
+            }
+        }
+
+        function saveCartToStorage() {
+            localStorage.setItem('shoppingCart', JSON.stringify(cart));
+        }
+
+        function updateCartDisplay() {
+            updateCartItems();
+            updateOrderSummary();
+        }
+
+        function updateCartItems() {
+            const cartItemsContainer = document.getElementById('cartItemsContainer');
+            const cartItemsCount = document.getElementById('cartItemsCount');
+            const proceedBtn = document.getElementById('proceedToInfo');
+
+            if (!cartItemsContainer) return;
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="empty-cart">
+                        <div class="empty-cart-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <h3>Tu carrito está vacío</h3>
+                        <p>Agrega productos desde la tienda para comenzar tu compra</p>
+                        <a href="index.html" class="explore-btn">Explorar Productos</a>
+                    </div>
+                `;
+                if (proceedBtn) proceedBtn.disabled = true;
+                if (cartItemsCount) cartItemsCount.textContent = '(0 productos)';
+            } else {
+                let html = '';
+
+                cart.forEach((item, index) => {
+                    const quantity = item.quantity || 1;
+                    const itemTotal = item.price * quantity;
+
+                    html += `
+                        <div class="cart-item" data-index="${index}">
+                            <div class="cart-item-image">
+                                <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/300x400?text=Sin+Imagen'">
+                            </div>
+                            <div class="cart-item-details">
+                                <h3 class="cart-item-title">${item.name}</h3>
+                                <div class="cart-item-price">
+                                    <span>$${item.price.toFixed(2)}</span>
+                                    ${item.originalPrice ? `<span class="cart-item-original-price">$${item.originalPrice.toFixed(2)}</span>` : ''}
+                                </div>
+                                <div class="cart-item-actions">
+                                    <div class="quantity-controls">
+                                        <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">-</button>
+                                        <span class="quantity-display">${quantity}</span>
+                                        <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">+</button>
+                                    </div>
+                                    <button class="remove-btn" onclick="removeFromCart(${index})">
+                                        <i class="fas fa-trash-alt"></i> Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="cart-item-total">
+                                <div class="cart-item-total-price">$${itemTotal.toFixed(2)}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                cartItemsContainer.innerHTML = html;
+                if (proceedBtn) proceedBtn.disabled = false;
+
+                const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+                if (cartItemsCount) cartItemsCount.textContent = `(${totalItems} ${totalItems === 1 ? 'producto' : 'productos'})`;
+            }
+        }
+
+        function updateQuantity(index, change) {
+            if (cart[index]) {
+                cart[index].quantity = (cart[index].quantity || 1) + change;
+
+                if (cart[index].quantity <= 0) {
+                    cart.splice(index, 1);
+                }
+
+                saveCartToStorage();
+                updateCartDisplay();
+                updateCartCount();
+                showNotification('Cantidad actualizada', 'success');
+            }
+        }
+
+        function removeFromCart(index) {
+            const productName = cart[index].name;
+            cart.splice(index, 1);
+            saveCartToStorage();
+            updateCartDisplay();
+            updateCartCount();
+            showNotification(`${productName} eliminado del carrito`, 'success');
+        }
+
+        function clearCart() {
+            if (cart.length === 0) return;
+
+            if (confirm('¿Estás seguro de que quieres vaciar todo el carrito?')) {
+                cart = [];
+                saveCartToStorage();
+                updateCartDisplay();
+                updateCartCount();
+                showNotification('Carrito vaciado correctamente', 'success');
+            }
+        }
+
+        function updateCartCount() {
+            const cartCount = document.getElementById('cartCount');
+            if (cartCount) {
+                const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+                cartCount.textContent = totalItems;
+                cartCount.style.transform = 'scale(1.3)';
+                setTimeout(() => {
+                    cartCount.style.transform = 'scale(1)';
+                }, 300);
+            }
+        }
+
+        function updateOrderSummary() {
+            const subtotal = cart.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
+            const shipping = subtotal >= SHIPPING_FREE_THRESHOLD ? 0 : SHIPPING_COST;
+            let discount = 0;
+
+            if (promoCodeApplied && subtotal > 0) {
+                discount = subtotal * discountAmount;
+            }
+
+            const total = subtotal + shipping - discount;
+
+            const subtotalElement = document.getElementById('subtotal');
+            const shippingElement = document.getElementById('shipping');
+            const discountElement = document.getElementById('discount');
+            const totalElement = document.getElementById('total');
+
+            if (subtotalElement) subtotalElement.textContent = `$${subtotal.toFixed(2)}`;
+            if (shippingElement) shippingElement.textContent = shipping === 0 ? 'Gratis' : `$${shipping.toFixed(2)}`;
+            if (discountElement) discountElement.textContent = discount > 0 ? `-$${discount.toFixed(2)}` : '$0.00';
+            if (totalElement) totalElement.textContent = `$${total.toFixed(2)}`;
+        }
+
+        // ===== FUNCIONES DE PROMOCIONES =====
+        function applyPromoCode() {
+            const promoCodeInput = document.getElementById('promoCode');
+            if (!promoCodeInput) return;
+
+            const code = promoCodeInput.value.trim().toUpperCase();
+
+            if (!code) {
+                showNotification('Por favor ingresa un código promocional', 'error');
+                return;
+            }
+
+            if (VALID_PROMO_CODES[code]) {
+                promoCodeApplied = true;
+                discountAmount = VALID_PROMO_CODES[code];
+                updateOrderSummary();
+
+                showNotification(`¡Código ${code} aplicado! Descuento del ${discountAmount * 100}%`);
+
+                promoCodeInput.disabled = true;
+                const applyBtn = document.querySelector('.apply-promo-btn');
+                if (applyBtn) {
+                    applyBtn.disabled = true;
+                    applyBtn.textContent = 'Aplicado';
+                }
+            } else {
+                showNotification('Código promocional inválido', 'error');
+                promoCodeInput.value = '';
+            }
+        }
+
+        // ===== FUNCIONES DE NAVEGACIÓN =====
+        function goToStep(step) {
+            if (step > 1 && cart.length === 0) {
+                showNotification('Tu carrito está vacío', 'error');
+                return;
+            }
+
+            for (let i = 1; i <= 4; i++) {
+                const circle = document.getElementById(`step${i}Circle`);
+                const label = document.getElementById(`step${i}Label`);
+                const container = document.getElementById(`step${i}`);
+
+                if (i < step) {
+                    if (circle) circle.className = 'step-circle completed';
+                    if (label) label.className = 'step-label completed';
+                } else if (i === step) {
+                    if (circle) circle.className = 'step-circle active';
+                    if (label) label.className = 'step-label active';
+                } else {
+                    if (circle) circle.className = 'step-circle';
+                    if (label) label.className = 'step-label';
+                }
+
+                if (container) {
+                    container.className = i === step ? 'step-container active' : 'step-container';
+                }
+            }
+
+            currentStep = step;
+
+            if (step === 4) {
+                loadConfirmationDetails();
+            }
+        }
+
+        function validateAndGoToPayment() {
+            if (validateInfo()) {
+                goToStep(3);
+            }
+        }
+
+        function validateInfo() {
+            const fields = ['fullName', 'email', 'phone', 'address', 'city', 'zipCode'];
+            let isValid = true;
+
+            fields.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    if (!element.value.trim()) {
+                        element.classList.add('error');
+                        isValid = false;
+                    } else {
+                        element.classList.remove('error');
+                    }
+                }
+            });
+
+            const email = document.getElementById('email');
+            if (email && email.value.trim()) {
+                if (!email.value.includes('@') || !email.value.includes('.')) {
+                    email.classList.add('error');
+                    isValid = false;
+                }
+            }
+
+            if (!isValid) {
+                showNotification('Por favor completa todos los campos correctamente', 'error');
+                return false;
+            }
+
+            return true;
+        }
+
+        function selectPaymentMethod(method, element) {
+            selectedPaymentMethod = method;
+
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('selected');
+            });
+
+            element.classList.add('selected');
+
+            const cardDetails = document.getElementById('cardDetails');
+            if (cardDetails) {
+                cardDetails.style.display = method === 'card' ? 'block' : 'none';
+            }
+        }
+
+        function processPayment() {
+            if (selectedPaymentMethod === 'card') {
+                if (!validateCard()) {
+                    showNotification('Datos de tarjeta inválidos', 'error');
+                    return;
+                }
+            }
+
+            if (cart.length === 0) {
+                showNotification('Tu carrito está vacío', 'error');
+                return;
+            }
+
+            showNotification('Procesando pago...', 'info');
+
+            setTimeout(() => {
+                const date = new Date();
+                const year = date.getFullYear();
+                const random = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+                const orderNumber = `#SH-${year}-${random}`;
+
+                document.getElementById('orderNumber').textContent = orderNumber;
+
+                cart = [];
+                promoCodeApplied = false;
+                discountAmount = 0;
+                saveCartToStorage();
+                updateCartCount();
+
+                goToStep(4);
+                loadConfirmationDetails();
+
+                showNotification('¡Pago realizado con éxito!', 'success');
+            }, 1500);
+        }
+
+        function validateCard() {
+            const cardNumber = document.getElementById('cardNumber');
+            const expiryDate = document.getElementById('expiryDate');
+            const cvv = document.getElementById('cvv');
+            const cardHolder = document.getElementById('cardHolder');
+
+            if (!cardNumber || !expiryDate || !cvv || !cardHolder) return false;
+
+            const cardNumberValue = cardNumber.value.replace(/\s/g, '');
+            const expiryDateValue = expiryDate.value;
+            const cvvValue = cvv.value;
+            const cardHolderValue = cardHolder.value.trim();
+
+            let isValid = true;
+
+            if (!cardNumberValue || cardNumberValue.length < 16) {
+                cardNumber.classList.add('error');
+                isValid = false;
+            } else {
+                cardNumber.classList.remove('error');
+            }
+
+            if (!expiryDateValue || expiryDateValue.length < 5) {
+                expiryDate.classList.add('error');
+                isValid = false;
+            } else {
+                expiryDate.classList.remove('error');
+            }
+
+            if (!cvvValue || cvvValue.length < 3) {
+                cvv.classList.add('error');
+                isValid = false;
+            } else {
+                cvv.classList.remove('error');
+            }
+
+            if (!cardHolderValue) {
+                cardHolder.classList.add('error');
+                isValid = false;
+            } else {
+                cardHolder.classList.remove('error');
+            }
+
+            return isValid;
+        }
+
+        function loadConfirmationDetails() {
+            const container = document.getElementById('confirmationDetails');
+            if (!container) return;
+
+            const fullName = document.getElementById('fullName')?.value || '';
+            const email = document.getElementById('email')?.value || '';
+            const address = document.getElementById('address')?.value || '';
+            const city = document.getElementById('city')?.value || '';
+            const zipCode = document.getElementById('zipCode')?.value || '';
+            const phone = document.getElementById('phone')?.value || '';
+
+            const subtotal = cart.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
+            const shipping = subtotal >= SHIPPING_FREE_THRESHOLD ? 0 : SHIPPING_COST;
+            const discount = promoCodeApplied ? subtotal * discountAmount : 0;
+            const total = subtotal + shipping - discount;
+
+            container.innerHTML = `
+                <div class="detail-row">
+                    <span class="detail-label">Nombre:</span>
+                    <span class="detail-value">${fullName || 'No especificado'}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Email:</span>
+                    <span class="detail-value">${email || 'No especificado'}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Dirección:</span>
+                    <span class="detail-value">${address || ''}, ${city || ''} ${zipCode || ''}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Teléfono:</span>
+                    <span class="detail-value">${phone || 'No especificado'}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Subtotal:</span>
+                    <span class="detail-value">$${Number(subtotal).toFixed(2)}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Envío:</span>
+                    <span class="detail-value">${shipping === 0 ? 'Gratis' : '$' + Number(shipping).toFixed(2)}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Descuento:</span>
+                    <span class="detail-value">-$${Number(discount).toFixed(2)}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Total:</span>
+                    <span class="detail-value" style="font-weight: 800; color: #ff3366;">$${Number(total).toFixed(2)}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Método de pago:</span>
+                    <span class="detail-value">${selectedPaymentMethod === 'card' ? 'Tarjeta de Crédito/Débito' : 'PayPal'}</span>
+                </div>
+            `;
+        }
+
+        // ===== FUNCIONES AUXILIARES =====
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
+        }
+
+        function setupEventListeners() {
+            const cardNumber = document.getElementById('cardNumber');
+            if (cardNumber) {
+                cardNumber.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+                    e.target.value = value;
+                });
+            }
+
+            const expiryDate = document.getElementById('expiryDate');
+            if (expiryDate) {
+                expiryDate.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length >= 2) {
+                        value = value.substring(0,2) + '/' + value.substring(2,4);
+                    }
+                    e.target.value = value;
+                });
+            }
+
+            const cvv = document.getElementById('cvv');
+            if (cvv) {
+                cvv.addEventListener('input', function(e) {
+                    e.target.value = e.target.value.replace(/\D/g, '');
+                });
+            }
+        }
+
+        function updateUserInterface() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const accountLink = document.getElementById('accountLink');
+            const accountText = document.getElementById('accountText');
+
+            if (currentUser && accountText) {
+                const firstName = currentUser.fullName ? currentUser.fullName.split(' ')[0] : 'Usuario';
+                accountText.textContent = firstName;
+            }
+        }
+
+        function setupMobileMenu() {
+            const menuToggle = document.querySelector('.mobile-menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+
+            if (menuToggle && navLinks) {
+                menuToggle.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                    const icon = menuToggle.querySelector('i');
+                    if (icon) {
+                        if (navLinks.classList.contains('active')) {
+                            icon.classList.remove('fa-bars');
+                            icon.classList.add('fa-times');
+                        } else {
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    }
+                });
+            }
+
+            const dropdowns = document.querySelectorAll('.dropdown > .nav-link');
+            dropdowns.forEach(dropdown => {
+                dropdown.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 992) {
+                        e.preventDefault();
+                        const parent = this.parentElement;
+                        parent.classList.toggle('active');
+                    }
+                });
+            });
+        }
+
+        // Escuchar cambios en localStorage
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'shoppingCart') {
+                cart = JSON.parse(e.newValue) || [];
+                updateCartCount();
+                updateCartDisplay();
+            }
+            if (e.key === 'favorites') {
+                favorites = JSON.parse(e.newValue) || [];
+                updateWishlistCount();
+            }
+        });
