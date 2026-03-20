@@ -681,6 +681,7 @@
     </footer>
 
     <script>
+        const API_BASE = 'https://pagina-6ygv.onrender.com';
         // Función para mostrar notificaciones
         function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
@@ -745,10 +746,10 @@
             }
         });
 
-        // Manejar el registro (simulado - guarda en localStorage)
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
+        // Manejar el registro (envía al backend)
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
+
             const fullName = document.getElementById('fullName').value.trim();
             const email = document.getElementById('email').value.trim();
             const phone = document.getElementById('phone').value.trim();
@@ -756,58 +757,65 @@
             const confirmPassword = document.getElementById('confirmPassword').value;
             const terms = document.getElementById('terms').checked;
             const registerBtn = document.getElementById('registerBtn');
-            
+
             // Validaciones
             if (!fullName || !email || !password || !confirmPassword) {
                 showNotification('Por favor completa todos los campos obligatorios', 'error');
                 return;
             }
-            
+
             if (password !== confirmPassword) {
                 showNotification('Las contraseñas no coinciden', 'error');
                 return;
             }
-            
+
             if (password.length < 8) {
                 showNotification('La contraseña debe tener al menos 8 caracteres', 'error');
                 return;
             }
-            
+
             if (!terms) {
                 showNotification('Debes aceptar los términos y condiciones', 'error');
                 return;
             }
-            
+
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 showNotification('Por favor ingresa un email válido', 'error');
                 return;
             }
-            
+
             registerBtn.disabled = true;
             registerBtn.innerHTML = '<span><i class="fas fa-spinner fa-spin"></i> Registrando...</span>';
-            
-            // Simular registro exitoso (guardar en localStorage)
-            setTimeout(() => {
-                // Crear usuario simulado
-                const newUser = {
-                    id: Date.now(),
-                    fullName: fullName,
-                    email: email,
-                    phone: phone,
-                    password: password // En un caso real, esto estaría hasheado
-                };
-                
-                // Guardar en localStorage
-                localStorage.setItem('currentUser', JSON.stringify(newUser));
-                localStorage.setItem('token', 'simulated-token-' + Date.now());
-                
-                showNotification(`¡Bienvenido/a ${fullName}! Registro exitoso.`);
-                
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1500);
-            }, 1000);
+
+            try {
+                const resp = await fetch(`${API_BASE}/api/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: fullName, email, password })
+                });
+
+                const data = await resp.json();
+                if (!resp.ok) {
+                    const msg = data && data.error ? data.error : 'Error al registrar';
+                    showNotification(msg, 'error');
+                    registerBtn.disabled = false;
+                    registerBtn.innerHTML = '<span><i class="fas fa-user-check"></i> Crear Cuenta</span>';
+                    return;
+                }
+
+                // Guardar token y usuario
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('currentUser', JSON.stringify({ id: data.user.id, fullName: data.user.name, email: data.user.email }));
+
+                showNotification(`¡Bienvenido/a ${data.user.name}! Registro exitoso.`);
+                setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+            } catch (err) {
+                console.error('Error registering:', err);
+                showNotification('Error de conexión al registrar', 'error');
+                registerBtn.disabled = false;
+                registerBtn.innerHTML = '<span><i class="fas fa-user-check"></i> Crear Cuenta</span>';
+            }
         });
 
         // Verificar si ya hay sesión iniciada
