@@ -5,7 +5,7 @@ Instrucciones rápidas para ejecutar el backend localmente y conectarlo a MongoD
 1. Crear `.env` en `backend/` (puedes copiar `.env.example`):
 
 ```
-MONGODB_URI="mongodb://localhost:27017/pagina_dev"
+MONGODB_URI="mongodb://localhost:27017/pagina_prod"
 PORT=3000
 JWT_SECRET="pon_una_clave_segura_aqui"
 ```
