@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="assets/css/pages/usuarios.css">
 </head>
 <body>
-    <!-- Top Bar - SIN MI CUENTA -->
+    <!-- Top Bar Premium -->
     <div class="top-bar">
         <div class="container top-bar-content">
             <div class="top-message">¡Envío gratis en pedidos superiores a $49.99!</div>
@@ -21,25 +21,55 @@
         </div>
     </div>
 
-    <!-- Header con enlace a index.html -->
-    <header class="main-header">
-        <div class="container header-content">
-            <a href="index.html" class="logo">
-                <i class="fas fa-crown"></i>
-                Style<span>Hub</span>
-            </a>
+    <!-- Header Premium -->
+    <header>
+        <div class="container main-header">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-crown"></i>
+                    Style<span>Hub</span>
+                </a>
 
-            <a href="index.html" class="back-home">
-                <i class="fas fa-arrow-left"></i>
-                Volver a la tienda
-            </a>
+                <button class="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Buscar productos, marcas y más...">
+                    <button type="submit" id="searchButton"><i class="fas fa-search"></i></button>
+
+                    <!-- Sugerencias de búsqueda mejoradas -->
+                    <div class="search-suggestions" id="searchSuggestions"></div>
+                </div>
+
+                <div class="user-actions">
+                    <a href="#" class="account-link" id="accountLink" onclick="openAuthModal(event)">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="accountText">Mi cuenta</span>
+                    </a>
+                    <div class="wishlist-wrapper">
+                        <a href="Favoritos.html" class="wishlist-link">
+                            <i class="fas fa-heart"></i>
+                            <span>Favoritos</span>
+                        </a>
+                        <span class="wishlist-count" id="wishlistCount">0</span>
+                    </div>
+                    <div class="cart-wrapper">
+                        <a href="carrito.html" class="cart-link">
+                            <i class="fas fa-shopping-bag"></i>
+                            <span>Carrito</span>
+                        </a>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </div>
+                </div>
+            </div>
         </div>
-    </header>
 
-<nav>
+        <!-- Navigation Premium con Dropdowns -->
+        <nav>
             <div class="container">
                 <ul class="nav-links">
-                    <li><a href="index.html" class="nav-link active"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Inicio</a></li>
 
                     <!-- Dropdown Mujer -->
                     <li class="dropdown">
@@ -99,6 +129,7 @@
                 </ul>
             </div>
         </nav>
+    </header>
 
     <!-- Sección de Login -->
     <section class="login-section">
@@ -111,7 +142,7 @@
                 </div>
 
                 <div class="login-form">
-                    <form id="loginForm">
+                    <form id="loginFormPage">
                         <div class="form-group">
                             <label><i class="fas fa-envelope"></i> Correo electrónico</label>
                             <input type="email" id="email" placeholder="tucorreo@ejemplo.com" required>
@@ -132,14 +163,14 @@
                             </a>
                         </div>
 
-                        <button type="submit" class="login-btn" id="loginBtn">
+                        <button type="submit" class="login-btn" id="loginBtnPage">
                             <span><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</span>
                         </button>
                     </form>
 
                     <div class="register-link">
                         <p>¿No tienes una cuenta?</p>
-                        <a href="registro.html" class="btn-outline" style="display: inline-block; padding: 14px 30px; border: 2px solid var(--primary); border-radius: 50px; color: var(--primary); text-decoration: none; font-weight: 700; transition: var(--transition);">
+                        <a href="#" onclick="openAuthModal(event); switchAuthTab('register'); return false;" class="btn-outline" style="display: inline-block; padding: 14px 30px; border: 2px solid var(--primary); border-radius: 50px; color: var(--primary); text-decoration: none; font-weight: 700; transition: var(--transition);">
                             <i class="fas fa-user-plus"></i> Crear cuenta nueva
                         </a>
                     </div>
@@ -147,11 +178,11 @@
                     <div class="social-login">
                         <p>O continúa con</p>
                         <div class="social-buttons">
-                            <a href="#" class="social-btn google" id="googleLogin">
+                            <a href="#" class="social-btn google">
                                 <i class="fab fa-google"></i>
                                 Google
                             </a>
-                            <a href="#" class="social-btn facebook" id="facebookLogin">
+                            <a href="#" class="social-btn facebook">
                                 <i class="fab fa-facebook-f"></i>
                                 Facebook
                             </a>
@@ -179,16 +210,131 @@
         </div>
     </div>
 
-    <!-- Footer simplificado -->
-    <footer style="background: var(--secondary); color: white; padding: 40px 0; margin-top: 60px;">
+    <!-- Modal de Resultados de Búsqueda -->
+    <div class="search-modal" id="searchModal">
+        <div class="search-modal-content">
+            <div class="search-modal-header">
+                <h2>Resultados de búsqueda</h2>
+                <button class="close-modal" id="closeSearchModal">&times;</button>
+            </div>
+            <div class="search-stats" id="searchStats"></div>
+            <div class="search-results-grid" id="searchResultsGrid"></div>
+        </div>
+    </div>
+
+    <!-- Modal de Autenticación -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-modal-content">
+            <button class="auth-close" onclick="closeAuthModal()">&times;</button>
+            
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="switchAuthTab('login')" id="loginTab">Iniciar Sesión</div>
+                <div class="auth-tab" onclick="switchAuthTab('register')" id="registerTab">Registrarse</div>
+            </div>
+
+            <!-- Formulario de Login -->
+            <div class="auth-form active" id="loginFormModal">
+                <div class="error-message" id="loginError" style="display: none;"></div>
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="loginEmailModal">Email</label>
+                        <input type="email" id="loginEmailModal" required placeholder="tu@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPasswordModal">Contraseña</label>
+                        <input type="password" id="loginPasswordModal" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="auth-submit">
+                        <span>Iniciar Sesión</span>
+                    </button>
+                </form>
+                <div class="auth-footer">
+                    ¿No tienes cuenta? <a onclick="switchAuthTab('register')">Regístrate</a>
+                </div>
+            </div>
+
+            <!-- Formulario de Registro -->
+            <div class="auth-form" id="registerFormModal">
+                <div class="error-message" id="registerError" style="display: none;"></div>
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="registerNameModal">Nombre completo</label>
+                        <input type="text" id="registerNameModal" required placeholder="María García">
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmailModal">Email</label>
+                        <input type="email" id="registerEmailModal" required placeholder="maria@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPasswordModal">Contraseña</label>
+                        <input type="password" id="registerPasswordModal" required placeholder="Mínimo 6 caracteres">
+                    </div>
+                    <button type="submit" class="auth-submit">
+                        <span>Crear Cuenta</span>
+                    </button>
+                </form>
+                <div class="auth-footer">
+                    ¿Ya tienes cuenta? <a onclick="switchAuthTab('login')">Inicia sesión</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Premium -->
+    <footer>
         <div class="container">
-            <div class="copyright" style="text-align: center;">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>StyleHub Premium</h3>
+                    <p>Tu destino de moda premium online con las últimas tendencias internacionales.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Ayuda Premium</h3>
+                    <ul>
+                        <li><a href="ayuda.html"><i class="fas fa-headset"></i> Centro de ayuda 24/7</a></li>
+                        <li><a href="como-comprar.html"><i class="fas fa-shopping-cart"></i> Cómo comprar</a></li>
+                        <li><a href="guia-tallas.html"><i class="fas fa-ruler-combined"></i> Guía de tallas premium</a></li>
+                        <li><a href="envios.html"><i class="fas fa-shipping-fast"></i> Envíos express</a></li>
+                        <li><a href="devoluciones.html"><i class="fas fa-undo-alt"></i> Devoluciones premium</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Acerca de</h3>
+                    <ul>
+                        <li><a href="sobre-nosotros.html"><i class="fas fa-info-circle"></i> Sobre nosotros</a></li>
+                        <li><a href="trabaja-con-nosotros.html"><i class="fas fa-briefcase"></i> Trabaja con nosotros</a></li>
+                        <li><a href="terminos.html"><i class="fas fa-file-contract"></i> Términos premium</a></li>
+                        <li><a href="privacidad.html"><i class="fas fa-shield-alt"></i> Privacidad</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Contacto Premium</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> soporte@stylehub.com</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Calle Moda 123, Madrid</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright">
                 <p>&copy; 2024 StyleHub Premium. Todos los derechos reservados.</p>
-                <p>Desarrollado con <i class="fas fa-heart" style="color: var(--primary);"></i> para los amantes de la moda premium</p>
+                <p>Desarrollado con <i class="fas fa-heart"></i> para los amantes de la moda premium</p>
             </div>
         </div>
     </footer>
 
+    <script src="assets/js/pages/index.js"></script>
     <script src="assets/js/pages/usuarios.js"></script>
 </body>
 </html>

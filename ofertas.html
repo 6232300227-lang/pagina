@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="assets/css/pages/ofertas.css">
 </head>
 <body>
-    <!-- Top Bar - SIN MI CUENTA -->
+    <!-- Top Bar Premium -->
     <div class="top-bar">
         <div class="container top-bar-content">
             <div class="top-message">¡Envío gratis en pedidos superiores a $49.99!</div>
@@ -21,7 +21,7 @@
         </div>
     </div>
 
-    <!-- Header -->
+    <!-- Header Premium -->
     <header>
         <div class="container main-header">
             <div class="header-content">
@@ -29,42 +29,47 @@
                     <i class="fas fa-crown"></i>
                     Style<span>Hub</span>
                 </a>
-                
+
                 <button class="mobile-menu-toggle">
                     <i class="fas fa-bars"></i>
                 </button>
-                
+
                 <div class="search-bar">
-                    <input type="text" placeholder="Buscar ofertas, productos y más...">
-                    <button type="submit"><i class="fas fa-search"></i></button>
+                    <input type="text" id="searchInput" placeholder="Buscar ofertas, productos y más...">
+                    <button type="submit" id="searchButton"><i class="fas fa-search"></i></button>
+
+                    <!-- Sugerencias de búsqueda mejoradas -->
+                    <div class="search-suggestions" id="searchSuggestions"></div>
                 </div>
-                
+
                 <div class="user-actions">
-                    <a href="registro.html" class="account-link" id="accountLink">
+                    <a href="#" class="account-link" id="accountLink" onclick="openAuthModal(event)">
                         <i class="fas fa-user-circle"></i>
                         <span id="accountText">Mi cuenta</span>
                     </a>
-                    <a href="Favoritos.html" class="wishlist-link">
-                        <i class="fas fa-heart"></i>
-                        <span>Favoritos</span>
+                    <div class="wishlist-wrapper">
+                        <a href="Favoritos.html" class="wishlist-link">
+                            <i class="fas fa-heart"></i>
+                            <span>Favoritos</span>
+                        </a>
                         <span class="wishlist-count" id="wishlistCount">0</span>
-                    </a>
+                    </div>
                     <div class="cart-wrapper">
                         <a href="carrito.html" class="cart-link">
                             <i class="fas fa-shopping-bag"></i>
                             <span>Carrito</span>
                         </a>
-                        <div class="cart-count" id="cartCount">0</div>
+                        <span class="cart-count" id="cartCount">0</span>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <!-- Navigation con Dropdowns -->
+
+        <!-- Navigation Premium con Dropdowns -->
         <nav>
             <div class="container">
                 <ul class="nav-links">
-                    <li><a href="index.html" class="nav-link active"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Inicio</a></li>
 
                     <!-- Dropdown Mujer -->
                     <li class="dropdown">
@@ -119,7 +124,7 @@
                     </li>
 
                     <li><a href="novedades.html" class="nav-link"><i class="fas fa-star"></i> Novedades</a></li>
-                    <li><a href="ofertas.html" class="nav-link"><i class="fas fa-tag"></i> Ofertas</a></li>
+                    <li><a href="ofertas.html" class="nav-link active"><i class="fas fa-tag"></i> Ofertas</a></li>
                     <li><a href="colecciones.html" class="nav-link"><i class="fas fa-palette"></i> Colecciones</a></li>
                 </ul>
             </div>
@@ -261,7 +266,77 @@
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- Modal de Resultados de Búsqueda -->
+    <div class="search-modal" id="searchModal">
+        <div class="search-modal-content">
+            <div class="search-modal-header">
+                <h2>Resultados de búsqueda</h2>
+                <button class="close-modal" id="closeSearchModal">&times;</button>
+            </div>
+            <div class="search-stats" id="searchStats"></div>
+            <div class="search-results-grid" id="searchResultsGrid"></div>
+        </div>
+    </div>
+
+    <!-- Modal de Autenticación -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-modal-content">
+            <button class="auth-close" onclick="closeAuthModal()">&times;</button>
+            
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="switchAuthTab('login')" id="loginTab">Iniciar Sesión</div>
+                <div class="auth-tab" onclick="switchAuthTab('register')" id="registerTab">Registrarse</div>
+            </div>
+
+            <!-- Formulario de Login -->
+            <div class="auth-form active" id="loginForm">
+                <div class="error-message" id="loginError" style="display: none;"></div>
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" required placeholder="tu@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Contraseña</label>
+                        <input type="password" id="loginPassword" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="auth-submit">
+                        <span>Iniciar Sesión</span>
+                    </button>
+                </form>
+                <div class="auth-footer">
+                    ¿No tienes cuenta? <a onclick="switchAuthTab('register')">Regístrate</a>
+                </div>
+            </div>
+
+            <!-- Formulario de Registro -->
+            <div class="auth-form" id="registerForm">
+                <div class="error-message" id="registerError" style="display: none;"></div>
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="registerName">Nombre completo</label>
+                        <input type="text" id="registerName" required placeholder="María García">
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" required placeholder="maria@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Contraseña</label>
+                        <input type="password" id="registerPassword" required placeholder="Mínimo 6 caracteres">
+                    </div>
+                    <button type="submit" class="auth-submit">
+                        <span>Crear Cuenta</span>
+                    </button>
+                </form>
+                <div class="auth-footer">
+                    ¿Ya tienes cuenta? <a onclick="switchAuthTab('login')">Inicia sesión</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Premium -->
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -276,7 +351,7 @@
                         <a href="#"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
-                
+
                 <div class="footer-column">
                     <h3>Ayuda Premium</h3>
                     <ul>
@@ -287,7 +362,7 @@
                         <li><a href="devoluciones.html"><i class="fas fa-undo-alt"></i> Devoluciones premium</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-column">
                     <h3>Acerca de</h3>
                     <ul>
@@ -297,7 +372,7 @@
                         <li><a href="privacidad.html"><i class="fas fa-shield-alt"></i> Privacidad</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-column">
                     <h3>Contacto Premium</h3>
                     <ul>
@@ -307,7 +382,7 @@
                     </ul>
                 </div>
             </div>
-            
+
             <div class="copyright">
                 <p>&copy; 2024 StyleHub Premium. Todos los derechos reservados.</p>
                 <p>Desarrollado con <i class="fas fa-heart"></i> para los amantes de la moda premium</p>
@@ -315,6 +390,6 @@
         </div>
     </footer>
 
-    <script src="assets/js/pages/ofertas.js"></script>
+    <script src="assets/js/pages/index.js"></script>
 </body>
 </html>

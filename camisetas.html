@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="assets/css/pages/camisetas.css">
 </head>
 <body>
-    <!-- Top Bar -->
+    <!-- Top Bar Premium -->
     <div class="top-bar">
         <div class="container top-bar-content">
             <div class="top-message">¡Envío gratis en pedidos superiores a $49.99!</div>
@@ -21,7 +21,7 @@
         </div>
     </div>
 
-    <!-- Header -->
+    <!-- Header Premium -->
     <header>
         <div class="container main-header">
             <div class="header-content">
@@ -37,11 +37,13 @@
                 <div class="search-bar">
                     <input type="text" id="searchInput" placeholder="Buscar productos, marcas y más...">
                     <button type="submit" id="searchButton"><i class="fas fa-search"></i></button>
+
+                    <!-- Sugerencias de búsqueda mejoradas -->
                     <div class="search-suggestions" id="searchSuggestions"></div>
                 </div>
 
                 <div class="user-actions">
-                    <a href="usuarios.html" class="account-link" id="accountLink">
+                    <a href="#" class="account-link" id="accountLink" onclick="openAuthModal(event)">
                         <i class="fas fa-user-circle"></i>
                         <span id="accountText">Mi cuenta</span>
                     </a>
@@ -63,11 +65,11 @@
             </div>
         </div>
 
-        <!-- Navigation con Dropdowns -->
+        <!-- Navigation Premium con Dropdowns -->
         <nav>
             <div class="container">
                 <ul class="nav-links">
-                    <li><a href="index.html" class="nav-link active"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Inicio</a></li>
 
                     <!-- Dropdown Mujer -->
                     <li class="dropdown">
@@ -88,7 +90,7 @@
 
                     <!-- Dropdown Hombre -->
                     <li class="dropdown">
-                        <a href="#" class="nav-link"><i class="fas fa-male"></i> Hombre <i class="fas fa-chevron-down"></i></a>
+                        <a href="#" class="nav-link active"><i class="fas fa-male"></i> Hombre <i class="fas fa-chevron-down"></i></a>
                         <div class="dropdown-content">
                             <div class="dropdown-header">ROPA DE HOMBRE</div>
                             <a href="camisetas.html"><i class="fas fa-tshirt"></i> Camisetas</a>
@@ -192,7 +194,65 @@
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- Modal de Autenticación -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-modal-content">
+            <button class="auth-close" onclick="closeAuthModal()">&times;</button>
+            
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="switchAuthTab('login')" id="loginTab">Iniciar Sesión</div>
+                <div class="auth-tab" onclick="switchAuthTab('register')" id="registerTab">Registrarse</div>
+            </div>
+
+            <!-- Formulario de Login -->
+            <div class="auth-form active" id="loginForm">
+                <div class="error-message" id="loginError" style="display: none;"></div>
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" required placeholder="tu@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Contraseña</label>
+                        <input type="password" id="loginPassword" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="auth-submit" id="loginBtn">
+                        <span>Iniciar Sesión</span>
+                    </button>
+                </form>
+                <div class="auth-footer">
+                    ¿No tienes cuenta? <a onclick="switchAuthTab('register')">Regístrate</a>
+                </div>
+            </div>
+
+            <!-- Formulario de Registro -->
+            <div class="auth-form" id="registerForm">
+                <div class="error-message" id="registerError" style="display: none;"></div>
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="registerName">Nombre completo</label>
+                        <input type="text" id="registerName" required placeholder="María García">
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" required placeholder="maria@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Contraseña</label>
+                        <input type="password" id="registerPassword" required placeholder="Mínimo 6 caracteres">
+                    </div>
+                    <button type="submit" class="auth-submit" id="registerBtn">
+                        <span>Crear Cuenta</span>
+                    </button>
+                </form>
+                <div class="auth-footer">
+                    ¿Ya tienes cuenta? <a onclick="switchAuthTab('login')">Inicia sesión</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Premium -->
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -246,6 +306,6 @@
         </div>
     </footer>
 
-    <script src="assets/js/pages/camisetas.js"></script>
+    <script src="assets/js/pages/index.js"></script>
 </body>
 </html>
