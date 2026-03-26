@@ -3,6 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const path = require('path');
 const { connectDB } = require('./db/connection');
 const User = require('./models/User');
 const CartItem = require('./models/Cart');
@@ -11,6 +12,8 @@ dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
+// Servir archivos estáticos del frontend
+app.use(express.static(path.join(__dirname, '..')));
 
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_jwt_secret';
