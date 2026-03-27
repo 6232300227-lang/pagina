@@ -90,8 +90,8 @@
             background: white;
             border-radius: 30px;
             width: 90%;
-            max-width: 450px;
-            padding: 40px;
+            max-width: 360px;
+            padding: 26px;
             position: relative;
             animation: scaleIn 0.3s ease;
             max-height: 90vh;
@@ -100,16 +100,16 @@
 
         .auth-close {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 14px;
+            right: 14px;
             background: none;
             border: none;
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             cursor: pointer;
             color: var(--dark-gray);
             transition: var(--transition);
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -124,16 +124,16 @@
 
         .auth-tabs {
             display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
+            gap: 12px;
+            margin-bottom: 20px;
             border-bottom: 2px solid var(--gray);
-            padding-bottom: 20px;
+            padding-bottom: 15px;
         }
 
         .auth-tab {
             flex: 1;
             text-align: center;
-            padding: 15px;
+            padding: 10px;
             cursor: pointer;
             font-weight: 600;
             color: var(--dark-gray);
@@ -156,7 +156,7 @@
         }
 
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 18px;
         }
 
         .form-group label {
@@ -169,7 +169,7 @@
 
         .form-group input {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             border: 2px solid var(--gray);
             border-radius: 15px;
             font-size: 1rem;
@@ -185,16 +185,16 @@
 
         .auth-submit {
             width: 100%;
-            padding: 18px;
+            padding: 14px;
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             border: none;
             border-radius: 15px;
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             font-weight: 700;
             cursor: pointer;
             transition: var(--transition);
-            margin-top: 20px;
+            margin-top: 14px;
         }
 
         .auth-submit:hover {
@@ -210,7 +210,7 @@
 
         .auth-footer {
             text-align: center;
-            margin-top: 25px;
+            margin-top: 18px;
             color: var(--dark-gray);
         }
 
