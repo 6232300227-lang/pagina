@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="assets/css/pages/carrito.css">
 
     <link rel="stylesheet" href="assets/css/responsive-global.css">
+    <script src="https://accounts.google.com/gsi/client" async defer onload="if(typeof initGoogleSignIn==='function')initGoogleSignIn()"></script>
 </head>
 <body>
     <!-- Top Bar Premium -->
@@ -208,6 +209,10 @@
                                     <span>Total</span>
                                     <span id="total">$0.00</span>
                                 </div>
+                                <div class="summary-row eta-row">
+                                    <span>Fecha estimada de entrega</span>
+                                    <span id="estimatedDelivery">Calculando...</span>
+                                </div>
                             </div>
 
                             <!-- Promo Code -->
@@ -309,6 +314,13 @@
                     <button type="submit" class="auth-submit" id="loginBtn">
                         <span>Iniciar Sesión</span>
                     </button>
+                    <div class="auth-social">
+                        <div class="auth-divider">o con</div>
+                        <div class="google-signin-btn-container" id="googleLoginModal"></div>
+                        <div style="text-align:center; margin-top:8px;">
+                            <button type="button" class="auth-social social-btn google" onclick="loginWithGoogle()">Iniciar con Google</button>
+                        </div>
+                    </div>
                 </form>
                 <div class="auth-footer">
                     ¿No tienes cuenta? <a onclick="switchAuthTab('register')">Regístrate</a>
@@ -334,6 +346,13 @@
                     <button type="submit" class="auth-submit" id="registerBtn">
                         <span>Crear Cuenta</span>
                     </button>
+                    <div class="auth-social">
+                        <div class="auth-divider">o con</div>
+                        <div class="google-signin-btn-container" id="googleRegisterModal"></div>
+                        <div style="text-align:center; margin-top:8px;">
+                            <button type="button" class="auth-social social-btn google" onclick="loginWithGoogle()">Continuar con Google</button>
+                        </div>
+                    </div>
                 </form>
                 <div class="auth-footer">
                     ¿Ya tienes cuenta? <a onclick="switchAuthTab('login')">Inicia sesión</a>

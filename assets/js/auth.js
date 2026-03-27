@@ -102,7 +102,7 @@ async function handleLogin(event) {
             document.getElementById('loginPassword').value = '';
         } else {
             if (errorDiv) {
-                errorDiv.textContent = data.error || data.message || 'Error al iniciar sesión';
+                errorDiv.textContent = data.message || 'Error al iniciar sesión';
                 errorDiv.style.display = 'flex';
             }
         }
@@ -170,7 +170,7 @@ async function handleRegister(event) {
             document.getElementById('registerPassword').value = '';
         } else {
             if (errorDiv) {
-                errorDiv.textContent = data.error || data.message || 'Error al registrar';
+                errorDiv.textContent = data.message || 'Error al registrar';
                 errorDiv.style.display = 'flex';
             }
         }
@@ -229,13 +229,9 @@ function logout(options = {}) {
 
 // Mostrar menú de usuario
 function showUserMenu() {
-    if (!currentUser) {
-        openAuthModal();
-        return;
+    if (confirm('¿Cerrar sesión?')) {
+        logout();
     }
-
-    const target = currentUser.role === 'admin' ? 'admin-dashboard.html' : 'usuarios.html';
-    window.location.href = target;
 }
 
 // Actualizar interfaz de usuario

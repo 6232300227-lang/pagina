@@ -1261,6 +1261,13 @@
             margin-top: 25px;
         }
 
+        .eta-row span:last-child {
+            font-weight: 700;
+            color: var(--secondary);
+            font-style: italic;
+            font-size: 0.95rem;
+        }
+
         /* ===== PROMO CODE ===== */
         .promo-section {
             margin: 40px 0;

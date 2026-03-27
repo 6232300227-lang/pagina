@@ -195,16 +195,14 @@
                         <p>¿Ya tienes una cuenta? <a href="#" onclick="openAuthModal(event); return false;">Inicia sesión aquí</a></p>
                     </div>
                     
-                    <div class="social-register">
-                        <p>O regístrate con</p>
-                        <div class="social-buttons">
-                            <button type="button" id="googleRegister" onclick="loginWithGoogle()" class="social-btn google">
-                                <i class="fab fa-google"></i>
-                                Google
+                    <div class="social-register auth-social">
+                        <div class="auth-divider"><span>o con</span></div>
+                        <div style="display:flex;flex-direction:column;gap:8px;">
+                            <button type="button" id="googleRegister" onclick="loginWithGoogle()" class="social-btn google" style="width:100%;justify-content:center;">
+                                <i class="fab fa-google"></i> Continuar con Google
                             </button>
-                            <a href="#" id="facebookRegister" class="social-btn facebook">
-                                <i class="fab fa-facebook-f"></i>
-                                Facebook
+                            <a href="#" id="facebookRegister" class="social-btn facebook" style="width:100%;justify-content:center;display:inline-flex;">
+                                <i class="fab fa-facebook-f"></i> Continuar con Facebook
                             </a>
                         </div>
                     </div>
@@ -252,7 +250,7 @@
                     </button>
                 </form>
                 <div class="auth-social">
-                    <div class="auth-divider"><span>o continúa con</span></div>
+                    <div class="auth-divider"><span>o con</span></div>
                     <button type="button" onclick="loginWithGoogle()" class="social-btn google" style="width:100%;justify-content:center;">
                         <i class="fab fa-google"></i> Iniciar sesión con Google
                     </button>
@@ -283,7 +281,7 @@
                     </button>
                 </form>
                 <div class="auth-social">
-                    <div class="auth-divider"><span>o regístrate con</span></div>
+                    <div class="auth-divider"><span>o con</span></div>
                     <button type="button" onclick="loginWithGoogle()" class="social-btn google" style="width:100%;justify-content:center;">
                         <i class="fab fa-google"></i> Registrarse con Google
                     </button>

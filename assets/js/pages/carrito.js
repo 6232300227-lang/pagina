@@ -62,31 +62,23 @@
             setupEventListeners();
             setupMobileMenu();
             setupSearch();
-            syncLocalAccountGreeting();
+            updateUserInterface();
             updateCheckoutProgress(1);
             handleMercadoPagoReturn();
         });
 
         // ===== FUNCIONES DE BÚSQUEDA =====
-        function normalizeSearchText(value) {
-            return String(value || '')
-                .toLowerCase()
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .trim();
-        }
-
         function searchProducts(query) {
             if (!query || query.trim() === '') {
                 return [];
             }
 
-            const searchTerm = normalizeSearchText(query);
+            const searchTerm = query.toLowerCase().trim();
 
             return productDatabase.filter(product => {
-                return normalizeSearchText(product.name).includes(searchTerm) ||
-                       normalizeSearchText(product.category).includes(searchTerm) ||
-                       normalizeSearchText(product.subcategory).includes(searchTerm);
+                return product.name.toLowerCase().includes(searchTerm) ||
+                       product.category.toLowerCase().includes(searchTerm) ||
+                       product.subcategory.toLowerCase().includes(searchTerm);
             });
         }
 
@@ -502,6 +494,13 @@
             if (shippingElement) shippingElement.textContent = shipping === 0 ? 'Gratis' : `$${shipping.toFixed(2)}`;
             if (discountElement) discountElement.textContent = discount > 0 ? `-$${discount.toFixed(2)}` : '$0.00';
             if (totalElement) totalElement.textContent = `$${total.toFixed(2)}`;
+
+            // Estimated delivery
+            const etaEl = document.getElementById('estimatedDelivery');
+            if (etaEl) {
+                const eta = estimateDeliveryRange(subtotal);
+                etaEl.textContent = eta;
+            }
         }
 
         // ===== FUNCIONES DE PROMOCIONES =====
@@ -536,6 +535,35 @@
         }
 
         // ===== FUNCIONES DE NAVEGACIÓN =====
+            // ===== ESTIMACIÓN DE ENTREGA =====
+            function addBusinessDays(date, days) {
+                const result = new Date(date);
+                while (days > 0) {
+                    result.setDate(result.getDate() + 1);
+                    const dow = result.getDay();
+                    if (dow !== 0 && dow !== 6) days--;
+                }
+                return result;
+            }
+
+            function formatDateES(d) {
+                const months = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+                return `${d.getDate()} ${months[d.getMonth()]}`;
+            }
+
+            function estimateDeliveryRange(subtotal = 0) {
+                // Simple business rule for ETA ranges (in business days)
+                let minDays = 3, maxDays = 7;
+                if (subtotal >= 80) { minDays = 1; maxDays = 3; }
+                else if (subtotal >= 50) { minDays = 2; maxDays = 5; }
+
+                const today = new Date();
+                const start = addBusinessDays(today, minDays);
+                const end = addBusinessDays(today, maxDays);
+
+                if (minDays === maxDays) return formatDateES(start);
+                return `${formatDateES(start)} - ${formatDateES(end)}`;
+            }
         function updateCheckoutProgress(step) {
             const fill = document.getElementById('progressFill');
             if (!fill) return;
@@ -901,6 +929,7 @@
             const shipping = Number(source.summary.shipping || 0);
             const discount = Number(source.summary.discount || 0);
             const total = Number(source.summary.total || 0);
+            const estimated = estimateDeliveryRange(subtotal);
 
             container.innerHTML = `
                 <div class="detail-row">
@@ -938,6 +967,10 @@
                 <div class="detail-row">
                     <span class="detail-label">Método de pago:</span>
                     <span class="detail-value">${source.paymentMethodLabel || 'Mercado Pago'}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Fecha estimada de entrega:</span>
+                    <span class="detail-value">${estimated}</span>
                 </div>
             `;
         }
@@ -987,8 +1020,9 @@
             }
         }
 
-        function syncLocalAccountGreeting() {
+        function updateUserInterface() {
             const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const accountLink = document.getElementById('accountLink');
             const accountText = document.getElementById('accountText');
 
             if (currentUser && accountText) {
@@ -1014,32 +1048,6 @@
                             icon.classList.add('fa-bars');
                         }
                     }
-                });
-
-                document.addEventListener('click', (event) => {
-                    if (!navLinks.classList.contains('active')) return;
-                    const clickedInside = navLinks.contains(event.target) || menuToggle.contains(event.target);
-                    if (!clickedInside) {
-                        navLinks.classList.remove('active');
-                        const icon = menuToggle.querySelector('i');
-                        if (icon) {
-                            icon.classList.remove('fa-times');
-                            icon.classList.add('fa-bars');
-                        }
-                    }
-                });
-
-                navLinks.querySelectorAll('a').forEach((link) => {
-                    link.addEventListener('click', () => {
-                        if (window.innerWidth <= 992) {
-                            navLinks.classList.remove('active');
-                            const icon = menuToggle.querySelector('i');
-                            if (icon) {
-                                icon.classList.remove('fa-times');
-                                icon.classList.add('fa-bars');
-                            }
-                        }
-                    });
                 });
             }
 

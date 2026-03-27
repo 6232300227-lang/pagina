@@ -4,6 +4,8 @@
         // ===== VARIABLES GLOBALES =====
         let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
         let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+        let token = localStorage.getItem('token') || null;
 
         // Productos destacados (estos se cargarán desde la BD más adelante)
         const featuredProducts = [
@@ -56,16 +58,201 @@
             updateWishlistCount();
             setupMobileMenu();
             setupSearch();
-            if (typeof window.updateUserInterface === 'function') {
-                window.updateUserInterface();
-            }
+            updateUserInterface();
+            checkAuthStatus();
 
             window.addEventListener('stylehub:logout', function() {
-                if (typeof window.updateUserInterface === 'function') {
-                    window.updateUserInterface();
-                }
+                currentUser = null;
+                token = null;
+                updateUserInterface();
             });
         });
+
+        // ===== FUNCIONES DE AUTENTICACIÓN =====
+        function openAuthModal(event) {
+            if (event) event.preventDefault();
+            if (currentUser) {
+                // Si ya está logueado, mostrar opciones de perfil
+                showUserMenu();
+            } else {
+                document.getElementById('authModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.remove('active');
+            document.body.style.overflow = '';
+            // Limpiar errores
+            document.getElementById('loginError').style.display = 'none';
+            document.getElementById('registerError').style.display = 'none';
+        }
+
+        function switchAuthTab(tab) {
+            const loginTab = document.getElementById('loginTab');
+            const registerTab = document.getElementById('registerTab');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+
+            if (tab === 'login') {
+                loginTab.classList.add('active');
+                registerTab.classList.remove('active');
+                loginForm.classList.add('active');
+                registerForm.classList.remove('active');
+            } else {
+                registerTab.classList.add('active');
+                loginTab.classList.remove('active');
+                registerForm.classList.add('active');
+                loginForm.classList.remove('active');
+            }
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const errorDiv = document.getElementById('loginError');
+            const loginBtn = document.getElementById('loginBtn');
+
+            // Mostrar loading
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<span class="loading-spinner"></span> Cargando...';
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Guardar token y usuario
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                    token = data.token;
+                    currentUser = data.user;
+
+                    closeAuthModal();
+                    updateUserInterface();
+                    showNotification('¡Bienvenido de vuelta!', 'success');
+                } else {
+                    errorDiv.textContent = data.message || 'Error al iniciar sesión';
+                    errorDiv.style.display = 'flex';
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Error de conexión con el servidor';
+                errorDiv.style.display = 'flex';
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<span>Iniciar Sesión</span>';
+            }
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const errorDiv = document.getElementById('registerError');
+            const registerBtn = document.getElementById('registerBtn');
+
+            // Validar contraseña
+            if (password.length < 6) {
+                errorDiv.textContent = 'La contraseña debe tener al menos 6 caracteres';
+                errorDiv.style.display = 'flex';
+                return;
+            }
+
+            // Mostrar loading
+            registerBtn.disabled = true;
+            registerBtn.innerHTML = '<span class="loading-spinner"></span> Cargando...';
+
+            try {
+                const response = await fetch(`${API_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Guardar token y usuario
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                    token = data.token;
+                    currentUser = data.user;
+
+                    closeAuthModal();
+                    updateUserInterface();
+                    showNotification('¡Registro exitoso! Bienvenido a StyleHub', 'success');
+                } else {
+                    errorDiv.textContent = data.message || 'Error al registrar';
+                    errorDiv.style.display = 'flex';
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Error de conexión con el servidor';
+                errorDiv.style.display = 'flex';
+            } finally {
+                registerBtn.disabled = false;
+                registerBtn.innerHTML = '<span>Crear Cuenta</span>';
+            }
+        }
+
+        function logout() {
+            if (typeof window.logout === 'function' && window.logout !== logout) {
+                window.logout();
+                return;
+            }
+
+            localStorage.removeItem('token');
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('mpCheckoutDraft');
+            localStorage.removeItem('mpLastPaymentId');
+            token = null;
+            currentUser = null;
+            updateUserInterface();
+            showNotification('Has cerrado sesión', 'info');
+            setTimeout(() => {
+                window.location.href = `${window.location.origin}${window.location.pathname}`;
+            }, 250);
+        }
+
+        function showUserMenu() {
+            // Aquí puedes mostrar un menú flotante con opciones de perfil
+            if (confirm('¿Cerrar sesión?')) {
+                logout();
+            }
+        }
+
+        function checkAuthStatus() {
+            if (token && currentUser) {
+                // Verificar si el token sigue siendo válido
+                // Opcional: hacer una petición al backend para validar
+            }
+        }
+
+        function updateUserInterface() {
+            const accountText = document.getElementById('accountText');
+            const accountLink = document.getElementById('accountLink');
+
+            if (currentUser && accountText) {
+                const firstName = currentUser.name ? currentUser.name.split(' ')[0] : 'Usuario';
+                accountText.textContent = `Hola, ${firstName}`;
+                accountLink.href = 'perfil.html'; // Cambiar a página de perfil
+            } else {
+                accountText.textContent = 'Mi cuenta';
+                accountLink.href = '#';
+            }
+        }
 
         // ===== FUNCIONES DE PRODUCTOS =====
         function optimizeImageLoading() {
@@ -270,25 +457,17 @@
         }
 
         // ===== FUNCIONES DE BÚSQUEDA =====
-        function normalizeSearchText(value) {
-            return String(value || '')
-                .toLowerCase()
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .trim();
-        }
-
         function searchProducts(query) {
             if (!query || query.trim() === '') {
                 return [];
             }
 
-            const searchTerm = normalizeSearchText(query);
+            const searchTerm = query.toLowerCase().trim();
 
             return productDatabase.filter(product => {
-                return normalizeSearchText(product.name).includes(searchTerm) ||
-                       normalizeSearchText(product.category).includes(searchTerm) ||
-                       normalizeSearchText(product.subcategory).includes(searchTerm);
+                return product.name.toLowerCase().includes(searchTerm) ||
+                       product.category.toLowerCase().includes(searchTerm) ||
+                       product.subcategory.toLowerCase().includes(searchTerm);
             });
         }
 
@@ -556,32 +735,6 @@
                         }
                     }
                 });
-
-                document.addEventListener('click', (event) => {
-                    if (!navLinks.classList.contains('active')) return;
-                    const clickedInside = navLinks.contains(event.target) || menuToggle.contains(event.target);
-                    if (!clickedInside) {
-                        navLinks.classList.remove('active');
-                        const icon = menuToggle.querySelector('i');
-                        if (icon) {
-                            icon.classList.remove('fa-times');
-                            icon.classList.add('fa-bars');
-                        }
-                    }
-                });
-
-                navLinks.querySelectorAll('a').forEach((link) => {
-                    link.addEventListener('click', () => {
-                        if (window.innerWidth <= 992) {
-                            navLinks.classList.remove('active');
-                            const icon = menuToggle.querySelector('i');
-                            if (icon) {
-                                icon.classList.remove('fa-times');
-                                icon.classList.add('fa-bars');
-                            }
-                        }
-                    });
-                });
             }
 
             const dropdowns = document.querySelectorAll('.dropdown > .nav-link');
@@ -607,8 +760,15 @@
                 updateWishlistCount();
             }
             if (e.key === 'currentUser') {
-                if (typeof window.updateUserInterface === 'function') {
-                    window.updateUserInterface();
-                }
+                currentUser = JSON.parse(e.newValue);
+                updateUserInterface();
             }
         });
+
+        // Exponer funciones globalmente
+        window.openAuthModal = openAuthModal;
+        window.closeAuthModal = closeAuthModal;
+        window.switchAuthTab = switchAuthTab;
+        window.handleLogin = handleLogin;
+        window.handleRegister = handleRegister;
+        window.logout = logout;

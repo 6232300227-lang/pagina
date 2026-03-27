@@ -181,6 +181,16 @@
     background: #e0e0e0;
 }
 
+.auth-divider span {
+    display: inline-block;
+    padding: 6px 12px;
+    background: white;
+    border-radius: 20px;
+    color: var(--dark-gray);
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
 .auth-social .social-btn.google {
     display: flex;
     align-items: center;
@@ -204,6 +214,11 @@
     background: #f8f9fa;
     box-shadow: 0 2px 8px rgba(0,0,0,0.12);
 }
+
+/* Ensure google fallback button matches modal layout */
+.auth-social { text-align: center; }
+.auth-social .google-signin-btn-container,
+.auth-social .social-btn.google { margin: 10px auto 0; display: inline-flex; }
 
 /* Contenedores del botón oficial de Google */
 .google-signin-btn-container {
