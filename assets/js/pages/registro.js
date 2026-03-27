@@ -73,7 +73,7 @@ const API_BASE = 'https://pagina-6ygv.onrender.com';
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
             const terms = document.getElementById('terms').checked;
-            const registerBtn = document.getElementById('registerBtn');
+            const registerBtn = document.getElementById('registerBtn') || document.getElementById('registerBtnPage');
 
             // Validaciones
             if (!fullName || !email || !password || !confirmPassword) {
@@ -102,8 +102,10 @@ const API_BASE = 'https://pagina-6ygv.onrender.com';
                 return;
             }
 
-            registerBtn.disabled = true;
-            registerBtn.innerHTML = '<span><i class="fas fa-spinner fa-spin"></i> Registrando...</span>';
+            if (registerBtn) {
+                registerBtn.disabled = true;
+                registerBtn.innerHTML = '<span><i class="fas fa-spinner fa-spin"></i> Registrando...</span>';
+            }
 
             try {
                 const resp = await fetch(`${API_BASE}/api/auth/register`, {
@@ -116,22 +118,26 @@ const API_BASE = 'https://pagina-6ygv.onrender.com';
                 if (!resp.ok) {
                     const msg = data && data.error ? data.error : 'Error al registrar';
                     showNotification(msg, 'error');
-                    registerBtn.disabled = false;
-                    registerBtn.innerHTML = '<span><i class="fas fa-user-check"></i> Crear Cuenta</span>';
+                    if (registerBtn) {
+                        registerBtn.disabled = false;
+                        registerBtn.innerHTML = '<span><i class="fas fa-user-check"></i> Crear Cuenta</span>';
+                    }
                     return;
                 }
 
                 // Guardar token y usuario
                 localStorage.setItem('token', data.token);
-                localStorage.setItem('currentUser', JSON.stringify({ id: data.user.id, fullName: data.user.name, email: data.user.email }));
+                localStorage.setItem('currentUser', JSON.stringify({ id: data.user.id, name: data.user.name, fullName: data.user.name, email: data.user.email, role: data.user.role || 'customer' }));
 
                 showNotification(`¡Bienvenido/a ${data.user.name}! Registro exitoso.`);
                 setTimeout(() => { window.location.href = 'index.html'; }, 1200);
             } catch (err) {
                 console.error('Error registering:', err);
                 showNotification('Error de conexión al registrar', 'error');
-                registerBtn.disabled = false;
-                registerBtn.innerHTML = '<span><i class="fas fa-user-check"></i> Crear Cuenta</span>';
+                if (registerBtn) {
+                    registerBtn.disabled = false;
+                    registerBtn.innerHTML = '<span><i class="fas fa-user-check"></i> Crear Cuenta</span>';
+                }
             }
         });
 
@@ -153,10 +159,14 @@ const API_BASE = 'https://pagina-6ygv.onrender.com';
             }
         });
 
-        // Simular registro con Google (placeholder)
+        // Integración con Google Sign-In real si está disponible
         document.getElementById('googleRegister').addEventListener('click', function(e) {
             e.preventDefault();
-            showNotification('Redirigiendo a Google...', 'info');
+            if (typeof window.loginWithGoogle === 'function') {
+                window.loginWithGoogle();
+                return;
+            }
+            showNotification('Google Sign-In no está disponible aún', 'info');
         });
 
         document.getElementById('facebookRegister').addEventListener('click', function(e) {

@@ -88,6 +88,11 @@ async function handleLogin(event) {
             token = data.token;
             currentUser = data.user;
 
+            if (currentUser && currentUser.role === 'admin') {
+                window.location.href = 'admin-dashboard.html';
+                return;
+            }
+
             closeAuthModal();
             updateUserInterface();
             showNotification('¡Bienvenido de vuelta!', 'success');
@@ -207,7 +212,9 @@ function updateUserInterface() {
     if (currentUser && accountText) {
         const firstName = currentUser.name ? currentUser.name.split(' ')[0] : 'Usuario';
         accountText.textContent = `Hola, ${firstName}`;
-        if (accountLink) accountLink.href = 'perfil.html';
+        if (accountLink) {
+            accountLink.href = currentUser.role === 'admin' ? 'admin-dashboard.html' : 'perfil.html';
+        }
     } else {
         if (accountText) accountText.textContent = 'Mi cuenta';
         if (accountLink) accountLink.href = '#';
@@ -297,6 +304,12 @@ async function handleGoogleSignIn(response) {
             localStorage.setItem('currentUser', JSON.stringify(data.user));
             token = data.token;
             currentUser = data.user;
+
+            if (currentUser && currentUser.role === 'admin') {
+                window.location.href = 'admin-dashboard.html';
+                return;
+            }
+
             closeAuthModal();
             updateUserInterface();
             showNotification('¡Bienvenido con Google!', 'success');

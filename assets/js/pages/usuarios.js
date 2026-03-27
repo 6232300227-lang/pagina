@@ -29,15 +29,17 @@ const API_BASE = 'https://pagina-6ygv.onrender.com';
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             const rememberMe = document.getElementById('rememberMe').checked;
-            const loginBtn = document.getElementById('loginBtn');
+            const loginBtn = document.getElementById('loginBtn') || document.getElementById('loginBtnPage');
 
             if (!email || !password) {
                 showNotification('Por favor completa todos los campos', 'error');
                 return;
             }
 
-            loginBtn.disabled = true;
-            loginBtn.innerHTML = '<span><i class="fas fa-spinner fa-spin"></i> Iniciando sesión...</span>';
+            if (loginBtn) {
+                loginBtn.disabled = true;
+                loginBtn.innerHTML = '<span><i class="fas fa-spinner fa-spin"></i> Iniciando sesión...</span>';
+            }
 
             try {
                 const resp = await fetch(`${API_BASE}/api/auth/login`, {
@@ -50,14 +52,16 @@ const API_BASE = 'https://pagina-6ygv.onrender.com';
                 if (!resp.ok) {
                     const msg = data && data.error ? data.error : 'Error al iniciar sesión';
                     showNotification(msg, 'error');
-                    loginBtn.disabled = false;
-                    loginBtn.innerHTML = '<span><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</span>';
+                    if (loginBtn) {
+                        loginBtn.disabled = false;
+                        loginBtn.innerHTML = '<span><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</span>';
+                    }
                     return;
                 }
 
                 // Guardar token y usuario
                 localStorage.setItem('token', data.token);
-                localStorage.setItem('currentUser', JSON.stringify({ id: data.user.id, fullName: data.user.name, email: data.user.email }));
+                localStorage.setItem('currentUser', JSON.stringify({ id: data.user.id, name: data.user.name, fullName: data.user.name, email: data.user.email, role: data.user.role || 'customer' }));
 
                 if (rememberMe) {
                     localStorage.setItem('rememberedUser', email);
@@ -66,12 +70,15 @@ const API_BASE = 'https://pagina-6ygv.onrender.com';
                 }
 
                 showNotification(`¡Bienvenido/a ${data.user.name}!`);
-                setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+                const target = (data.user.role === 'admin') ? 'admin-dashboard.html' : 'index.html';
+                setTimeout(() => { window.location.href = target; }, 1000);
             } catch (err) {
                 console.error('Login error:', err);
                 showNotification('Error de conexión al iniciar sesión', 'error');
-                loginBtn.disabled = false;
-                loginBtn.innerHTML = '<span><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</span>';
+                if (loginBtn) {
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = '<span><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</span>';
+                }
             }
         });
 
@@ -124,10 +131,14 @@ const API_BASE = 'https://pagina-6ygv.onrender.com';
             }
         });
 
-        // Simular login con Google (placeholder)
+        // Integración con Google Sign-In real si está disponible
         document.getElementById('googleLogin').addEventListener('click', function(e) {
             e.preventDefault();
-            showNotification('Redirigiendo a Google...', 'info');
+            if (typeof window.loginWithGoogle === 'function') {
+                window.loginWithGoogle();
+                return;
+            }
+            showNotification('Google Sign-In no está disponible aún', 'info');
         });
 
         document.getElementById('facebookLogin').addEventListener('click', function(e) {
