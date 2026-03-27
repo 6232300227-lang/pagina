@@ -13,6 +13,12 @@
     <script src="https://accounts.google.com/gsi/client" async defer onload="if(typeof initGoogleSignIn==='function')initGoogleSignIn()"></script>
 </head>
 <body>
+    <!-- Google Identity onload container -->
+    <div id="g_id_onload"
+         data-client_id="168775181456-70l3t07ca26h7bh0vghb7nc818tg63pr.apps.googleusercontent.com"
+         data-login_uri="https://stylehub.pics"
+         data-auto_prompt="false">
+    </div>
     <!-- Top Bar Premium -->
     <div class="top-bar">
         <div class="container top-bar-content">
@@ -183,7 +189,7 @@
                     <div class="social-login auth-social">
                         <div class="auth-divider"><span>o con</span></div>
                         <div style="display:flex;flex-direction:column;gap:8px;">
-                            <div id="googleLoginContainer" class="google-signin-btn-container" style="display:flex;justify-content:center;"></div>
+                            <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="continue_with" data-shape="rectangular" data-logo_alignment="left" style="display:flex;justify-content:center;width:100%;"></div>
                             <a href="#" id="facebookLogin" class="social-btn facebook" style="width:100%;justify-content:center;display:inline-flex;">
                                 <i class="fab fa-facebook-f"></i> Continuar con Facebook
                             </a>
@@ -317,7 +323,7 @@
                 </form>
                 <div class="auth-social">
                     <div class="auth-divider"><span>o con</span></div>
-                    <div id="googleLoginModalContainer" class="google-signin-btn-container" style="display:flex;justify-content:center;"></div>
+                    <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="continue_with" data-shape="rectangular" data-logo_alignment="left" style="display:flex;justify-content:center;width:100%;"></div>
                 </div>
                 <div class="auth-footer">
                     ¿No tienes cuenta? <a onclick="switchAuthTab('register')">Regístrate</a>
@@ -346,7 +352,7 @@
                 </form>
                 <div class="auth-social">
                     <div class="auth-divider"><span>o con</span></div>
-                    <div id="googleRegisterModalContainer" class="google-signin-btn-container" style="display:flex;justify-content:center;"></div>
+                    <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="continue_with" data-shape="rectangular" data-logo_alignment="left" style="display:flex;justify-content:center;width:100%;"></div>
                 </div>
                 <div class="auth-footer">
                     ¿Ya tienes cuenta? <a onclick="switchAuthTab('login')">Inicia sesión</a>
