@@ -146,9 +146,18 @@
     <!-- Progress Steps -->
     <div class="container">
         <div class="progress-steps" id="progressSteps">
+            <div class="progress-fill" id="progressFill"></div>
             <div class="progress-step" onclick="goToStep(1)">
                 <div class="step-circle active" id="step1Circle">1</div>
                 <div class="step-label active" id="step1Label">Carrito</div>
+            </div>
+            <div class="progress-step locked">
+                <div class="step-circle" id="step2Circle">2</div>
+                <div class="step-label" id="step2Label">Datos</div>
+            </div>
+            <div class="progress-step locked">
+                <div class="step-circle" id="step3Circle">3</div>
+                <div class="step-label" id="step3Label">Pago</div>
             </div>
             <div class="progress-step" onclick="goToStep(4)">
                 <div class="step-circle" id="step4Circle">2</div>
@@ -214,6 +223,15 @@
                             <button class="checkout-btn" onclick="processPayment()" id="proceedToInfo">
                                 <i class="fas fa-lock"></i> Pagar
                             </button>
+
+                            <div class="checkout-trust-box">
+                                <h4><i class="fas fa-shield-check"></i> Compra protegida</h4>
+                                <ul>
+                                    <li><i class="fas fa-check"></i> Pago cifrado y validado por Mercado Pago</li>
+                                    <li><i class="fas fa-check"></i> Reembolso y devoluciones hasta 30 días</li>
+                                    <li><i class="fas fa-check"></i> Soporte premium antes y después de tu compra</li>
+                                </ul>
+                            </div>
 
                             <button class="continue-shopping-btn" onclick="window.location.href='index.html'">
                                 <i class="fas fa-arrow-left"></i> Seguir Comprando

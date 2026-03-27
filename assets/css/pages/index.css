@@ -1103,6 +1103,79 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
         }
 
+        .trust-strip {
+            margin: 20px 0 30px;
+        }
+
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(160px, 1fr));
+            gap: 14px;
+        }
+
+        .trust-item {
+            background: linear-gradient(145deg, #ffffff 0%, #fff7f8 100%);
+            border: 1px solid #f0e7ea;
+            border-radius: 16px;
+            padding: 16px 14px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            box-shadow: 0 12px 25px rgba(18, 18, 18, 0.05);
+        }
+
+        .trust-item i {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-top: 2px;
+        }
+
+        .trust-item h3 {
+            margin: 0 0 4px;
+            font-size: 0.95rem;
+            color: var(--secondary);
+        }
+
+        .trust-item p {
+            margin: 0;
+            font-size: 0.82rem;
+            color: var(--dark-gray);
+        }
+
+        .featured-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .featured-head .section-title {
+            margin-bottom: 0;
+        }
+
+        .featured-sort-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .featured-sort-wrap label {
+            font-size: 0.85rem;
+            color: var(--dark-gray);
+            font-weight: 600;
+        }
+
+        .featured-sort-wrap select {
+            border: 1px solid #eadfe3;
+            border-radius: 12px;
+            padding: 9px 12px;
+            font-size: 0.85rem;
+            color: var(--secondary);
+            background: #fff;
+            outline: none;
+        }
+
         .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -1529,6 +1602,9 @@
             .section-title {
                 font-size: 2.8rem;
             }
+            .trust-grid {
+                grid-template-columns: repeat(2, minmax(160px, 1fr));
+            }
             .product-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -1569,6 +1645,10 @@
             .section-title {
                 font-size: 2.4rem;
                 margin-bottom: 40px;
+            }
+            .featured-head {
+                flex-direction: column;
+                align-items: flex-start;
             }
             .category-grid {
                 grid-template-columns: 1fr;
@@ -1614,6 +1694,9 @@
             }
             .search-modal-content {
                 padding: 20px;
+            }
+            .trust-grid {
+                grid-template-columns: 1fr;
             }
         }
 

@@ -817,11 +817,26 @@
             z-index: 1;
         }
 
+        .progress-fill {
+            position: absolute;
+            top: 25px;
+            left: 0;
+            height: 3px;
+            width: 0;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            z-index: 1;
+            transition: width 0.35s ease;
+        }
+
         .progress-step {
             position: relative;
             z-index: 2;
             text-align: center;
             cursor: pointer;
+        }
+
+        .progress-step.locked {
+            cursor: default;
         }
 
         .step-circle {
@@ -864,6 +879,45 @@
 
         .step-label.completed {
             color: var(--success);
+        }
+
+        .checkout-trust-box {
+            border: 1px solid #eadfe3;
+            border-radius: 14px;
+            background: #fff8fb;
+            padding: 14px;
+            margin: 16px 0;
+        }
+
+        .checkout-trust-box h4 {
+            margin: 0 0 8px;
+            color: var(--secondary);
+            font-size: 0.95rem;
+        }
+
+        .checkout-trust-box h4 i {
+            color: var(--primary);
+        }
+
+        .checkout-trust-box ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: grid;
+            gap: 6px;
+        }
+
+        .checkout-trust-box li {
+            font-size: 0.84rem;
+            color: var(--dark-gray);
+            display: flex;
+            gap: 7px;
+            align-items: flex-start;
+        }
+
+        .checkout-trust-box li i {
+            color: var(--success);
+            margin-top: 2px;
         }
 
         /* ===== CART LAYOUT ===== */

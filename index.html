@@ -149,28 +149,28 @@
             <h2 class="section-title">Categorías Destacadas</h2>
             <div class="category-grid">
                 <a href="novedades.html" class="category-card">
-                    <img src="https://placehold.co/600x400/ff3366/ffffff?text=Novedades" alt="Novedades">
+                    <img src="https://placehold.co/600x400/ff3366/ffffff?text=Novedades" alt="Novedades" loading="lazy" decoding="async">
                     <div class="overlay">
                         <h3>Novedades</h3>
                         <p>Colección 2024</p>
                     </div>
                 </a>
                 <a href="ofertas.html" class="category-card">
-                    <img src="https://placehold.co/600x400/ffcc00/000000?text=Ofertas" alt="Ofertas">
+                    <img src="https://placehold.co/600x400/ffcc00/000000?text=Ofertas" alt="Ofertas" loading="lazy" decoding="async">
                     <div class="overlay">
                         <h3>Ofertas Especiales</h3>
                         <p>Hasta 70% de descuento</p>
                     </div>
                 </a>
                 <a href="colecciones.html" class="category-card">
-                    <img src="https://placehold.co/600x400/1a1a1a/ff3366?text=Colecciones" alt="Colecciones">
+                    <img src="https://placehold.co/600x400/1a1a1a/ff3366?text=Colecciones" alt="Colecciones" loading="lazy" decoding="async">
                     <div class="overlay">
                         <h3>Colecciones Exclusivas</h3>
                         <p>Diseños únicos</p>
                     </div>
                 </a>
                 <a href="Favoritos.html" class="category-card">
-                    <img src="https://placehold.co/600x400/ff3366/ffffff?text=Favoritos" alt="Favoritos">
+                    <img src="https://placehold.co/600x400/ff3366/ffffff?text=Favoritos" alt="Favoritos" loading="lazy" decoding="async">
                     <div class="overlay">
                         <h3>Mis Favoritos</h3>
                         <p>Guarda tus productos</p>
@@ -180,10 +180,54 @@
         </div>
     </section>
 
+    <section class="trust-strip">
+        <div class="container trust-grid">
+            <article class="trust-item">
+                <i class="fas fa-shield-heart"></i>
+                <div>
+                    <h3>Pago 100% seguro</h3>
+                    <p>Pasarela protegida y datos cifrados.</p>
+                </div>
+            </article>
+            <article class="trust-item">
+                <i class="fas fa-truck-fast"></i>
+                <div>
+                    <h3>Envío express</h3>
+                    <p>Entrega estimada de 2 a 5 días hábiles.</p>
+                </div>
+            </article>
+            <article class="trust-item">
+                <i class="fas fa-rotate-left"></i>
+                <div>
+                    <h3>Cambios fáciles</h3>
+                    <p>Hasta 30 días para cambios y devoluciones.</p>
+                </div>
+            </article>
+            <article class="trust-item">
+                <i class="fas fa-headset"></i>
+                <div>
+                    <h3>Soporte premium</h3>
+                    <p>Atención personalizada 24/7 por WhatsApp y email.</p>
+                </div>
+            </article>
+        </div>
+    </section>
+
     <!-- Featured Products -->
     <section class="featured-products">
         <div class="container">
-            <h2 class="section-title">Productos Destacados</h2>
+            <div class="featured-head">
+                <h2 class="section-title">Productos Destacados</h2>
+                <div class="featured-sort-wrap">
+                    <label for="featuredSort">Ordenar por:</label>
+                    <select id="featuredSort">
+                        <option value="featured">Destacados</option>
+                        <option value="newest">Más nuevos</option>
+                        <option value="price-asc">Precio: menor a mayor</option>
+                        <option value="price-desc">Precio: mayor a menor</option>
+                    </select>
+                </div>
+            </div>
             <div class="product-grid" id="featuredProductsGrid"></div>
         </div>
     </section>

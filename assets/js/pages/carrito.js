@@ -62,22 +62,31 @@
             setupEventListeners();
             setupMobileMenu();
             setupSearch();
-            updateUserInterface();
+            syncLocalAccountGreeting();
+            updateCheckoutProgress(1);
             handleMercadoPagoReturn();
         });
 
         // ===== FUNCIONES DE BÚSQUEDA =====
+        function normalizeSearchText(value) {
+            return String(value || '')
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .trim();
+        }
+
         function searchProducts(query) {
             if (!query || query.trim() === '') {
                 return [];
             }
 
-            const searchTerm = query.toLowerCase().trim();
+            const searchTerm = normalizeSearchText(query);
 
             return productDatabase.filter(product => {
-                return product.name.toLowerCase().includes(searchTerm) ||
-                       product.category.toLowerCase().includes(searchTerm) ||
-                       product.subcategory.toLowerCase().includes(searchTerm);
+                return normalizeSearchText(product.name).includes(searchTerm) ||
+                       normalizeSearchText(product.category).includes(searchTerm) ||
+                       normalizeSearchText(product.subcategory).includes(searchTerm);
             });
         }
 
@@ -527,6 +536,15 @@
         }
 
         // ===== FUNCIONES DE NAVEGACIÓN =====
+        function updateCheckoutProgress(step) {
+            const fill = document.getElementById('progressFill');
+            if (!fill) return;
+
+            const normalizedStep = Math.max(1, Math.min(4, Number(step) || 1));
+            const percent = ((normalizedStep - 1) / 3) * 100;
+            fill.style.width = `${percent}%`;
+        }
+
         function goToStep(step) {
             if (step > 1 && cart.length === 0) {
                 showNotification('Tu carrito está vacío', 'error');
@@ -555,6 +573,7 @@
             }
 
             currentStep = step;
+            updateCheckoutProgress(step);
 
             if (step === 4) {
                 loadConfirmationDetails();
@@ -968,9 +987,8 @@
             }
         }
 
-        function updateUserInterface() {
+        function syncLocalAccountGreeting() {
             const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            const accountLink = document.getElementById('accountLink');
             const accountText = document.getElementById('accountText');
 
             if (currentUser && accountText) {
@@ -996,6 +1014,32 @@
                             icon.classList.add('fa-bars');
                         }
                     }
+                });
+
+                document.addEventListener('click', (event) => {
+                    if (!navLinks.classList.contains('active')) return;
+                    const clickedInside = navLinks.contains(event.target) || menuToggle.contains(event.target);
+                    if (!clickedInside) {
+                        navLinks.classList.remove('active');
+                        const icon = menuToggle.querySelector('i');
+                        if (icon) {
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    }
+                });
+
+                navLinks.querySelectorAll('a').forEach((link) => {
+                    link.addEventListener('click', () => {
+                        if (window.innerWidth <= 992) {
+                            navLinks.classList.remove('active');
+                            const icon = menuToggle.querySelector('i');
+                            if (icon) {
+                                icon.classList.remove('fa-times');
+                                icon.classList.add('fa-bars');
+                            }
+                        }
+                    });
                 });
             }
 
