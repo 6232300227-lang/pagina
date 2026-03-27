@@ -10,8 +10,15 @@
     <link rel="stylesheet" href="assets/css/pages/chaquetas.css">
 
     <link rel="stylesheet" href="assets/css/responsive-global.css">
+    <script src="https://accounts.google.com/gsi/client" async defer onload="if(typeof initGoogleSignIn==='function')initGoogleSignIn()"></script>
 </head>
 <body>
+    <!-- Google Identity onload container -->
+    <div id="g_id_onload"
+         data-client_id="168775181456-70l3t07ca26h7bh0vghb7nc818tg63pr.apps.googleusercontent.com"
+         data-login_uri="https://stylehub.pics"
+         data-auto_prompt="false">
+    </div>
     <!-- Top Bar Premium -->
     <div class="top-bar">
         <div class="container top-bar-content">
@@ -223,6 +230,10 @@
                         <span>Iniciar Sesión</span>
                     </button>
                 </form>
+                <div class="auth-social">
+                    <div class="auth-divider"><span>o con</span></div>
+                    <div class="google-signin-btn-container" style="display:flex;justify-content:center;"></div>
+                </div>
                 <div class="auth-footer">
                     ¿No tienes cuenta? <a onclick="switchAuthTab('register')">Regístrate</a>
                 </div>
@@ -248,6 +259,10 @@
                         <span>Crear Cuenta</span>
                     </button>
                 </form>
+                <div class="auth-social">
+                    <div class="auth-divider"><span>o con</span></div>
+                    <div class="google-signin-btn-container" style="display:flex;justify-content:center;"></div>
+                </div>
                 <div class="auth-footer">
                     ¿Ya tienes cuenta? <a onclick="switchAuthTab('login')">Inicia sesión</a>
                 </div>
