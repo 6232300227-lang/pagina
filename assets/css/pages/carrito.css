@@ -1510,6 +1510,26 @@
             box-shadow: 0 10px 25px rgba(255, 51, 102, 0.3);
         }
 
+        .nav-btn.mp {
+            background: linear-gradient(135deg, #009EE3 0%, #0072CE 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn.mp:hover {
+            background: linear-gradient(135deg, #0072CE 0%, #005EB8 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 114, 206, 0.35);
+        }
+
+        .nav-btn.mp:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         /* ===== CONFIRMATION PAGE ===== */
         .confirmation-section {
             background: white;

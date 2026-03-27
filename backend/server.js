@@ -18,6 +18,10 @@ app.use(express.static(path.join(__dirname, '..')));
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_jwt_secret';
 
+// Mercado Pago access token (used via direct HTTP request)
+const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN || process.env.MERCADOPAGO_ACCESS_TOKEN || 'TEST-138373493028620-032618-5d962b9c5f5cec27ee7ec14701e75c89-2049134991';
+const MP_API_URL = 'https://api.mercadopago.com/checkout/preferences';
+
 connectDB().catch(err => {
   console.error('Failed to connect to MongoDB:', err);
   process.exit(1);
@@ -105,6 +109,57 @@ app.post('/api/cart', async (req, res) => {
     res.status(201).json(item);
   } catch (err) {
     res.status(400).json({ error: err.message });
+  }
+});
+
+// Mercado Pago: create preference and return init_point
+app.post('/api/payments/create_preference', async (req, res) => {
+  try {
+    const { items, payer, back_urls } = req.body;
+
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ error: 'Items are required' });
+    }
+
+    const preference = {
+      items: items.map(it => ({
+        title: it.title || it.name || 'Producto',
+        quantity: Number(it.quantity) || 1,
+        unit_price: Number(it.unit_price || it.price || 0)
+      })),
+      payer: payer || {},
+      back_urls: back_urls || {
+        success: process.env.FRONTEND_URL || 'http://localhost:5500',
+        failure: process.env.FRONTEND_URL || 'http://localhost:5500',
+        pending: process.env.FRONTEND_URL || 'http://localhost:5500'
+      },
+      auto_return: 'approved'
+    };
+
+    // Use fetch to call Mercado Pago API directly
+    if (typeof fetch === 'undefined') {
+      throw new Error('Global fetch is not available in this Node runtime. Please run on Node 18+ or install a fetch polyfill.');
+    }
+
+    const response = await fetch(MP_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${MP_ACCESS_TOKEN}`
+      },
+      body: JSON.stringify(preference)
+    });
+
+    const mpJson = await response.json();
+    if (response.ok) {
+      return res.json({ init_point: mpJson.init_point, preferenceId: mpJson.id });
+    }
+
+    console.error('MP API responded with error:', mpJson);
+    res.status(500).json({ error: 'No init_point returned', details: mpJson });
+  } catch (err) {
+    console.error('MP error:', err);
+    res.status(500).json({ error: 'Error creating Mercado Pago preference' });
   }
 });
 

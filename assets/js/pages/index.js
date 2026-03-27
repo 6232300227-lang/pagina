@@ -276,9 +276,14 @@
                         ${stars}
                         <span>(${product.reviews})</span>
                     </div>
-                    <button class="${inCart ? 'added-to-cart-btn' : 'add-to-cart-btn'}" onclick="addToCart(${product.id})">
-                        <i class="fas fa-shopping-bag"></i> ${inCart ? 'En el carrito' : 'Añadir al carrito'}
-                    </button>
+                        <div class="product-actions">
+                            <button class="${inCart ? 'added-to-cart-btn' : 'add-to-cart-btn'}" onclick="addToCart(${product.id})">
+                                <i class="fas fa-shopping-bag"></i> ${inCart ? 'En el carrito' : 'Añadir al carrito'}
+                            </button>
+                            <button class="buy-now-btn" onclick="buyNow(${product.id})">
+                                <i class="fas fa-credit-card"></i> Comprar
+                            </button>
+                        </div>
                 </div>
             `;
 

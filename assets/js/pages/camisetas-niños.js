@@ -462,9 +462,14 @@
                         ${stars}
                         <span>(${product.reviews})</span>
                     </div>
-                    <button class="${buttonClass}" onclick="addToCart(${product.id})">
-                        <i class="fas fa-shopping-bag"></i> ${buttonText}
-                    </button>
+                    <div class="product-actions">
+                        <button class="${buttonClass}" onclick="addToCart(${product.id})">
+                            <i class="fas fa-shopping-bag"></i> ${buttonText}
+                        </button>
+                        <button class="buy-now-btn" onclick="buyNow(${product.id})">
+                            <i class="fas fa-credit-card"></i> Comprar
+                        </button>
+                    </div>
                 </div>
             `;
 

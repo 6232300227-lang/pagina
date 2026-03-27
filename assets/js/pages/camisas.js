@@ -428,9 +428,14 @@
                         ${stars}
                         <span>(${product.reviews})</span>
                     </div>
-                    <button class="${buttonClass}" onclick="addToCart(${product.id})">
-                        <i class="fas fa-shopping-bag"></i> ${buttonText}
-                    </button>
+                    <div class="product-actions">
+                        <button class="${buttonClass}" onclick="addToCart(${product.id})">
+                            <i class="fas fa-shopping-bag"></i> ${buttonText}
+                        </button>
+                        <button class="buy-now-btn" onclick="buyNow(${product.id})">
+                            <i class="fas fa-credit-card"></i> Comprar
+                        </button>
+                    </div>
                 </div>
             `;
 
@@ -503,6 +508,27 @@
                 button.classList.remove('add-to-cart-btn');
                 button.classList.add('added-to-cart-btn');
             }
+        }
+
+        window.buyNow = function(productId) {
+            const product = productsData.find(p => p.id === productId);
+            if (!product) return;
+
+            cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+            const existingItem = cart.find(item => item.id === productId);
+
+            if (existingItem) {
+                existingItem.quantity = (existingItem.quantity || 1) + 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+
+            localStorage.setItem('shoppingCart', JSON.stringify(cart));
+            updateCartCount();
+            showNotification(`${product.name} añadido. Redirigiendo al pago...`, 'success');
+
+            // Redirect to cart and open information step
+            window.location.href = 'carrito.html#step2';
         }
 
         function setupFilters() {

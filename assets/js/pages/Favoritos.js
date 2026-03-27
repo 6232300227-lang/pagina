@@ -357,9 +357,14 @@
                                     <span>(${item.reviews || 100})</span>
                                 </div>
                                 <div class="favorite-actions">
-                                    <button class="${inCart ? 'added-to-cart-btn' : 'add-to-cart-btn'}" onclick="addToCartFromFavorites(${item.id})">
-                                        <i class="fas fa-shopping-bag"></i> ${inCart ? 'En el carrito' : 'Añadir al carrito'}
-                                    </button>
+                                    <div class="product-actions">
+                                        <button class="${inCart ? 'added-to-cart-btn' : 'add-to-cart-btn'}" onclick="addToCartFromFavorites(${item.id})">
+                                            <i class="fas fa-shopping-bag"></i> ${inCart ? 'En el carrito' : 'Añadir al carrito'}
+                                        </button>
+                                        <button class="buy-now-btn" onclick="buyNow(${item.id})">
+                                            <i class="fas fa-credit-card"></i> Comprar
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

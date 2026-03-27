@@ -59,6 +59,13 @@
             setupMobileMenu();
             setupSearch();
             updateUserInterface();
+
+            // Support direct links from product pages: carrito.html#step2 -> open information step
+            if (window.location.hash === '#step2') {
+                setTimeout(() => {
+                    goToStep(2);
+                }, 200);
+            }
         });
 
         // ===== FUNCIONES DE BÚSQUEDA =====
@@ -628,6 +635,59 @@
 
                 showNotification('¡Pago realizado con éxito!', 'success');
             }, 1500);
+        }
+
+        // Mercado Pago checkout
+        async function checkoutWithMercadoPago() {
+            if (cart.length === 0) {
+                showNotification('Tu carrito está vacío', 'error');
+                return;
+            }
+
+            // Ensure shipping/info step is valid (collect payer info)
+            if (!validateInfo()) {
+                showNotification('Por favor completa la información de envío', 'error');
+                goToStep(2);
+                return;
+            }
+
+            const payer = {
+                email: document.getElementById('email')?.value || '',
+                name: document.getElementById('fullName')?.value || ''
+            };
+
+            const items = cart.map(item => ({
+                title: item.name,
+                quantity: item.quantity || 1,
+                unit_price: Number(item.price) || 0
+            }));
+
+            try {
+                const response = await fetch('/api/payments/create_preference', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ items, payer })
+                });
+
+                if (!response.ok) {
+                    const err = await response.json().catch(() => ({}));
+                    console.error('MP create preference failed', err);
+                    showNotification('Error al iniciar el pago', 'error');
+                    return;
+                }
+
+                const data = await response.json();
+                if (data.init_point) {
+                    // Redirect user to Mercado Pago sandbox checkout
+                    window.location.href = data.init_point;
+                } else {
+                    console.error('No init_point', data);
+                    showNotification('No se pudo iniciar el pago', 'error');
+                }
+            } catch (err) {
+                console.error('Checkout error', err);
+                showNotification('Error al conectar con el servidor de pago', 'error');
+            }
         }
 
         function validateCard() {
