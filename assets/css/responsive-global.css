@@ -57,6 +57,20 @@ iframe {
     font-size: 1.05rem !important;
 }
 
+/* Desktop: bajar visualmente el enlace de cuenta dentro del header */
+@media (min-width: 993px) {
+    .header-content {
+        align-items: flex-start !important;
+    }
+    .user-actions {
+        align-items: flex-start !important;
+    }
+    .account-link {
+        align-self: flex-end !important;
+        margin-top: 6px !important;
+    }
+}
+
 .wishlist-wrapper,
 .cart-wrapper {
     position: relative !important;
@@ -216,6 +230,25 @@ iframe {
         display: grid !important;
         grid-template-columns: 1fr;
         gap: 10px;
+    }
+
+    /* Mover enlace de cuenta al footer en móviles: ocultar en header */
+    .main-header .account-link {
+        display: none !important;
+    }
+    footer .mobile-account-link {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        padding: 10px 12px !important;
+        border-radius: 8px !important;
+        background: transparent !important;
+        color: inherit !important;
+        text-decoration: none !important;
+        font-weight: 600 !important;
+    }
+    footer .mobile-account-link i {
+        font-size: 1.05rem !important;
     }
 
     .nav-btn,

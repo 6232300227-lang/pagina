@@ -220,10 +220,18 @@ function logout(options = {}) {
         return;
     }
 
-    // Recarga para que todos los widgets queden en estado invitado
+    // Intentar redirigir a la última página visitada (si existe), si no ir al inicio
+    const lastVisited = localStorage.getItem('lastVisited');
+    if (lastVisited) {
+        const target = lastVisited.startsWith('http') ? lastVisited : `${window.location.origin}${lastVisited}`;
+        setTimeout(() => {
+            window.location.href = target;
+        }, 250);
+        return;
+    }
+
     setTimeout(() => {
-        const cleanUrl = `${window.location.origin}${window.location.pathname}`;
-        window.location.href = cleanUrl;
+        window.location.href = 'index.html';
     }, 250);
 }
 
@@ -340,6 +348,40 @@ function refreshHeaderCounters() {
     updateWishlistCount();
 }
 
+// Mover el enlace de cuenta al footer en móviles (clonar/alternar)
+function ensureMobileAccountInFooter() {
+    try {
+        const footer = document.querySelector('footer');
+        const orig = document.getElementById('accountLink');
+        if (!footer || !orig) return;
+
+        const isMobile = window.innerWidth <= 768;
+        let mobileLink = document.getElementById('mobileAccountLink');
+
+        if (isMobile) {
+            if (!mobileLink) {
+                mobileLink = orig.cloneNode(true);
+                mobileLink.id = 'mobileAccountLink';
+                mobileLink.classList.add('mobile-account-link');
+                // Ensure click opens modal if needed
+                mobileLink.onclick = function(e) {
+                    const href = mobileLink.getAttribute('href');
+                    if (!href || href === '#' || href.includes('usuarios.html')) {
+                        openAuthModal(e);
+                    }
+                };
+                footer.appendChild(mobileLink);
+            }
+            orig.style.display = 'none';
+        } else {
+            if (mobileLink) mobileLink.remove();
+            orig.style.display = '';
+        }
+    } catch (_err) {
+        // ignore
+    }
+}
+
 // Cerrar modal cuando se hace click fuera de él
 document.addEventListener('DOMContentLoaded', function() {
     const authModal = document.getElementById('authModal');
@@ -354,8 +396,27 @@ document.addEventListener('DOMContentLoaded', function() {
     // Actualizar interfaz al cargar la página
     updateUserInterface();
     refreshHeaderCounters();
+    // Guardar la última página visitada para redirección post-logout
+    try {
+        const path = `${window.location.pathname}${window.location.search}`;
+        const lower = path.toLowerCase();
+        // Evitar usar el dashboard admin como destino
+        if (!lower.includes('admin-dashboard.html')) {
+            localStorage.setItem('lastVisited', path);
+        }
+    } catch (_err) {
+        // ignore
+    }
     // Inicializar Google Sign-In (el script de GSI puede cargarse después del DOM)
     window.addEventListener('load', initGoogleSignIn);
+
+    // Ajuste móvil: mover cuenta al footer si aplica
+    ensureMobileAccountInFooter();
+    window.addEventListener('resize', function() {
+        // Debounce simple
+        clearTimeout(window.__moveAccountTimer);
+        window.__moveAccountTimer = setTimeout(ensureMobileAccountInFooter, 120);
+    });
 
     // Sincronizar UI si el logout ocurre desde otra pestaña
     window.addEventListener('storage', function(e) {
