@@ -4,7 +4,11 @@
         let promoCodeApplied = false;
         let discountAmount = 0;
         let currentStep = 1;
-        let selectedPaymentMethod = 'card';
+        let checkoutOrderData = null;
+
+        const MP_DRAFT_KEY = 'mpCheckoutDraft';
+        const MP_LAST_PAYMENT_KEY = 'mpLastPaymentId';
+        const API_BASE = '';
 
         const SHIPPING_COST = 5.99;
         const SHIPPING_FREE_THRESHOLD = 29.99;
@@ -59,6 +63,7 @@
             setupMobileMenu();
             setupSearch();
             updateUserInterface();
+            handleMercadoPagoReturn();
 
             // Support direct links from product pages: carrito.html#step2 -> open information step
             if (window.location.hash === '#step2') {
@@ -601,55 +606,13 @@
             return true;
         }
 
-        function selectPaymentMethod(method, element) {
-            selectedPaymentMethod = method;
-
-            document.querySelectorAll('.payment-method').forEach(el => {
-                el.classList.remove('selected');
-            });
-
-            element.classList.add('selected');
-
-            const cardDetails = document.getElementById('cardDetails');
-            if (cardDetails) {
-                cardDetails.style.display = method === 'card' ? 'block' : 'none';
-            }
-        }
-
-        function processPayment() {
-            if (selectedPaymentMethod === 'card') {
-                if (!validateCard()) {
-                    showNotification('Datos de tarjeta inválidos', 'error');
-                    return;
-                }
-            }
-
+        async function processPayment() {
             if (cart.length === 0) {
                 showNotification('Tu carrito está vacío', 'error');
                 return;
             }
 
-            showNotification('Procesando pago...', 'info');
-
-            setTimeout(() => {
-                const date = new Date();
-                const year = date.getFullYear();
-                const random = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
-                const orderNumber = `#SH-${year}-${random}`;
-
-                document.getElementById('orderNumber').textContent = orderNumber;
-
-                cart = [];
-                promoCodeApplied = false;
-                discountAmount = 0;
-                saveCartToStorage();
-                updateCartCount();
-
-                goToStep(4);
-                loadConfirmationDetails();
-
-                showNotification('¡Pago realizado con éxito!', 'success');
-            }, 1500);
+            await checkoutWithMercadoPago();
         }
 
         // Mercado Pago checkout
@@ -669,9 +632,23 @@
                 return;
             }
 
+            const subtotal = cart.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
+            const shipping = subtotal >= SHIPPING_FREE_THRESHOLD ? 0 : SHIPPING_COST;
+            const discount = promoCodeApplied ? subtotal * discountAmount : 0;
+            const total = subtotal + shipping - discount;
+
+            const shippingInfo = {
+                fullName: document.getElementById('fullName')?.value.trim() || '',
+                email: document.getElementById('email')?.value.trim() || '',
+                phone: document.getElementById('phone')?.value.trim() || '',
+                address: document.getElementById('address')?.value.trim() || '',
+                city: document.getElementById('city')?.value.trim() || '',
+                zipCode: document.getElementById('zipCode')?.value.trim() || ''
+            };
+
             const payer = {
-                email: document.getElementById('email')?.value || '',
-                name: document.getElementById('fullName')?.value || ''
+                email: shippingInfo.email,
+                name: shippingInfo.fullName
             };
 
             const items = cart.map(item => ({
@@ -680,11 +657,32 @@
                 unit_price: Number(item.price) || 0
             }));
 
+            const draftOrder = {
+                createdAt: new Date().toISOString(),
+                shippingInfo,
+                items: cart.map(item => ({ ...item })),
+                summary: { subtotal, shipping, discount, total }
+            };
+
+            localStorage.setItem(MP_DRAFT_KEY, JSON.stringify(draftOrder));
+
             try {
-                const response = await fetch('/api/payments/create_preference', {
+                showNotification('Redirigiendo a Mercado Pago...', 'info');
+
+                const response = await fetch(`${API_BASE}/api/payments/create_preference`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ items, payer })
+                    body: JSON.stringify({
+                        items,
+                        payer,
+                        shippingInfo,
+                        summary: { subtotal, shipping, discount, total },
+                        back_urls: {
+                            success: `${window.location.origin}/carrito.html?mp_status=success`,
+                            failure: `${window.location.origin}/carrito.html?mp_status=failure`,
+                            pending: `${window.location.origin}/carrito.html?mp_status=pending`
+                        }
+                    })
                 });
 
                 if (!response.ok) {
@@ -696,7 +694,10 @@
 
                 const data = await response.json();
                 if (data.init_point) {
-                    // Redirect user to Mercado Pago sandbox checkout
+                    if (data.externalReference) {
+                        draftOrder.externalReference = data.externalReference;
+                        localStorage.setItem(MP_DRAFT_KEY, JSON.stringify(draftOrder));
+                    }
                     window.location.href = data.init_point;
                 } else {
                     console.error('No init_point', data);
@@ -708,67 +709,183 @@
             }
         }
 
-        function validateCard() {
-            const cardNumber = document.getElementById('cardNumber');
-            const expiryDate = document.getElementById('expiryDate');
-            const cvv = document.getElementById('cvv');
-            const cardHolder = document.getElementById('cardHolder');
+        async function handleMercadoPagoReturn() {
+            const params = new URLSearchParams(window.location.search);
+            const mpStatus = (params.get('mp_status') || '').toLowerCase();
+            const collectionStatus = (params.get('collection_status') || params.get('status') || '').toLowerCase();
+            const paymentId = params.get('payment_id') || params.get('collection_id') || '';
 
-            if (!cardNumber || !expiryDate || !cvv || !cardHolder) return false;
+            const isApproved = mpStatus === 'success' || collectionStatus === 'approved';
+            const isFailure = mpStatus === 'failure' || collectionStatus === 'rejected';
+            const isPending = mpStatus === 'pending' || collectionStatus === 'pending';
 
-            const cardNumberValue = cardNumber.value.replace(/\s/g, '');
-            const expiryDateValue = expiryDate.value;
-            const cvvValue = cvv.value;
-            const cardHolderValue = cardHolder.value.trim();
+            if (!isApproved && !isFailure && !isPending) return;
 
-            let isValid = true;
-
-            if (!cardNumberValue || cardNumberValue.length < 16) {
-                cardNumber.classList.add('error');
-                isValid = false;
-            } else {
-                cardNumber.classList.remove('error');
+            if (isFailure) {
+                showNotification('El pago no fue aprobado. Inténtalo nuevamente.', 'error');
+                goToStep(3);
+                return;
             }
 
-            if (!expiryDateValue || expiryDateValue.length < 5) {
-                expiryDate.classList.add('error');
-                isValid = false;
-            } else {
-                expiryDate.classList.remove('error');
+            if (isPending) {
+                showNotification('Tu pago está pendiente de confirmación.', 'info');
+                goToStep(3);
+                return;
             }
 
-            if (!cvvValue || cvvValue.length < 3) {
-                cvv.classList.add('error');
-                isValid = false;
-            } else {
-                cvv.classList.remove('error');
+            if (paymentId && localStorage.getItem(MP_LAST_PAYMENT_KEY) === paymentId) {
+                return;
             }
 
-            if (!cardHolderValue) {
-                cardHolder.classList.add('error');
-                isValid = false;
-            } else {
-                cardHolder.classList.remove('error');
+            const rawDraft = localStorage.getItem(MP_DRAFT_KEY);
+            if (!rawDraft) {
+                showNotification('No se encontró el pedido pendiente para confirmar.', 'error');
+                return;
             }
 
-            return isValid;
+            let draft;
+            try {
+                draft = JSON.parse(rawDraft);
+            } catch (err) {
+                console.error('Error leyendo borrador de pago:', err);
+                showNotification('No se pudo recuperar el detalle del pedido.', 'error');
+                return;
+            }
+
+            if (paymentId) {
+                try {
+                    const response = await fetch(`/api/payments/status/${paymentId}`);
+                    if (response.ok) {
+                        const statusData = await response.json();
+                        const realStatus = String(statusData.paymentStatus || '').toLowerCase();
+
+                        if (realStatus && realStatus !== 'approved') {
+                            if (realStatus === 'pending' || realStatus === 'in_process') {
+                                showNotification('El pago sigue pendiente de confirmación.', 'info');
+                                goToStep(3);
+                                return;
+                            }
+
+                            showNotification('El pago no fue aprobado por Mercado Pago.', 'error');
+                            goToStep(3);
+                            return;
+                        }
+
+                        if (statusData.externalReference) {
+                            draft.externalReference = statusData.externalReference;
+                        }
+                    }
+                } catch (err) {
+                    console.error('No se pudo consultar el estado del pago:', err);
+                }
+            }
+
+            checkoutOrderData = {
+                ...draft,
+                paymentMethodLabel: 'Mercado Pago',
+                paymentId
+            };
+
+            await persistOrderInBackend(checkoutOrderData);
+
+            if (paymentId) {
+                localStorage.setItem(MP_LAST_PAYMENT_KEY, paymentId);
+            }
+
+            localStorage.removeItem(MP_DRAFT_KEY);
+            localStorage.removeItem('shoppingCart');
+            cart = [];
+            updateCartCount();
+            updateCartDisplay();
+
+            const orderNumber = draft.externalReference
+                ? `#${draft.externalReference}`
+                : paymentId
+                    ? `#MP-${paymentId}`
+                    : generateLocalOrderNumber();
+            const orderNumberEl = document.getElementById('orderNumber');
+            if (orderNumberEl) orderNumberEl.textContent = orderNumber;
+
+            goToStep(4);
+            loadConfirmationDetails();
+            showNotification('¡Pago aprobado en Mercado Pago!', 'success');
+
+            const cleanUrl = `${window.location.origin}${window.location.pathname}`;
+            window.history.replaceState({}, document.title, cleanUrl);
+        }
+
+        async function persistOrderInBackend(order) {
+            if (!order || !order.shippingInfo || !Array.isArray(order.items) || order.items.length === 0) {
+                return;
+            }
+
+            try {
+                await fetch('/api/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: order.shippingInfo.fullName,
+                        email: order.shippingInfo.email
+                    })
+                });
+
+                const itemsPayload = order.items.map(item => ({
+                    productId: item.id || item.productId || '',
+                    name: item.name,
+                    qty: item.quantity || 1,
+                    price: Number(item.price) || 0,
+                    userEmail: order.shippingInfo.email
+                }));
+
+                await Promise.all(itemsPayload.map(it => fetch('/api/cart', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(it)
+                })));
+            } catch (err) {
+                console.error('No se pudo registrar el pedido en backend:', err);
+            }
+        }
+
+        function generateLocalOrderNumber() {
+            const year = new Date().getFullYear();
+            const random = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+            return `#SH-${year}-${random}`;
         }
 
         function loadConfirmationDetails() {
             const container = document.getElementById('confirmationDetails');
             if (!container) return;
 
-            const fullName = document.getElementById('fullName')?.value || '';
-            const email = document.getElementById('email')?.value || '';
-            const address = document.getElementById('address')?.value || '';
-            const city = document.getElementById('city')?.value || '';
-            const zipCode = document.getElementById('zipCode')?.value || '';
-            const phone = document.getElementById('phone')?.value || '';
+            const source = checkoutOrderData || {
+                shippingInfo: {
+                    fullName: document.getElementById('fullName')?.value || '',
+                    email: document.getElementById('email')?.value || '',
+                    phone: document.getElementById('phone')?.value || '',
+                    address: document.getElementById('address')?.value || '',
+                    city: document.getElementById('city')?.value || '',
+                    zipCode: document.getElementById('zipCode')?.value || ''
+                },
+                summary: (() => {
+                    const subtotal = cart.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
+                    const shipping = subtotal >= SHIPPING_FREE_THRESHOLD ? 0 : SHIPPING_COST;
+                    const discount = promoCodeApplied ? subtotal * discountAmount : 0;
+                    const total = subtotal + shipping - discount;
+                    return { subtotal, shipping, discount, total };
+                })(),
+                paymentMethodLabel: 'Mercado Pago'
+            };
 
-            const subtotal = cart.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
-            const shipping = subtotal >= SHIPPING_FREE_THRESHOLD ? 0 : SHIPPING_COST;
-            const discount = promoCodeApplied ? subtotal * discountAmount : 0;
-            const total = subtotal + shipping - discount;
+            const fullName = source.shippingInfo.fullName || '';
+            const email = source.shippingInfo.email || '';
+            const address = source.shippingInfo.address || '';
+            const city = source.shippingInfo.city || '';
+            const zipCode = source.shippingInfo.zipCode || '';
+            const phone = source.shippingInfo.phone || '';
+            const subtotal = Number(source.summary.subtotal || 0);
+            const shipping = Number(source.summary.shipping || 0);
+            const discount = Number(source.summary.discount || 0);
+            const total = Number(source.summary.total || 0);
 
             container.innerHTML = `
                 <div class="detail-row">
@@ -805,7 +922,7 @@
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Método de pago:</span>
-                    <span class="detail-value">${selectedPaymentMethod === 'card' ? 'Tarjeta de Crédito/Débito' : 'PayPal'}</span>
+                    <span class="detail-value">${source.paymentMethodLabel || 'Mercado Pago'}</span>
                 </div>
             `;
         }

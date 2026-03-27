@@ -277,46 +277,20 @@
             <!-- Step 3: Pago -->
             <div class="step-container" id="step3">
                 <div class="checkout-form">
-                    <h2 class="form-title"><i class="fas fa-credit-card"></i> Método de Pago</h2>
+                    <h2 class="form-title"><i class="fas fa-shield-alt"></i> Pago Seguro</h2>
 
-                    <div class="payment-methods">
-                        <div class="payment-method selected" onclick="selectPaymentMethod('card', this)">
-                            <i class="fas fa-credit-card"></i>
-                            <span>Tarjeta de Crédito/Débito</span>
-                        </div>
-                        <div class="payment-method" onclick="selectPaymentMethod('paypal', this)">
-                            <i class="fab fa-paypal"></i>
-                            <span>PayPal</span>
-                        </div>
-                    </div>
-
-                    <div id="cardDetails" class="card-details">
-                        <div class="form-group">
-                            <label class="form-label">Número de Tarjeta</label>
-                            <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
-                        </div>
-                        <div class="card-row">
-                            <div class="form-group">
-                                <label class="form-label">Fecha de Expiración</label>
-                                <input type="text" class="form-control" id="expiryDate" placeholder="MM/AA" maxlength="5">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">CVV</label>
-                                <input type="text" class="form-control" id="cvv" placeholder="123" maxlength="4">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Titular de la Tarjeta</label>
-                                <input type="text" class="form-control" id="cardHolder" placeholder="Como aparece en la tarjeta">
-                            </div>
-                        </div>
+                    <div class="card-details">
+                        <p style="margin:0; color:#2c3e50; font-weight:600;">
+                            Serás redirigido a Mercado Pago para completar el pago de forma segura.
+                        </p>
+                        <p style="margin:8px 0 0; color:#666; font-size:0.95rem;">
+                            Allí podrás ingresar los datos de tu tarjeta.
+                        </p>
                     </div>
 
                     <div class="navigation-buttons">
                         <button class="nav-btn prev" onclick="goToStep(2)">
                             <i class="fas fa-arrow-left"></i> Volver a Información
-                        </button>
-                        <button class="nav-btn mp" onclick="checkoutWithMercadoPago()">
-                            Pagar con Mercado Pago <i class="fab fa-mercado-pago"></i>
                         </button>
                         <button class="nav-btn next" onclick="processPayment()">
                             Realizar Pago <i class="fas fa-lock"></i>

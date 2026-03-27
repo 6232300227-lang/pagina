@@ -7,6 +7,7 @@ const path = require('path');
 const { connectDB } = require('./db/connection');
 const User = require('./models/User');
 const CartItem = require('./models/Cart');
+const Order = require('./models/Order');
 
 dotenv.config();
 const app = express();
@@ -22,8 +23,114 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Admin123!';
 const ADMIN_NAME = process.env.ADMIN_NAME || 'Administrador StyleHub';
 
 // Mercado Pago access token (used via direct HTTP request)
-const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN || process.env.MERCADOPAGO_ACCESS_TOKEN || 'TEST-138373493028620-032618-5d962b9c5f5cec27ee7ec14701e75c89-2049134991';
+const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN || process.env.MERCADOPAGO_ACCESS_TOKEN || 'APP_USR-138373493028620-032618-c24ebc952540422844b3ed964ec3eb52-2049134991';
 const MP_API_URL = 'https://api.mercadopago.com/checkout/preferences';
+const MP_PAYMENT_API_URL = 'https://api.mercadopago.com/v1/payments';
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://stylehub.pics';
+const BACKEND_PUBLIC_URL = process.env.BACKEND_PUBLIC_URL || 'https://pagina-6ygv.onrender.com';
+const MP_NOTIFICATION_URL = process.env.MP_NOTIFICATION_URL || `${BACKEND_PUBLIC_URL}/api/payments/webhook`;
+
+function normalizeFrontendBase(value) {
+  if (!value) return '';
+
+  try {
+    const parsed = new URL(value);
+    parsed.pathname = '/';
+    parsed.search = '';
+    parsed.hash = '';
+    return parsed.toString().replace(/\/$/, '');
+  } catch (_err) {
+    return String(value)
+      .replace(/\/carrito\.html.*$/i, '')
+      .replace(/\/$/, '');
+  }
+}
+
+function mapMercadoPagoStatus(status = '') {
+  switch (String(status).toLowerCase()) {
+    case 'approved':
+      return 'approved';
+    case 'pending':
+    case 'in_process':
+    case 'in_mediation':
+      return 'pending';
+    case 'rejected':
+      return 'rejected';
+    case 'cancelled':
+    case 'cancel':
+      return 'cancelled';
+    default:
+      return 'pending_payment';
+  }
+}
+
+function toMoney(value) {
+  const number = Number(value || 0);
+  return Number.isFinite(number) ? number : 0;
+}
+
+function buildOrderSummary(items = [], incomingSummary = {}) {
+  const subtotal = items.reduce((acc, item) => {
+    return acc + (toMoney(item.unit_price || item.price) * (Number(item.quantity) || 1));
+  }, 0);
+
+  const shipping = toMoney(incomingSummary.shipping);
+  const discount = toMoney(incomingSummary.discount);
+  const total = subtotal + shipping - discount;
+
+  return { subtotal, shipping, discount, total };
+}
+
+async function fetchMercadoPagoPayment(paymentId) {
+  const response = await fetch(`${MP_PAYMENT_API_URL}/${paymentId}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${MP_ACCESS_TOKEN}`
+    }
+  });
+
+  const json = await response.json();
+  if (!response.ok) {
+    throw new Error(`Mercado Pago payment lookup failed: ${JSON.stringify(json)}`);
+  }
+
+  return json;
+}
+
+function extractWebhookPaymentId(req) {
+  return String(
+    req.body?.data?.id ||
+    req.body?.id ||
+    req.query['data.id'] ||
+    req.query.id ||
+    ''
+  ).trim();
+}
+
+async function syncOrderFromMercadoPagoPayment(paymentId) {
+  if (!paymentId) {
+    return null;
+  }
+
+  const payment = await fetchMercadoPagoPayment(paymentId);
+  const externalReference = payment.external_reference || payment.metadata?.order_reference || '';
+
+  const update = {
+    paymentId: String(payment.id || paymentId),
+    paymentStatus: payment.status || 'unknown',
+    paymentStatusDetail: payment.status_detail || '',
+    status: mapMercadoPagoStatus(payment.status),
+    rawPayment: payment,
+    paidAt: payment.date_approved ? new Date(payment.date_approved) : null
+  };
+
+  const query = externalReference
+    ? { externalReference }
+    : { paymentId: String(payment.id || paymentId) };
+
+  const order = await Order.findOneAndUpdate(query, { $set: update }, { new: true });
+  return { order, payment };
+}
 
 connectDB()
   .then(() => ensureDefaultAdmin())
@@ -170,26 +277,46 @@ app.post('/api/cart', async (req, res) => {
 // Mercado Pago: create preference and return init_point
 app.post('/api/payments/create_preference', async (req, res) => {
   try {
-    const { items, payer, back_urls } = req.body;
+    const { items, payer, back_urls, shippingInfo, summary } = req.body;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ error: 'Items are required' });
     }
 
+    if (!MP_ACCESS_TOKEN) {
+      return res.status(500).json({ error: 'Mercado Pago no está configurado (falta MP_ACCESS_TOKEN)' });
+    }
+
+    const originFromRequest = (req.headers.origin || '').replace(/\/$/, '');
+    const frontendBase = normalizeFrontendBase(FRONTEND_URL || originFromRequest || `http://localhost:${PORT}`);
+    const orderReference = `SH-${Date.now()}-${Math.floor(Math.random() * 100000)}`;
+    const normalizedItems = items.map(it => ({
+      title: it.title || it.name || 'Producto',
+      quantity: Number(it.quantity) || 1,
+      unit_price: toMoney(it.unit_price || it.price)
+    }));
+    const orderSummary = buildOrderSummary(normalizedItems, summary || {});
+
     const preference = {
-      items: items.map(it => ({
-        title: it.title || it.name || 'Producto',
-        quantity: Number(it.quantity) || 1,
-        unit_price: Number(it.unit_price || it.price || 0)
-      })),
+      items: normalizedItems,
       payer: payer || {},
       back_urls: back_urls || {
-        success: process.env.FRONTEND_URL || 'http://localhost:5500',
-        failure: process.env.FRONTEND_URL || 'http://localhost:5500',
-        pending: process.env.FRONTEND_URL || 'http://localhost:5500'
+        success: `${frontendBase}/carrito.html?mp_status=success`,
+        failure: `${frontendBase}/carrito.html?mp_status=failure`,
+        pending: `${frontendBase}/carrito.html?mp_status=pending`
       },
-      auto_return: 'approved'
+      auto_return: 'approved',
+      external_reference: orderReference,
+      statement_descriptor: 'STYLEHUB',
+      metadata: {
+        source: 'stylehub-web',
+        order_reference: orderReference
+      }
     };
+
+    if (MP_NOTIFICATION_URL) {
+      preference.notification_url = MP_NOTIFICATION_URL;
+    }
 
     // Use fetch to call Mercado Pago API directly
     if (typeof fetch === 'undefined') {
@@ -207,7 +334,36 @@ app.post('/api/payments/create_preference', async (req, res) => {
 
     const mpJson = await response.json();
     if (response.ok) {
-      return res.json({ init_point: mpJson.init_point, preferenceId: mpJson.id });
+      await Order.create({
+        externalReference: orderReference,
+        preferenceId: mpJson.id,
+        paymentStatus: 'pending',
+        status: 'pending_payment',
+        payer: {
+          name: payer?.name || shippingInfo?.fullName || '',
+          email: payer?.email || shippingInfo?.email || ''
+        },
+        shippingInfo: {
+          fullName: shippingInfo?.fullName || '',
+          email: shippingInfo?.email || '',
+          phone: shippingInfo?.phone || '',
+          address: shippingInfo?.address || '',
+          city: shippingInfo?.city || '',
+          zipCode: shippingInfo?.zipCode || ''
+        },
+        items: normalizedItems.map(item => ({
+          title: item.title,
+          quantity: item.quantity,
+          unitPrice: item.unit_price
+        })),
+        summary: orderSummary
+      });
+
+      return res.json({
+        init_point: mpJson.init_point || mpJson.sandbox_init_point,
+        preferenceId: mpJson.id,
+        externalReference: orderReference
+      });
     }
 
     console.error('MP API responded with error:', mpJson);
@@ -215,6 +371,60 @@ app.post('/api/payments/create_preference', async (req, res) => {
   } catch (err) {
     console.error('MP error:', err);
     res.status(500).json({ error: 'Error creating Mercado Pago preference' });
+  }
+});
+
+app.get('/api/payments/webhook', (req, res) => {
+  res.status(200).json({ ok: true, message: 'Webhook Mercado Pago activo' });
+});
+
+app.post('/api/payments/webhook', async (req, res) => {
+  try {
+    const topic = String(req.query.topic || req.body?.type || '').toLowerCase();
+    const paymentId = extractWebhookPaymentId(req);
+
+    if (topic && topic !== 'payment') {
+      return res.status(200).json({ ok: true, ignored: true, topic });
+    }
+
+    if (!paymentId) {
+      return res.status(200).json({ ok: true, ignored: true, reason: 'payment id missing' });
+    }
+
+    const result = await syncOrderFromMercadoPagoPayment(paymentId);
+    return res.status(200).json({
+      ok: true,
+      paymentId,
+      status: result?.order?.status || result?.payment?.status || 'processed'
+    });
+  } catch (err) {
+    console.error('Mercado Pago webhook error:', err);
+    return res.status(500).json({ error: 'Error procesando webhook de Mercado Pago' });
+  }
+});
+
+app.get('/api/payments/status/:paymentId', async (req, res) => {
+  try {
+    const { paymentId } = req.params;
+    if (!paymentId) {
+      return res.status(400).json({ error: 'paymentId requerido' });
+    }
+
+    const result = await syncOrderFromMercadoPagoPayment(paymentId);
+    if (!result?.payment) {
+      return res.status(404).json({ error: 'Pago no encontrado' });
+    }
+
+    return res.json({
+      paymentId: String(result.payment.id || paymentId),
+      paymentStatus: result.payment.status || 'unknown',
+      paymentStatusDetail: result.payment.status_detail || '',
+      orderStatus: result.order?.status || 'pending_payment',
+      externalReference: result.payment.external_reference || result.order?.externalReference || ''
+    });
+  } catch (err) {
+    console.error('Mercado Pago status lookup error:', err);
+    return res.status(500).json({ error: 'No se pudo consultar el estado del pago' });
   }
 });
 
