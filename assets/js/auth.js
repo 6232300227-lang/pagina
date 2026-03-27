@@ -3,8 +3,28 @@
 
 const API_URL = 'https://pagina-6ygv.onrender.com/api';
 
-let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
-let token = localStorage.getItem('token') || null;
+let currentUser = null;
+let token = null;
+
+function loadAuthFromStorage() {
+    try {
+        const raw = localStorage.getItem('currentUser');
+        currentUser = raw ? JSON.parse(raw) : null;
+    } catch (_err) {
+        currentUser = null;
+    }
+    try {
+        token = localStorage.getItem('token') || null;
+    } catch (_err) {
+        token = null;
+    }
+    // expose to other scripts
+    try { window.currentUser = currentUser; } catch (_) {}
+    try { window.token = token; } catch (_) {}
+}
+
+// Inicializar desde localStorage al cargar el script
+loadAuthFromStorage();
 
 // Función para abrir el modal de autenticación
 function openAuthModal(event) {
@@ -87,6 +107,11 @@ async function handleLogin(event) {
             localStorage.setItem('currentUser', JSON.stringify(data.user));
             token = data.token;
             currentUser = data.user;
+            try { window.currentUser = currentUser; } catch (_) {}
+            try { window.token = token; } catch (_) {}
+            // expose globals for other scripts
+            try { window.currentUser = currentUser; } catch (_) {}
+            try { window.token = token; } catch (_) {}
 
             if (currentUser && currentUser.role === 'admin') {
                 window.location.href = 'admin-dashboard.html';
@@ -196,7 +221,9 @@ function logout(options = {}) {
     localStorage.removeItem('mpLastPaymentId');
     token = null;
     currentUser = null;
-
+    
+    try { window.currentUser = null; } catch (_) {}
+    try { window.token = null; } catch (_) {}
     // Restablecer UI y modales por si quedaron abiertos
     closeAuthModal();
     updateUserInterface();
@@ -235,11 +262,109 @@ function logout(options = {}) {
     }, 250);
 }
 
-// Mostrar menú de usuario
-function showUserMenu() {
-    if (confirm('¿Cerrar sesión?')) {
-        logout();
+// Mostrar menú de usuario: desplegable con opciones y acceso a cierre de sesión
+function showUserMenu(event) {
+    // prevent navigation if called from a link
+    if (event && event.preventDefault) event.preventDefault();
+    removeAccountMenu();
+
+    const accountLink = document.getElementById('accountLink');
+    if (!accountLink) return;
+
+    const menu = document.createElement('div');
+    menu.className = 'account-menu';
+    menu.id = 'accountMenu';
+
+    // Perfil / Dashboard
+    const profileLink = document.createElement('a');
+    profileLink.href = 'usuarios.html';
+    profileLink.innerHTML = '<i class="fas fa-user-circle"></i><span>Mi cuenta</span>';
+    menu.appendChild(profileLink);
+
+    // Favoritos
+    const fav = document.createElement('a');
+    fav.href = 'Favoritos.html';
+    fav.innerHTML = '<i class="fas fa-heart"></i><span>Favoritos</span>';
+    menu.appendChild(fav);
+
+    // Admin link (if admin)
+    if (currentUser && currentUser.role === 'admin') {
+        const admin = document.createElement('a');
+        admin.href = 'admin-dashboard.html';
+        admin.innerHTML = '<i class="fas fa-shield-alt"></i><span>Dashboard</span>';
+        menu.appendChild(admin);
     }
+
+    // Logout button
+    const logoutBtn = document.createElement('button');
+    logoutBtn.type = 'button';
+    logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i><span>Cerrar sesión</span>';
+    logoutBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showLogoutModal();
+    });
+    menu.appendChild(logoutBtn);
+
+    // Position menu under the account link
+    document.body.appendChild(menu);
+    const rect = accountLink.getBoundingClientRect();
+    menu.style.top = `${rect.bottom + window.scrollY + 8}px`;
+    menu.style.left = `${Math.max(12, rect.left + window.scrollX - 60)}px`;
+
+    // Close on outside click
+    setTimeout(() => {
+        window.addEventListener('click', onDocClickForAccountMenu);
+    }, 0);
+}
+
+function onDocClickForAccountMenu(e) {
+    const menu = document.getElementById('accountMenu');
+    if (!menu) return;
+    if (!menu.contains(e.target) && e.target.id !== 'accountLink' && !e.target.closest('.mobile-account-link')) {
+        removeAccountMenu();
+    }
+}
+
+function removeAccountMenu() {
+    const existing = document.getElementById('accountMenu');
+    if (existing) existing.remove();
+    window.removeEventListener('click', onDocClickForAccountMenu);
+}
+
+function showLogoutModal() {
+    removeAccountMenu();
+    // If modal already exists, don't recreate
+    if (document.getElementById('logoutModalOverlay')) return;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'logoutModalOverlay';
+    overlay.className = 'logout-modal-overlay';
+
+    const modal = document.createElement('div');
+    modal.className = 'logout-modal';
+    modal.innerHTML = `
+        <h3>¿Cerrar sesión?</h3>
+        <p>Si cierras sesión, puedes volver a iniciar sesión en cualquier momento.</p>
+        <div class="logout-actions">
+            <button class="cancel-btn">Cancelar</button>
+            <button class="confirm-btn">Cerrar sesión</button>
+        </div>
+    `;
+
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    // Bind actions
+    modal.querySelector('.cancel-btn').addEventListener('click', closeLogoutModal);
+    modal.querySelector('.confirm-btn').addEventListener('click', function() {
+        closeLogoutModal();
+        logout();
+    });
+}
+
+function closeLogoutModal() {
+    const overlay = document.getElementById('logoutModalOverlay');
+    if (overlay) overlay.remove();
 }
 
 // Actualizar interfaz de usuario
@@ -251,8 +376,9 @@ function updateUserInterface() {
         const firstName = currentUser.name ? currentUser.name.split(' ')[0] : 'Usuario';
         accountText.textContent = `Hola, ${firstName}`;
         if (accountLink) {
+            // When logged in, navigate to usuarios or admin dashboard
             accountLink.href = currentUser.role === 'admin' ? 'admin-dashboard.html' : 'usuarios.html';
-            // Remove modal trigger so the link actually navigates
+            // Remove any inline click handlers so default navigation occurs
             accountLink.removeAttribute('onclick');
         }
         // Inject admin dashboard button once
@@ -418,6 +544,57 @@ document.addEventListener('DOMContentLoaded', function() {
         window.__moveAccountTimer = setTimeout(ensureMobileAccountInFooter, 120);
     });
 
+    // Bind header/mobile account link and account logout button robustly
+    function bindAccountControls() {
+        const accountLink = document.getElementById('accountLink');
+        if (accountLink) {
+            // remove any existing inline handlers
+            accountLink.removeAttribute('onclick');
+            // Click behavior: if logged in, go to usuarios/admin; otherwise open auth modal
+            accountLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (window.currentUser) {
+                    const dest = (window.currentUser.role === 'admin') ? 'admin-dashboard.html' : 'usuarios.html';
+                    window.location.href = dest;
+                } else {
+                    openAuthModal(e);
+                }
+            });
+        }
+
+        // mobile cloned link (might be created by ensureMobileAccountInFooter)
+        const mobileLink = document.getElementById('mobileAccountLink');
+        if (mobileLink) {
+            mobileLink.removeAttribute('onclick');
+            mobileLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (window.currentUser) {
+                    const dest = (window.currentUser.role === 'admin') ? 'admin-dashboard.html' : 'usuarios.html';
+                    window.location.href = dest;
+                } else {
+                    openAuthModal(e);
+                }
+            });
+        }
+
+        const accountLogoutBtn = document.getElementById('accountLogoutBtn');
+        if (accountLogoutBtn) {
+            accountLogoutBtn.removeAttribute('onclick');
+            accountLogoutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                showLogoutModal();
+            });
+        }
+    }
+
+    // run initial bind and also after mobile link may be created
+    bindAccountControls();
+    // ensure bindings re-applied if mobile link appears later
+    window.addEventListener('resize', function() {
+        clearTimeout(window.__bindAccountTimer);
+        window.__bindAccountTimer = setTimeout(bindAccountControls, 200);
+    });
+
     // Sincronizar UI si el logout ocurre desde otra pestaña
     window.addEventListener('storage', function(e) {
         if (e.key === 'token' || e.key === 'currentUser') {
@@ -496,6 +673,9 @@ async function handleGoogleSignIn(response) {
             localStorage.setItem('currentUser', JSON.stringify(data.user));
             token = data.token;
             currentUser = data.user;
+
+            try { window.currentUser = currentUser; } catch (_) {}
+            try { window.token = token; } catch (_) {}
 
             if (currentUser && currentUser.role === 'admin') {
                 window.location.href = 'admin-dashboard.html';

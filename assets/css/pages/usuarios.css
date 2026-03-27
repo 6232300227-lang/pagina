@@ -497,6 +497,71 @@
             color: #fff;
         }
 
+        /* Enhanced buttons and account menu */
+        .auth-submit, .login-btn, .register-btn, .btn-outline-account, .social-btn, .btn-outline-register {
+            box-shadow: 0 8px 20px rgba(34,34,34,0.08);
+            border-radius: 14px;
+            transition: transform 160ms ease, box-shadow 160ms ease;
+        }
+        .auth-submit:hover, .login-btn:hover, .register-btn:hover, .btn-outline-account:hover, .social-btn:hover, .btn-outline-register:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 18px 36px rgba(34,34,34,0.12);
+        }
+
+        /* Account dropdown menu (header) */
+        .account-menu {
+            position: absolute;
+            min-width: 220px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+            padding: 10px;
+            z-index: 10050;
+            overflow: hidden;
+            font-weight: 600;
+        }
+        .account-menu a, .account-menu button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            color: var(--secondary);
+            text-decoration: none;
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        .account-menu a:hover, .account-menu button:hover {
+            background: rgba(255,51,102,0.05);
+            color: var(--primary-dark);
+        }
+
+        /* Logout confirm modal */
+        .logout-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10060;
+        }
+        .logout-modal {
+            background: #fff;
+            border-radius: 14px;
+            padding: 22px 24px;
+            width: 360px;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.18);
+            text-align: center;
+        }
+        .logout-modal h3 { margin-bottom: 8px; color: var(--secondary); }
+        .logout-modal p { margin-bottom: 18px; color: #6b7280; }
+        .logout-actions { display:flex; gap:10px; justify-content:center; }
+        .logout-actions .confirm-btn { background: var(--primary); color: #fff; border: none; padding: 10px 16px; border-radius: 10px; font-weight:700; }
+        .logout-actions .cancel-btn { background: transparent; border: 1px solid #e6e9ef; padding: 10px 14px; border-radius: 10px; }
+
         .account-tabs {
             display: flex;
             flex-wrap: wrap;
@@ -781,6 +846,26 @@
                 gap: 15px;
                 align-items: flex-start;
             }
+        }
+        /* Banner image and Google button inside header */
+        .auth-banner-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            margin-top: 12px;
+        }
+
+        .auth-banner {
+            max-width: 140px;
+            width: 30%;
+            height: auto;
+            display: block;
+        }
+
+        .banner-google {
+            width: 220px;
+            max-width: 50%;
         }
     .dropdown-content::-webkit-scrollbar {
             width: 6px;

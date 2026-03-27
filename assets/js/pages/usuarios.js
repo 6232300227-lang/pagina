@@ -16,8 +16,25 @@ function showNotification(message, type = 'success') {
 }
 
 function getStoredSession() {
-    const token = localStorage.getItem('token') || '';
-    const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    let token = '';
+    let user = null;
+    try {
+        token = localStorage.getItem('token') || '';
+    } catch (_err) {
+        token = '';
+    }
+    try {
+        user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    } catch (_err) {
+        user = null;
+    }
+    // Fallback to window globals if set by auth.js
+    if ((!token || token === '') && typeof window.token !== 'undefined') {
+        token = window.token || '';
+    }
+    if ((!user || user === null) && typeof window.currentUser !== 'undefined') {
+        user = window.currentUser || null;
+    }
     return { token, user };
 }
 
@@ -364,7 +381,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    if (token && user && user.role === 'customer') {
+    if (token && user) {
+        // If token present but user object lacks role, still try to load account view
         await initAccountView();
     } else {
         initLoginView();

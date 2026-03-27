@@ -10,8 +10,15 @@
     <link rel="stylesheet" href="assets/css/pages/index.css">
 
     <link rel="stylesheet" href="assets/css/responsive-global.css">
+    <script src="https://accounts.google.com/gsi/client" async defer onload="if(typeof initGoogleSignIn==='function')initGoogleSignIn()"></script>
 </head>
 <body>
+    <!-- Google Identity onload container -->
+    <div id="g_id_onload"
+         data-client_id="168775181456-70l3t07ca26h7bh0vghb7nc818tg63pr.apps.googleusercontent.com"
+         data-login_uri="https://stylehub.pics"
+         data-auto_prompt="false">
+    </div>
     <!-- Top Bar Premium -->
     <div class="top-bar">
         <div class="container top-bar-content">
@@ -271,6 +278,10 @@
                         <span>Iniciar Sesión</span>
                     </button>
                 </form>
+                <div class="auth-social">
+                    <div class="auth-divider"><span>o con</span></div>
+                    <div class="google-signin-btn-container" style="display:flex;justify-content:center;"></div>
+                </div>
                 <div class="auth-footer">
                     ¿No tienes cuenta? <a onclick="switchAuthTab('register')">Regístrate</a>
                 </div>
@@ -296,6 +307,10 @@
                         <span>Crear Cuenta</span>
                     </button>
                 </form>
+                <div class="auth-social">
+                    <div class="auth-divider"><span>o con</span></div>
+                    <div class="google-signin-btn-container" style="display:flex;justify-content:center;"></div>
+                </div>
                 <div class="auth-footer">
                     ¿Ya tienes cuenta? <a onclick="switchAuthTab('login')">Inicia sesión</a>
                 </div>
@@ -359,6 +374,35 @@
 
         <script src="assets/js/auth.js"></script>
         <script src="assets/js/pages/index.js"></script>
+        <script>
+            // Ensure `Mi cuenta` works reliably on index page: open modal when logged out, navigate when logged in
+            (function() {
+                function bindIndexAccount() {
+                    const accountLink = document.getElementById('accountLink');
+                    if (!accountLink) return;
+                    accountLink.removeAttribute('onclick');
+                    accountLink.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        try {
+                            const winUser = window.currentUser || JSON.parse(localStorage.getItem('currentUser') || 'null');
+                            if (winUser) {
+                                const dest = (winUser.role === 'admin') ? 'admin-dashboard.html' : 'usuarios.html';
+                                window.location.href = dest;
+                            } else {
+                                if (typeof openAuthModal === 'function') openAuthModal(e);
+                            }
+                        } catch (_err) {
+                            if (typeof openAuthModal === 'function') openAuthModal(e);
+                        }
+                    });
+                }
+                // Bind now and on storage changes (cross-tab login)
+                document.addEventListener('DOMContentLoaded', bindIndexAccount);
+                window.addEventListener('storage', function(e) {
+                    if (e.key === 'currentUser' || e.key === 'token') bindIndexAccount();
+                });
+            })();
+        </script>
 </body>
 </html>
 
