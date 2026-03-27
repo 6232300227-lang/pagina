@@ -10,19 +10,108 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Header (usa el header existente en otras páginas) -->
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container top-bar-content">
+            <div class="top-message">¡Envío gratis en pedidos superiores a $49.99!</div>
+            <div class="top-links">
+                <a href="ayuda.html"><i class="fas fa-question-circle"></i> Ayuda</a>
+                <a href="seguimiento.html"><i class="fas fa-shipping-fast"></i> Seguimiento</a>
+                <a href="#" class="language-selector"><i class="fas fa-globe"></i> ES</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
     <header>
         <div class="container main-header">
             <div class="header-content">
-                <a href="index.html" class="logo"><i class="fas fa-crown"></i> Style<span>Hub</span></a>
+                <a href="index.html" class="logo">
+                    <i class="fas fa-crown"></i>
+                    Style<span>Hub</span>
+                </a>
+
+                <button class="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Buscar productos, marcas y más...">
+                    <button type="submit" id="searchButton"><i class="fas fa-search"></i></button>
+                    <div class="search-suggestions" id="searchSuggestions"></div>
+                </div>
+
                 <div class="user-actions">
                     <a href="#" class="account-link" id="accountLink" onclick="openAuthModal(event)">
                         <i class="fas fa-user-circle"></i>
                         <span id="accountText">Mi cuenta</span>
                     </a>
+                    <div class="wishlist-wrapper">
+                        <a href="Favoritos.html" class="wishlist-link">
+                            <i class="fas fa-heart"></i>
+                            <span>Favoritos</span>
+                        </a>
+                        <span class="wishlist-count" id="wishlistCount">0</span>
+                    </div>
+                    <div class="cart-wrapper">
+                        <a href="carrito.html" class="cart-link">
+                            <i class="fas fa-shopping-bag"></i>
+                            <span>Carrito</span>
+                        </a>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Navigation -->
+        <nav>
+            <div class="container">
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="nav-link"><i class="fas fa-female"></i> Mujer <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <div class="dropdown-header">ROPA DE MUJER</div>
+                            <a href="vestidos.html"><i class="fas fa-tshirt"></i> Vestidos</a>
+                            <a href="tops.html"><i class="fas fa-tshirt"></i> Tops y Blusas</a>
+                            <a href="pantalones-mujer.html"><i class="fas fa-tshirt"></i> Pantalones</a>
+                            <a href="faldas.html"><i class="fas fa-tshirt"></i> Faldas</a>
+                            <a href="chaquetas-mujer.html"><i class="fas fa-tshirt"></i> Chaquetas</a>
+                            <div class="dropdown-header">ACCESORIOS</div>
+                            <a href="bolsos.html"><i class="fas fa-shopping-bag"></i> Bolsos</a>
+                            <a href="joyeria.html"><i class="fas fa-gem"></i> Joyería</a>
+                            <a href="zapatos-mujer.html"><i class="fas fa-shoe-prints"></i> Zapatos</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="nav-link"><i class="fas fa-male"></i> Hombre <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <div class="dropdown-header">ROPA DE HOMBRE</div>
+                            <a href="camisetas.html"><i class="fas fa-tshirt"></i> Camisetas</a>
+                            <a href="camisas.html"><i class="fas fa-tshirt"></i> Camisas</a>
+                            <a href="pantalones-hombre.html"><i class="fas fa-tshirt"></i> Pantalones</a>
+                            <a href="chaquetas.html"><i class="fas fa-tshirt"></i> Chaquetas</a>
+                            <a href="trajes.html"><i class="fas fa-tshirt"></i> Trajes</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="nav-link"><i class="fas fa-child"></i> Niños <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <div class="dropdown-header">NIÑAS</div>
+                            <a href="tops-niña.html"><i class="fas fa-tshirt"></i> Tops para niñas</a>
+                            <a href="pantalones-niña.html"><i class="fas fa-tshirt"></i> Pantalones para niñas</a>
+                            <div class="dropdown-header">NIÑOS</div>
+                            <a href="camisetas-niños.html"><i class="fas fa-tshirt"></i> Camisetas para niños</a>
+                        </div>
+                    </li>
+                    <li><a href="novedades.html" class="nav-link"><i class="fas fa-star"></i> Novedades</a></li>
+                    <li><a href="ofertas.html" class="nav-link"><i class="fas fa-tags"></i> Ofertas</a></li>
+                    <li><a href="colecciones.html" class="nav-link"><i class="fas fa-th-large"></i> Colecciones</a></li>
+                    <li><a href="sobre-nosotros.html" class="nav-link"><i class="fas fa-info-circle"></i> Sobre nosotros</a></li>
+                </ul>
+            </div>
+        </nav>
     </header>
 
     <main class="container" style="padding:40px 20px; max-width:900px;">
@@ -45,9 +134,49 @@
         </ul>
     </main>
 
-    <footer style="padding:30px 20px; text-align:center; background:#f8f8f8;">
+    <footer>
         <div class="container">
-            <p>&copy; <span id="year"></span> Mi Empresa. Todos los derechos reservados.</p>
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Mi Empresa</h3>
+                    <p>Moda de calidad y atención personalizada.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Ayuda</h3>
+                    <ul>
+                        <li><a href="ayuda.html"><i class="fas fa-headset"></i> Centro de ayuda</a></li>
+                        <li><a href="envios.html"><i class="fas fa-shipping-fast"></i> Envíos</a></li>
+                        <li><a href="devoluciones.html"><i class="fas fa-undo-alt"></i> Devoluciones</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Acerca de</h3>
+                    <ul>
+                        <li><a href="sobre-nosotros.html"><i class="fas fa-info-circle"></i> Sobre nosotros</a></li>
+                        <li><a href="terminos.html"><i class="fas fa-file-contract"></i> Términos</a></li>
+                        <li><a href="privacidad.html"><i class="fas fa-shield-alt"></i> Privacidad</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Contacto</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> contacto@miempresa.com</li>
+                        <li><i class="fas fa-phone"></i> +34 600 000 000</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright" style="text-align:center; padding-top:18px; color:#6b7280;">
+                <p>&copy; <span id="year"></span> Mi Empresa. Todos los derechos reservados.</p>
+            </div>
         </div>
     </footer>
 
