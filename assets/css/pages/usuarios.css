@@ -165,11 +165,11 @@
 
         /* ===== LOGIN SECTION ===== */
         .login-section {
-            padding: 20px 0;
+            padding: 12px 0;
         }
 
         .login-container {
-            max-width: 360px;
+            max-width: 280px;
             margin: 0 auto;
             background: white;
             border-radius: var(--border-radius);
@@ -181,7 +181,7 @@
         .login-header {
             background: linear-gradient(135deg, var(--secondary) 0%, #333 100%);
             color: white;
-            padding: 20px;
+            padding: 14px;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -199,29 +199,29 @@
 
         .login-header h2 {
             font-family: 'Playfair Display', serif;
-            font-size: 1.6rem;
+            font-size: 1.3rem;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
 
         .login-header p {
             opacity: 0.9;
-            font-size: 1.1rem;
+            font-size: 0.85rem;
         }
 
         .login-header i {
-            font-size: 2.4rem;
+            font-size: 1.8rem;
             color: var(--primary);
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             animation: float 3s ease-in-out infinite;
         }
 
         .login-form {
-            padding: 22px 26px;
+            padding: 16px 18px;
         }
 
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 14px;
             position: relative;
         }
 
