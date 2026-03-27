@@ -58,6 +58,12 @@
             setupSearch();
             updateUserInterface();
             checkAuthStatus();
+
+            window.addEventListener('stylehub:logout', function() {
+                currentUser = null;
+                token = null;
+                updateUserInterface();
+            });
         });
 
         // ===== FUNCIONES DE AUTENTICACIÓN =====
@@ -200,12 +206,22 @@
         }
 
         function logout() {
+            if (typeof window.logout === 'function' && window.logout !== logout) {
+                window.logout();
+                return;
+            }
+
             localStorage.removeItem('token');
             localStorage.removeItem('currentUser');
+            localStorage.removeItem('mpCheckoutDraft');
+            localStorage.removeItem('mpLastPaymentId');
             token = null;
             currentUser = null;
             updateUserInterface();
             showNotification('Has cerrado sesión', 'info');
+            setTimeout(() => {
+                window.location.href = `${window.location.origin}${window.location.pathname}`;
+            }, 250);
         }
 
         function showUserMenu() {

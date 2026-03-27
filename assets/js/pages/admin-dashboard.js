@@ -1,6 +1,18 @@
 const API_BASE = 'https://pagina-6ygv.onrender.com/api';
 let salesChartInstance = null;
 
+function sectionLabel(section) {
+    const map = {
+        mujer: 'Mujer',
+        hombre: 'Hombre',
+        ninos: 'Niños',
+        ofertas: 'Ofertas',
+        novedades: 'Novedades',
+        general: 'General'
+    };
+    return map[section] || 'General';
+}
+
 function currency(value) {
     return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD' }).format(value || 0);
 }
@@ -154,6 +166,7 @@ function renderProducts(products) {
                 <img src="${image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/200x200?text=Producto'">
                 <div>
                     <p class="product-name">${product.name}</p>
+                    <p class="product-meta">Apartado: ${sectionLabel(product.section)}</p>
                     <p class="product-meta">${product.description || 'Sin descripción'}</p>
                     <p class="product-price">
                         ${discount > 0 ? `<span class="old">${currency(oldPrice)}</span>` : ''}
@@ -182,6 +195,7 @@ function renderProducts(products) {
 function fillProductForm(product) {
     document.getElementById('productId').value = product.id || '';
     document.getElementById('productName').value = product.name || '';
+    document.getElementById('productSection').value = product.section || 'general';
     document.getElementById('productImage').value = product.image || '';
     document.getElementById('productDescription').value = product.description || '';
     document.getElementById('productPrice').value = product.price ?? '';
@@ -207,6 +221,7 @@ async function saveProduct(token) {
     const productId = document.getElementById('productId').value;
     const payload = {
         name: document.getElementById('productName').value.trim(),
+        section: document.getElementById('productSection').value,
         image: document.getElementById('productImage').value.trim(),
         description: document.getElementById('productDescription').value.trim(),
         price: Number(document.getElementById('productPrice').value || 0),
@@ -245,6 +260,8 @@ function bindActions(token) {
         logoutBtn.addEventListener('click', () => {
             localStorage.removeItem('token');
             localStorage.removeItem('currentUser');
+            localStorage.removeItem('mpCheckoutDraft');
+            localStorage.removeItem('mpLastPaymentId');
             window.location.href = 'usuarios.html';
         });
     }

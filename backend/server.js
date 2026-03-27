@@ -22,6 +22,9 @@ const JWT_SECRET = process.env.JWT_SECRET || 'dev_jwt_secret';
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@stylehub.com';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Admin123!';
 const ADMIN_NAME = process.env.ADMIN_NAME || 'Administrador StyleHub';
+const ADMIN2_EMAIL = process.env.ADMIN2_EMAIL || 'admin2@stylehub.com';
+const ADMIN2_PASSWORD = process.env.ADMIN2_PASSWORD || 'Admin456!';
+const ADMIN2_NAME = process.env.ADMIN2_NAME || 'Administrador Secundario';
 
 // Mercado Pago access token (used via direct HTTP request)
 const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN || process.env.MERCADOPAGO_ACCESS_TOKEN || 'APP_USR-138373493028620-032618-c24ebc952540422844b3ed964ec3eb52-2049134991';
@@ -134,35 +137,40 @@ async function syncOrderFromMercadoPagoPayment(paymentId) {
 }
 
 connectDB()
-  .then(() => ensureDefaultAdmin())
+  .then(() => ensureDefaultAdmins())
   .catch(err => {
     console.error('Failed to connect to MongoDB:', err);
     process.exit(1);
   });
 
-async function ensureDefaultAdmin() {
+async function ensureDefaultAdmins() {
   try {
-    const existingAdmin = await User.findOne({ email: ADMIN_EMAIL });
-    if (!existingAdmin) {
-      const hashed = await bcrypt.hash(ADMIN_PASSWORD, 10);
-      await User.create({
-        name: ADMIN_NAME,
-        email: ADMIN_EMAIL,
-        password: hashed,
-        role: 'admin'
-      });
-      console.log(`Admin account created: ${ADMIN_EMAIL}`);
-      console.log('Change ADMIN_PASSWORD in environment variables for production.');
-      return;
+    const defaultAdmins = [
+      { email: ADMIN_EMAIL, password: ADMIN_PASSWORD, name: ADMIN_NAME },
+      { email: ADMIN2_EMAIL, password: ADMIN2_PASSWORD, name: ADMIN2_NAME }
+    ];
+
+    for (const admin of defaultAdmins) {
+      const existingAdmin = await User.findOne({ email: admin.email });
+      if (!existingAdmin) {
+        const hashed = await bcrypt.hash(admin.password, 10);
+        await User.create({
+          name: admin.name,
+          email: admin.email,
+          password: hashed,
+          role: 'admin'
+        });
+        console.log(`Admin account created: ${admin.email}`);
+      } else if (existingAdmin.role !== 'admin') {
+        existingAdmin.role = 'admin';
+        await existingAdmin.save();
+        console.log(`User promoted to admin: ${admin.email}`);
+      }
     }
 
-    if (existingAdmin.role !== 'admin') {
-      existingAdmin.role = 'admin';
-      await existingAdmin.save();
-      console.log(`User promoted to admin: ${ADMIN_EMAIL}`);
-    }
+    console.log('Change ADMIN_PASSWORD y ADMIN2_PASSWORD in environment variables for production.');
   } catch (err) {
-    console.error('Failed to ensure default admin:', err);
+    console.error('Failed to ensure default admins:', err);
   }
 }
 
@@ -521,6 +529,7 @@ app.get('/api/admin/products', requireAdmin, async (req, res) => {
       return {
         id: product._id,
         name: product.name,
+        section: product.section || 'general',
         image: product.image,
         description: product.description,
         price: basePrice,
@@ -541,7 +550,7 @@ app.get('/api/admin/products', requireAdmin, async (req, res) => {
 
 app.post('/api/admin/products', requireAdmin, async (req, res) => {
   try {
-    const { name, image, description, price, discountPercent, isActive } = req.body;
+    const { name, section, image, description, price, discountPercent, isActive } = req.body;
     if (!name || price === undefined || price === null) {
       return res.status(400).json({ error: 'Nombre y precio son requeridos' });
     }
@@ -554,6 +563,7 @@ app.post('/api/admin/products', requireAdmin, async (req, res) => {
 
     const product = await Product.create({
       name: String(name).trim(),
+      section: String(section || 'general').toLowerCase(),
       image: String(image || '').trim(),
       description: String(description || '').trim(),
       price: safePrice,
@@ -571,10 +581,11 @@ app.post('/api/admin/products', requireAdmin, async (req, res) => {
 app.put('/api/admin/products/:id', requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, image, description, price, discountPercent, isActive } = req.body;
+    const { name, section, image, description, price, discountPercent, isActive } = req.body;
 
     const update = {};
     if (name !== undefined) update.name = String(name).trim();
+    if (section !== undefined) update.section = String(section || 'general').toLowerCase();
     if (image !== undefined) update.image = String(image).trim();
     if (description !== undefined) update.description = String(description).trim();
     if (price !== undefined) {

@@ -150,9 +150,13 @@ const API_BASE = 'https://pagina-6ygv.onrender.com';
             
             if (currentUser && token) {
                 if (confirm(`Ya tienes una sesión activa como ${currentUser.fullName}. ¿Quieres cerrar sesión para crear una nueva cuenta?`)) {
-                    localStorage.removeItem('currentUser');
-                    localStorage.removeItem('token');
-                    updateUserInterface();
+                    if (typeof window.logout === 'function') {
+                        window.logout({ redirectTo: 'registro.html' });
+                    } else {
+                        localStorage.removeItem('currentUser');
+                        localStorage.removeItem('token');
+                        updateUserInterface();
+                    }
                 } else {
                     window.location.href = 'index.html';
                 }

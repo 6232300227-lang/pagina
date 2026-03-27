@@ -188,13 +188,43 @@ async function handleRegister(event) {
 }
 
 // Cerrar sesión
-function logout() {
+function logout(options = {}) {
+    const redirectTo = options.redirectTo || null;
     localStorage.removeItem('token');
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('mpCheckoutDraft');
+    localStorage.removeItem('mpLastPaymentId');
     token = null;
     currentUser = null;
+
+    // Restablecer UI y modales por si quedaron abiertos
+    closeAuthModal();
     updateUserInterface();
     showNotification('Has cerrado sesión', 'info');
+
+    // Notificar a otros scripts/páginas
+    window.dispatchEvent(new CustomEvent('stylehub:logout'));
+
+    const inAdmin = window.location.pathname.toLowerCase().includes('admin-dashboard.html');
+    if (redirectTo) {
+        setTimeout(() => {
+            window.location.href = redirectTo;
+        }, 250);
+        return;
+    }
+
+    if (inAdmin) {
+        setTimeout(() => {
+            window.location.href = 'usuarios.html';
+        }, 250);
+        return;
+    }
+
+    // Recarga para que todos los widgets queden en estado invitado
+    setTimeout(() => {
+        const cleanUrl = `${window.location.origin}${window.location.pathname}`;
+        window.location.href = cleanUrl;
+    }, 250);
 }
 
 // Mostrar menú de usuario
@@ -275,6 +305,15 @@ document.addEventListener('DOMContentLoaded', function() {
     updateUserInterface();
     // Inicializar Google Sign-In (el script de GSI puede cargarse después del DOM)
     window.addEventListener('load', initGoogleSignIn);
+
+    // Sincronizar UI si el logout ocurre desde otra pestaña
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'token' || e.key === 'currentUser') {
+            token = localStorage.getItem('token') || null;
+            currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            updateUserInterface();
+        }
+    });
 });
 
 // Exponer funciones globalmente

@@ -349,6 +349,7 @@ th {
 }
 
 .product-form input,
+.product-form select,
 .product-form textarea {
     width: 100%;
     border: 1px solid var(--line);

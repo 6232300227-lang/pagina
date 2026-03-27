@@ -17,9 +17,19 @@ const API_BASE = 'https://pagina-6ygv.onrender.com';
 
         // Función para cerrar sesión
         function logout() {
+            if (typeof window.logout === 'function' && window.logout !== logout) {
+                window.logout({ redirectTo: 'usuarios.html' });
+                return;
+            }
+
             localStorage.removeItem('currentUser');
             localStorage.removeItem('token');
+            localStorage.removeItem('mpCheckoutDraft');
+            localStorage.removeItem('mpLastPaymentId');
             showNotification('Has cerrado sesión correctamente', 'info');
+            setTimeout(() => {
+                window.location.href = 'usuarios.html';
+            }, 250);
         }
 
         // Manejar el login (envía al backend)
