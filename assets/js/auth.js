@@ -214,10 +214,30 @@ function updateUserInterface() {
         accountText.textContent = `Hola, ${firstName}`;
         if (accountLink) {
             accountLink.href = currentUser.role === 'admin' ? 'admin-dashboard.html' : 'perfil.html';
+            // Remove modal trigger so the link actually navigates
+            accountLink.removeAttribute('onclick');
+        }
+        // Inject admin dashboard button once
+        if (currentUser.role === 'admin') {
+            let adminBtn = document.getElementById('adminDashboardLink');
+            if (!adminBtn && accountLink) {
+                adminBtn = document.createElement('a');
+                adminBtn.id = 'adminDashboardLink';
+                adminBtn.href = 'admin-dashboard.html';
+                adminBtn.className = 'admin-dashboard-link';
+                adminBtn.innerHTML = '<i class="fas fa-shield-alt"></i><span>Dashboard</span>';
+                accountLink.parentNode.insertBefore(adminBtn, accountLink.nextSibling);
+            }
+            if (adminBtn) adminBtn.style.display = '';
         }
     } else {
         if (accountText) accountText.textContent = 'Mi cuenta';
-        if (accountLink) accountLink.href = '#';
+        if (accountLink) {
+            accountLink.href = '#';
+            accountLink.setAttribute('onclick', 'openAuthModal(event)');
+        }
+        const adminBtn = document.getElementById('adminDashboardLink');
+        if (adminBtn) adminBtn.style.display = 'none';
     }
 }
 
@@ -281,9 +301,22 @@ function initGoogleSignIn() {
         auto_select: false,
         cancel_on_tap_outside: true
     });
+    // Renderizar el botón oficial de Google en todos los contenedores de la página
+    document.querySelectorAll('.google-signin-btn-container').forEach(function(container) {
+        google.accounts.id.renderButton(container, {
+            type: 'standard',
+            theme: 'outline',
+            size: 'large',
+            text: 'signin_with',
+            shape: 'rectangular',
+            logo_alignment: 'left',
+            width: 280
+        });
+    });
 }
 
 function loginWithGoogle() {
+    // Fallback por si se llama desde otra página sin contenedores
     if (typeof google === 'undefined' || !google.accounts) {
         showNotification('Google Sign-In no está disponible aún, intenta en un momento', 'info');
         return;

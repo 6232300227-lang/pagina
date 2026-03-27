@@ -181,11 +181,8 @@
 
                     <div class="social-login">
                         <p>O continúa con</p>
-                        <div class="social-buttons">
-                            <button type="button" id="googleLogin" onclick="loginWithGoogle()" class="social-btn google">
-                                <i class="fab fa-google"></i>
-                                Google
-                            </button>
+                        <div class="social-buttons" style="flex-direction:column;align-items:center;">
+                            <div id="googleLoginContainer" class="google-signin-btn-container"></div>
                             <a href="#" id="facebookLogin" class="social-btn facebook">
                                 <i class="fab fa-facebook-f"></i>
                                 Facebook
@@ -254,9 +251,7 @@
                 </form>
                 <div class="auth-social">
                     <div class="auth-divider"><span>o continúa con</span></div>
-                    <button type="button" onclick="loginWithGoogle()" class="social-btn google" style="width:100%;justify-content:center;">
-                        <i class="fab fa-google"></i> Iniciar sesión con Google
-                    </button>
+                    <div id="googleLoginModalContainer" class="google-signin-btn-container" style="display:flex;justify-content:center;"></div>
                 </div>
                 <div class="auth-footer">
                     ¿No tienes cuenta? <a onclick="switchAuthTab('register')">Regístrate</a>
@@ -285,9 +280,7 @@
                 </form>
                 <div class="auth-social">
                     <div class="auth-divider"><span>o regístrate con</span></div>
-                    <button type="button" onclick="loginWithGoogle()" class="social-btn google" style="width:100%;justify-content:center;">
-                        <i class="fab fa-google"></i> Registrarse con Google
-                    </button>
+                    <div id="googleRegisterModalContainer" class="google-signin-btn-container" style="display:flex;justify-content:center;"></div>
                 </div>
                 <div class="auth-footer">
                     ¿Ya tienes cuenta? <a onclick="switchAuthTab('login')">Inicia sesión</a>

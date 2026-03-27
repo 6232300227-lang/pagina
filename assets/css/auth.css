@@ -205,6 +205,33 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.12);
 }
 
+/* Contenedores del botón oficial de Google */
+.google-signin-btn-container {
+    margin: 8px 0;
+    min-height: 44px;
+}
+
+/* Admin dashboard quick-access button in navbar */
+.admin-dashboard-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #6c47ff, #a855f7);
+    color: #fff !important;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none !important;
+    letter-spacing: 0.4px;
+    transition: opacity 0.2s, transform 0.2s;
+    margin-left: 8px;
+}
+.admin-dashboard-link:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+}
+
 .auth-footer a {
     color: var(--primary);
     font-weight: 600;
