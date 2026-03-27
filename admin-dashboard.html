@@ -97,8 +97,75 @@
                 <a href="ofertas.html" class="action-link"><i class="fas fa-tags"></i> Ver ofertas</a>
             </article>
         </section>
+
+        <section class="panel-card sales-panel">
+            <div class="panel-header">
+                <h3><i class="fas fa-chart-line"></i> Ventas (últimos 7 días)</h3>
+                <button id="refreshSales" class="ghost-btn small"><i class="fas fa-rotate"></i> Actualizar</button>
+            </div>
+            <div class="sales-kpis">
+                <div><p>Ingresos</p><h4 id="salesRevenue">$0.00</h4></div>
+                <div><p>Órdenes aprobadas</p><h4 id="salesOrders">0</h4></div>
+                <div><p>Órdenes pendientes</p><h4 id="salesPending">0</h4></div>
+                <div><p>Ticket promedio</p><h4 id="salesAvg">$0.00</h4></div>
+            </div>
+            <div class="chart-wrap">
+                <canvas id="salesChart" height="120"></canvas>
+            </div>
+        </section>
+
+        <section class="product-grid">
+            <article class="panel-card product-form-card">
+                <div class="panel-header">
+                    <h3><i class="fas fa-box-open"></i> Cargar / Editar producto</h3>
+                    <button id="clearProductForm" class="ghost-btn small"><i class="fas fa-eraser"></i> Limpiar</button>
+                </div>
+                <form id="productForm" class="product-form">
+                    <input type="hidden" id="productId">
+                    <label>Nombre</label>
+                    <input type="text" id="productName" required placeholder="Nombre del producto">
+
+                    <label>Imagen (URL)</label>
+                    <input type="url" id="productImage" placeholder="https://...">
+
+                    <label>Descripción</label>
+                    <textarea id="productDescription" rows="3" placeholder="Descripción del producto"></textarea>
+
+                    <div class="form-two-cols">
+                        <div>
+                            <label>Precio</label>
+                            <input type="number" id="productPrice" min="0" step="0.01" required placeholder="0.00">
+                        </div>
+                        <div>
+                            <label>Descuento (%)</label>
+                            <input type="number" id="productDiscount" min="0" max="90" step="1" placeholder="0">
+                        </div>
+                    </div>
+
+                    <label class="inline-check">
+                        <input type="checkbox" id="productActive" checked>
+                        Producto activo
+                    </label>
+
+                    <button type="submit" id="saveProductBtn" class="danger-btn">
+                        <i class="fas fa-save"></i> Guardar producto
+                    </button>
+                </form>
+            </article>
+
+            <article class="panel-card products-list-card">
+                <div class="panel-header">
+                    <h3><i class="fas fa-images"></i> Productos registrados</h3>
+                    <button id="refreshProducts" class="ghost-btn small"><i class="fas fa-rotate"></i> Actualizar</button>
+                </div>
+                <div id="productsList" class="products-list">
+                    <p class="empty">Cargando productos...</p>
+                </div>
+            </article>
+        </section>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
     <script src="assets/js/pages/admin-dashboard.js"></script>
 </body>
 </html>

@@ -150,16 +150,8 @@
                 <div class="step-circle active" id="step1Circle">1</div>
                 <div class="step-label active" id="step1Label">Carrito</div>
             </div>
-            <div class="progress-step" onclick="goToStep(2)">
-                <div class="step-circle" id="step2Circle">2</div>
-                <div class="step-label" id="step2Label">Información</div>
-            </div>
-            <div class="progress-step" onclick="goToStep(3)">
-                <div class="step-circle" id="step3Circle">3</div>
-                <div class="step-label" id="step3Label">Pago</div>
-            </div>
             <div class="progress-step" onclick="goToStep(4)">
-                <div class="step-circle" id="step4Circle">4</div>
+                <div class="step-circle" id="step4Circle">2</div>
                 <div class="step-label" id="step4Label">Confirmación</div>
             </div>
         </div>
@@ -219,82 +211,14 @@
                             </div>
 
                             <!-- Navigation Buttons -->
-                            <button class="checkout-btn" onclick="goToStep(2)" id="proceedToInfo">
-                                <i class="fas fa-arrow-right"></i> Continuar con Información
+                            <button class="checkout-btn" onclick="processPayment()" id="proceedToInfo">
+                                <i class="fas fa-lock"></i> Pagar
                             </button>
 
                             <button class="continue-shopping-btn" onclick="window.location.href='index.html'">
                                 <i class="fas fa-arrow-left"></i> Seguir Comprando
                             </button>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Step 2: Información -->
-            <div class="step-container" id="step2">
-                <div class="checkout-form">
-                    <h2 class="form-title"><i class="fas fa-user"></i> Información de Envío</h2>
-
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label class="form-label">Nombre Completo *</label>
-                            <input type="text" class="form-control" id="fullName" placeholder="Ej: Juan Pérez">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Email *</label>
-                            <input type="email" class="form-control" id="email" placeholder="ejemplo@correo.com">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Teléfono *</label>
-                            <input type="tel" class="form-control" id="phone" placeholder="+34 123 456 789">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Dirección *</label>
-                            <input type="text" class="form-control" id="address" placeholder="Calle, número, piso">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Ciudad *</label>
-                            <input type="text" class="form-control" id="city" placeholder="Madrid">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Código Postal *</label>
-                            <input type="text" class="form-control" id="zipCode" placeholder="28001">
-                        </div>
-                    </div>
-
-                    <div class="navigation-buttons">
-                        <button class="nav-btn prev" onclick="goToStep(1)">
-                            <i class="fas fa-arrow-left"></i> Volver al Carrito
-                        </button>
-                        <button class="nav-btn next" onclick="validateAndGoToPayment()">
-                            Continuar al Pago <i class="fas fa-arrow-right"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Step 3: Pago -->
-            <div class="step-container" id="step3">
-                <div class="checkout-form">
-                    <h2 class="form-title"><i class="fas fa-shield-alt"></i> Pago Seguro</h2>
-
-                    <div class="card-details">
-                        <p style="margin:0; color:#2c3e50; font-weight:600;">
-                            Serás redirigido a Mercado Pago para completar el pago de forma segura.
-                        </p>
-                        <p style="margin:8px 0 0; color:#666; font-size:0.95rem;">
-                            Allí podrás ingresar los datos de tu tarjeta.
-                        </p>
-                    </div>
-
-                    <div class="navigation-buttons">
-                        <button class="nav-btn prev" onclick="goToStep(2)">
-                            <i class="fas fa-arrow-left"></i> Volver a Información
-                        </button>
-                        <button class="nav-btn next" onclick="processPayment()">
-                            Realizar Pago <i class="fas fa-lock"></i>
-                        </button>
                     </div>
                 </div>
             </div>
@@ -308,8 +232,9 @@
                     <h2 class="confirmation-title">¡Compra Exitosa!</h2>
                     <div class="order-number" id="orderNumber">#SH-2024-0001</div>
                     <p class="confirmation-message">
+                        Pago procesado por Mercado Pago.
                         Hemos enviado los detalles de tu compra a tu correo electrónico.
-                        Tu pedido será procesado y enviado en las próximas 24-48 horas.
+                        Tu pedido será preparado y enviado en las próximas 24-48 horas.
                     </p>
 
                     <div class="order-details-confirm" id="confirmationDetails">

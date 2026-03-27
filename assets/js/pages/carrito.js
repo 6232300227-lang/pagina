@@ -64,13 +64,6 @@
             setupSearch();
             updateUserInterface();
             handleMercadoPagoReturn();
-
-            // Support direct links from product pages: carrito.html#step2 -> open information step
-            if (window.location.hash === '#step2') {
-                setTimeout(() => {
-                    goToStep(2);
-                }, 200);
-            }
         });
 
         // ===== FUNCIONES DE BÚSQUEDA =====
@@ -625,12 +618,15 @@
                 return;
             }
 
-            // Ensure shipping/info step is valid (collect payer info)
-            if (!validateInfo()) {
-                showNotification('Por favor completa la información de envío', 'error');
-                goToStep(2);
-                return;
-            }
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            const inferredEmail =
+                currentUser?.email ||
+                cart.find(item => item.userEmail)?.userEmail ||
+                '';
+            const inferredName =
+                currentUser?.fullName ||
+                currentUser?.name ||
+                'Cliente StyleHub';
 
             const subtotal = cart.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
             const shipping = subtotal >= SHIPPING_FREE_THRESHOLD ? 0 : SHIPPING_COST;
@@ -638,12 +634,12 @@
             const total = subtotal + shipping - discount;
 
             const shippingInfo = {
-                fullName: document.getElementById('fullName')?.value.trim() || '',
-                email: document.getElementById('email')?.value.trim() || '',
-                phone: document.getElementById('phone')?.value.trim() || '',
-                address: document.getElementById('address')?.value.trim() || '',
-                city: document.getElementById('city')?.value.trim() || '',
-                zipCode: document.getElementById('zipCode')?.value.trim() || ''
+                fullName: inferredName,
+                email: inferredEmail,
+                phone: '',
+                address: '',
+                city: '',
+                zipCode: ''
             };
 
             const payer = {
@@ -723,13 +719,13 @@
 
             if (isFailure) {
                 showNotification('El pago no fue aprobado. Inténtalo nuevamente.', 'error');
-                goToStep(3);
+                goToStep(1);
                 return;
             }
 
             if (isPending) {
                 showNotification('Tu pago está pendiente de confirmación.', 'info');
-                goToStep(3);
+                goToStep(1);
                 return;
             }
 
@@ -762,12 +758,12 @@
                         if (realStatus && realStatus !== 'approved') {
                             if (realStatus === 'pending' || realStatus === 'in_process') {
                                 showNotification('El pago sigue pendiente de confirmación.', 'info');
-                                goToStep(3);
+                                goToStep(1);
                                 return;
                             }
 
                             showNotification('El pago no fue aprobado por Mercado Pago.', 'error');
-                            goToStep(3);
+                            goToStep(1);
                             return;
                         }
 

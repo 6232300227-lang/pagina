@@ -8,6 +8,7 @@ const { connectDB } = require('./db/connection');
 const User = require('./models/User');
 const CartItem = require('./models/Cart');
 const Order = require('./models/Order');
+const Product = require('./models/Product');
 
 dotenv.config();
 const app = express();
@@ -507,6 +508,147 @@ app.get('/api/admin/users', requireAdmin, async (req, res) => {
   } catch (err) {
     console.error('Admin users error:', err);
     res.status(500).json({ error: 'No se pudieron cargar usuarios' });
+  }
+});
+
+app.get('/api/admin/products', requireAdmin, async (req, res) => {
+  try {
+    const products = await Product.find().sort({ createdAt: -1 }).limit(300);
+    const formatted = products.map((product) => {
+      const discount = Number(product.discountPercent || 0);
+      const basePrice = Number(product.price || 0);
+      const finalPrice = basePrice * (1 - (discount / 100));
+      return {
+        id: product._id,
+        name: product.name,
+        image: product.image,
+        description: product.description,
+        price: basePrice,
+        discountPercent: discount,
+        finalPrice: Number(finalPrice.toFixed(2)),
+        isActive: product.isActive,
+        createdAt: product.createdAt,
+        updatedAt: product.updatedAt
+      };
+    });
+
+    res.json(formatted);
+  } catch (err) {
+    console.error('Admin products error:', err);
+    res.status(500).json({ error: 'No se pudieron cargar productos' });
+  }
+});
+
+app.post('/api/admin/products', requireAdmin, async (req, res) => {
+  try {
+    const { name, image, description, price, discountPercent, isActive } = req.body;
+    if (!name || price === undefined || price === null) {
+      return res.status(400).json({ error: 'Nombre y precio son requeridos' });
+    }
+
+    const safeDiscount = Math.max(0, Math.min(90, Number(discountPercent || 0)));
+    const safePrice = Number(price);
+    if (!Number.isFinite(safePrice) || safePrice < 0) {
+      return res.status(400).json({ error: 'Precio inválido' });
+    }
+
+    const product = await Product.create({
+      name: String(name).trim(),
+      image: String(image || '').trim(),
+      description: String(description || '').trim(),
+      price: safePrice,
+      discountPercent: safeDiscount,
+      isActive: isActive !== false
+    });
+
+    res.status(201).json(product);
+  } catch (err) {
+    console.error('Create product error:', err);
+    res.status(500).json({ error: 'No se pudo crear el producto' });
+  }
+});
+
+app.put('/api/admin/products/:id', requireAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, image, description, price, discountPercent, isActive } = req.body;
+
+    const update = {};
+    if (name !== undefined) update.name = String(name).trim();
+    if (image !== undefined) update.image = String(image).trim();
+    if (description !== undefined) update.description = String(description).trim();
+    if (price !== undefined) {
+      const safePrice = Number(price);
+      if (!Number.isFinite(safePrice) || safePrice < 0) {
+        return res.status(400).json({ error: 'Precio inválido' });
+      }
+      update.price = safePrice;
+    }
+    if (discountPercent !== undefined) {
+      const safeDiscount = Math.max(0, Math.min(90, Number(discountPercent || 0)));
+      update.discountPercent = safeDiscount;
+    }
+    if (isActive !== undefined) update.isActive = Boolean(isActive);
+
+    const product = await Product.findByIdAndUpdate(id, update, { new: true, runValidators: true });
+    if (!product) return res.status(404).json({ error: 'Producto no encontrado' });
+
+    res.json(product);
+  } catch (err) {
+    console.error('Update product error:', err);
+    res.status(500).json({ error: 'No se pudo actualizar el producto' });
+  }
+});
+
+app.get('/api/admin/sales-overview', requireAdmin, async (req, res) => {
+  try {
+    const now = new Date();
+    const start = new Date(now);
+    start.setDate(start.getDate() - 29);
+    start.setHours(0, 0, 0, 0);
+
+    const approvedOrders = await Order.find({
+      status: 'approved',
+      updatedAt: { $gte: start }
+    }).select('summary updatedAt status');
+
+    const pendingOrdersCount = await Order.countDocuments({ status: { $in: ['pending', 'pending_payment'] } });
+
+    const salesByDay = {};
+    let totalRevenue = 0;
+    let totalOrders = 0;
+
+    approvedOrders.forEach((order) => {
+      const d = new Date(order.updatedAt || order.createdAt || now);
+      const key = d.toISOString().slice(0, 10);
+      const amount = Number(order.summary?.total || 0);
+      salesByDay[key] = (salesByDay[key] || 0) + amount;
+      totalRevenue += amount;
+      totalOrders += 1;
+    });
+
+    const labels = [];
+    const values = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now);
+      d.setDate(d.getDate() - i);
+      const key = d.toISOString().slice(0, 10);
+      labels.push(d.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }));
+      values.push(Number((salesByDay[key] || 0).toFixed(2)));
+    }
+
+    const avgTicket = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+
+    res.json({
+      totalRevenue: Number(totalRevenue.toFixed(2)),
+      totalOrders,
+      pendingOrders: pendingOrdersCount,
+      avgTicket: Number(avgTicket.toFixed(2)),
+      chart: { labels, values }
+    });
+  } catch (err) {
+    console.error('Sales overview error:', err);
+    res.status(500).json({ error: 'No se pudo cargar la analítica de ventas' });
   }
 });
 
