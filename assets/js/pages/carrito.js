@@ -326,17 +326,32 @@
         }
 
         // ===== FUNCIONES DEL CARRITO =====
-        function loadCartFromStorage() {
-            const savedCart = localStorage.getItem('shoppingCart');
-            if (savedCart) {
-                cart = JSON.parse(savedCart);
-                cart = cart.map(item => ({
-                    ...item,
-                    quantity: item.quantity || 1
-                }));
-            } else {
-                cart = [];
+        function readCartFromStorage() {
+            // Compatibilidad con claves usadas en versiones anteriores del frontend
+            const cartKeys = ['shoppingCart', 'cartItems', 'carrito'];
+
+            for (const key of cartKeys) {
+                const raw = localStorage.getItem(key);
+                if (!raw) continue;
+
+                try {
+                    const parsed = JSON.parse(raw);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        return parsed;
+                    }
+                } catch (err) {
+                    console.warn(`No se pudo parsear el carrito almacenado en ${key}:`, err);
+                }
             }
+
+            return [];
+        }
+
+        function loadCartFromStorage() {
+            cart = readCartFromStorage().map(item => ({
+                ...item,
+                quantity: item.quantity || 1
+            }));
         }
 
         function saveCartToStorage() {
@@ -639,6 +654,9 @@
 
         // Mercado Pago checkout
         async function checkoutWithMercadoPago() {
+            // Recarga desde localStorage por si el usuario abrió el checkout desde otra pestaña/origen
+            loadCartFromStorage();
+
             if (cart.length === 0) {
                 showNotification('Tu carrito está vacío', 'error');
                 return;

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -8,6 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/auth.css">
     <link rel="stylesheet" href="assets/css/pages/registro.css">
+
+    <link rel="stylesheet" href="assets/css/responsive-global.css">
+    <script src="https://accounts.google.com/gsi/client" async defer onload="if(typeof initGoogleSignIn==='function')initGoogleSignIn()"></script>
 </head>
 <body>
     <!-- Top Bar Premium -->
@@ -195,10 +198,10 @@
                     <div class="social-register">
                         <p>O regístrate con</p>
                         <div class="social-buttons">
-                            <a href="#" class="social-btn google">
+                            <button type="button" onclick="loginWithGoogle()" class="social-btn google">
                                 <i class="fab fa-google"></i>
                                 Google
-                            </a>
+                            </button>
                             <a href="#" class="social-btn facebook">
                                 <i class="fab fa-facebook-f"></i>
                                 Facebook
@@ -248,6 +251,12 @@
                         <span>Iniciar Sesión</span>
                     </button>
                 </form>
+                <div class="auth-social">
+                    <div class="auth-divider"><span>o continúa con</span></div>
+                    <button type="button" onclick="loginWithGoogle()" class="social-btn google" style="width:100%;justify-content:center;">
+                        <i class="fab fa-google"></i> Iniciar sesión con Google
+                    </button>
+                </div>
                 <div class="auth-footer">
                     ¿No tienes cuenta? <a onclick="switchAuthTab('register')">Regístrate</a>
                 </div>
@@ -273,6 +282,12 @@
                         <span>Crear Cuenta</span>
                     </button>
                 </form>
+                <div class="auth-social">
+                    <div class="auth-divider"><span>o regístrate con</span></div>
+                    <button type="button" onclick="loginWithGoogle()" class="social-btn google" style="width:100%;justify-content:center;">
+                        <i class="fab fa-google"></i> Registrarse con Google
+                    </button>
+                </div>
                 <div class="auth-footer">
                     ¿Ya tienes cuenta? <a onclick="switchAuthTab('login')">Inicia sesión</a>
                 </div>
@@ -338,3 +353,5 @@
     <script src="assets/js/pages/registro.js"></script>
 </body>
 </html>
+
+

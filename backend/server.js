@@ -163,6 +163,40 @@ app.post('/api/payments/create_preference', async (req, res) => {
   }
 });
 
+// Google OAuth Sign-In
+app.post('/api/auth/google', async (req, res) => {
+  try {
+    const { credential } = req.body;
+    if (!credential) return res.status(400).json({ error: 'Credential requerido' });
+
+    // Verify Google ID token via Google's tokeninfo endpoint
+    const tokenRes = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(credential)}`);
+    const tokenInfo = await tokenRes.json();
+
+    if (!tokenRes.ok || tokenInfo.error) {
+      return res.status(401).json({ error: 'Token de Google inválido' });
+    }
+
+    const { email, name, sub: googleId, picture } = tokenInfo;
+    if (!email) return res.status(400).json({ error: 'No se pudo obtener el email de Google' });
+
+    // Find existing user or create a new one
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = await User.create({ name: name || email.split('@')[0], email, googleId });
+    } else if (!user.googleId) {
+      user.googleId = googleId;
+      await user.save();
+    }
+
+    const token = jwt.sign({ sub: user._id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
+    res.json({ token, user: { id: user._id, name: user.name, email: user.email, picture } });
+  } catch (err) {
+    console.error('Google auth error:', err);
+    res.status(500).json({ error: 'Error al autenticar con Google' });
+  }
+});
+
 function startServer(port, attempt = 0) {
   const server = app.listen(port, () => {
     console.log(`Server running on port ${port}`);

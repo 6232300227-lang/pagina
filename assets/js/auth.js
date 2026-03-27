@@ -246,6 +246,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Actualizar interfaz al cargar la página
     updateUserInterface();
+    // Inicializar Google Sign-In (el script de GSI puede cargarse después del DOM)
+    window.addEventListener('load', initGoogleSignIn);
 });
 
 // Exponer funciones globalmente
@@ -256,3 +258,55 @@ window.handleLogin = handleLogin;
 window.handleRegister = handleRegister;
 window.logout = logout;
 window.updateUserInterface = updateUserInterface;
+
+// ===== GOOGLE SIGN-IN =====
+// IMPORTANTE: reemplaza este valor con tu Google Client ID.
+// Cómo obtenerlo: https://console.cloud.google.com/ →
+//   "APIs y servicios" → "Credenciales" → "Crear credenciales" → "ID de cliente OAuth 2.0"
+//   Tipo de aplicación: Web  |  Orígenes JS autorizados: tu dominio y http://localhost:3000
+const GOOGLE_CLIENT_ID = '252457363364-ciqlidgir7l2m3pmk07dm4h6d4lausn5.apps.googleusercontent.com';
+
+function initGoogleSignIn() {
+    if (typeof google === 'undefined' || !google.accounts) return;
+    google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleGoogleSignIn,
+        auto_select: false,
+        cancel_on_tap_outside: true
+    });
+}
+
+function loginWithGoogle() {
+    if (typeof google === 'undefined' || !google.accounts) {
+        showNotification('Google Sign-In no está disponible aún, intenta en un momento', 'info');
+        return;
+    }
+    google.accounts.id.prompt();
+}
+
+async function handleGoogleSignIn(response) {
+    try {
+        const res = await fetch(`${API_URL}/auth/google`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ credential: response.credential })
+        });
+        const data = await res.json();
+        if (res.ok) {
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('currentUser', JSON.stringify(data.user));
+            token = data.token;
+            currentUser = data.user;
+            closeAuthModal();
+            updateUserInterface();
+            showNotification('¡Bienvenido con Google!', 'success');
+        } else {
+            showNotification(data.error || 'Error al iniciar sesión con Google', 'error');
+        }
+    } catch (err) {
+        showNotification('Error de conexión con el servidor', 'error');
+    }
+}
+
+window.loginWithGoogle = loginWithGoogle;
+window.handleGoogleSignIn = handleGoogleSignIn;

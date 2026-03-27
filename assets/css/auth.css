@@ -159,6 +159,52 @@
     color: var(--dark-gray);
 }
 
+/* Google button divider in auth modal */
+.auth-social {
+    margin-top: 16px;
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    color: var(--dark-gray);
+    font-size: 0.85rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e0e0e0;
+}
+
+.auth-social .social-btn.google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 20px;
+    border: 2px solid #dadce0;
+    border-radius: 50px;
+    background: #fff;
+    color: #3c4043;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+.auth-social .social-btn.google:hover {
+    background: #f8f9fa;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
 .auth-footer a {
     color: var(--primary);
     font-weight: 600;
