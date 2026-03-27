@@ -83,6 +83,34 @@ async function apiGet(path, token) {
     return data;
 }
 
+async function apiDelete(path, token) {
+    const res = await fetch(`${API_BASE}${path}`, {
+        method: 'DELETE',
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'No se pudo eliminar el usuario');
+    return data;
+}
+
+async function apiPatch(path, token, payload) {
+    const res = await fetch(`${API_BASE}${path}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+    });
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'No se pudo actualizar el usuario');
+    return data;
+}
+
 function renderStats(stats) {
     document.getElementById('totalUsers').textContent = stats.totalUsers || 0;
     document.getElementById('totalAdmins').textContent = stats.totalAdmins || 0;
@@ -90,11 +118,15 @@ function renderStats(stats) {
     document.getElementById('cartValue').textContent = currency(stats.cart?.totalValue || 0);
 }
 
-function renderUsers(users) {
+function renderUsers(users, token) {
     const body = document.getElementById('usersTableBody');
     if (!body) return;
+
+    const { currentUser } = getStoredAuth();
+    const currentAdminId = currentUser?.id || currentUser?._id || null;
+
     if (!users || users.length === 0) {
-        body.innerHTML = '<tr><td colspan="5" class="empty">No hay usuarios para mostrar</td></tr>';
+        body.innerHTML = '<tr><td colspan="7" class="empty">No hay usuarios para mostrar</td></tr>';
         return;
     }
 
@@ -102,16 +134,90 @@ function renderUsers(users) {
         const role = user.role || 'customer';
         const google = user.googleId ? 'Sí' : 'No';
         const roleClass = role === 'admin' ? 'role-admin' : 'role-customer';
+        const statusClass = user.isActive === false ? 'status-inactive' : 'status-active';
+        const statusText = user.isActive === false ? 'Desactivado' : 'Activo';
+        const userId = user._id || user.id;
+        const isCurrentAdmin = String(userId || '') === String(currentAdminId || '');
+        const toggleText = user.isActive === false ? 'Activar' : 'Desactivar';
         return `
             <tr>
                 <td>${user.name || 'Sin nombre'}</td>
                 <td>${user.email || '-'}</td>
                 <td><span class="role-pill ${roleClass}">${role}</span></td>
+                <td><span class="status-pill ${statusClass}">${statusText}</span></td>
                 <td>${google}</td>
                 <td>${formatDate(user.createdAt)}</td>
+                <td>
+                    ${isCurrentAdmin
+                        ? '<span class="empty">Tu cuenta</span>'
+                        : `
+                            <div class="row-actions">
+                                <button class="tiny-btn toggle" data-toggle-user="${userId}" data-next-status="${user.isActive === false ? 'true' : 'false'}">${toggleText}</button>
+                                <button class="tiny-btn delete" data-delete-user="${userId}">Eliminar</button>
+                            </div>
+                        `}
+                </td>
             </tr>
         `;
     }).join('');
+
+    body.querySelectorAll('[data-toggle-user]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+            const userId = btn.getAttribute('data-toggle-user');
+            const nextStatus = btn.getAttribute('data-next-status') === 'true';
+            if (!userId) return;
+
+            const actionText = nextStatus ? 'activar' : 'desactivar';
+            const ok = window.confirm(`¿Seguro que deseas ${actionText} este usuario?`);
+            if (!ok) return;
+
+            const original = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = 'Guardando...';
+
+            try {
+                await apiPatch(`/admin/users/${encodeURIComponent(userId)}/status`, token, { isActive: nextStatus });
+                const [stats, updatedUsers] = await Promise.all([
+                    apiGet('/admin/stats', token),
+                    apiGet('/admin/users', token)
+                ]);
+                renderStats(stats);
+                renderUsers(updatedUsers, token);
+            } catch (err) {
+                alert(err.message || 'No se pudo actualizar el estado del usuario');
+                btn.disabled = false;
+                btn.innerHTML = original;
+            }
+        });
+    });
+
+    body.querySelectorAll('[data-delete-user]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+            const userId = btn.getAttribute('data-delete-user');
+            if (!userId) return;
+
+            const ok = window.confirm('¿Seguro que deseas eliminar este usuario? Esta acción no se puede deshacer.');
+            if (!ok) return;
+
+            const original = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = 'Eliminando...';
+
+            try {
+                await apiDelete(`/admin/users/${encodeURIComponent(userId)}`, token);
+                const [stats, updatedUsers] = await Promise.all([
+                    apiGet('/admin/stats', token),
+                    apiGet('/admin/users', token)
+                ]);
+                renderStats(stats);
+                renderUsers(updatedUsers, token);
+            } catch (err) {
+                alert(err.message || 'No se pudo eliminar el usuario');
+                btn.disabled = false;
+                btn.innerHTML = original;
+            }
+        });
+    });
 }
 
 async function loadDashboard(token) {
@@ -122,7 +228,7 @@ async function loadDashboard(token) {
         apiGet('/admin/products', token)
     ]);
     renderStats(stats);
-    renderUsers(users);
+    renderUsers(users, token);
     renderSales(salesOverview);
     renderProducts(products);
 }

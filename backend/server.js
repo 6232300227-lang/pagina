@@ -185,8 +185,9 @@ async function requireAuth(req, res, next) {
     if (!token) return res.status(401).json({ error: 'Token requerido' });
 
     const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await User.findById(decoded.sub).select('name email role phone address city zipCode');
+    const user = await User.findById(decoded.sub).select('name email role isActive phone address city zipCode');
     if (!user) return res.status(401).json({ error: 'Usuario no válido' });
+    if (user.isActive === false) return res.status(403).json({ error: 'Cuenta desactivada' });
 
     req.authUser = user;
     next();
@@ -201,8 +202,9 @@ async function requireAdmin(req, res, next) {
     if (!token) return res.status(401).json({ error: 'Token requerido' });
 
     const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await User.findById(decoded.sub).select('email role name');
+    const user = await User.findById(decoded.sub).select('email role name isActive');
     if (!user) return res.status(401).json({ error: 'Usuario no válido' });
+    if (user.isActive === false) return res.status(403).json({ error: 'Cuenta desactivada' });
     if (user.role !== 'admin') return res.status(403).json({ error: 'Acceso solo para administradores' });
 
     req.authUser = user;
@@ -291,6 +293,7 @@ app.post('/api/auth/login', async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) return res.status(401).json({ error: 'Credenciales inválidas' });
+    if (user.isActive === false) return res.status(403).json({ error: 'Tu cuenta está desactivada. Contacta al administrador.' });
 
     if (!user.password) return res.status(401).json({ error: 'Esta cuenta usa inicio con Google' });
 
@@ -562,6 +565,10 @@ app.post('/api/auth/google', async (req, res) => {
       await user.save();
     }
 
+    if (user.isActive === false) {
+      return res.status(403).json({ error: 'Tu cuenta está desactivada. Contacta al administrador.' });
+    }
+
     const token = jwt.sign({ sub: user._id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
     res.json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role, picture } });
   } catch (err) {
@@ -708,11 +715,81 @@ app.get('/api/admin/users', requireAdmin, async (req, res) => {
     const users = await User.find()
       .sort({ createdAt: -1 })
       .limit(100)
-      .select('name email role googleId createdAt');
+      .select('name email role isActive googleId createdAt');
     res.json(users);
   } catch (err) {
     console.error('Admin users error:', err);
     res.status(500).json({ error: 'No se pudieron cargar usuarios' });
+  }
+});
+
+app.patch('/api/admin/users/:id/status', requireAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { isActive } = req.body || {};
+
+    if (!id) {
+      return res.status(400).json({ error: 'Id de usuario requerido' });
+    }
+    if (typeof isActive !== 'boolean') {
+      return res.status(400).json({ error: 'isActive debe ser booleano' });
+    }
+
+    if (String(req.authUser._id) === String(id)) {
+      return res.status(400).json({ error: 'No puedes desactivar tu propia cuenta administradora' });
+    }
+
+    const targetUser = await User.findById(id).select('role isActive');
+    if (!targetUser) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+    if (targetUser.role === 'admin') {
+      return res.status(400).json({ error: 'No se puede cambiar estado de otro administrador desde este panel' });
+    }
+
+    targetUser.isActive = isActive;
+    await targetUser.save();
+
+    return res.json({
+      ok: true,
+      id: String(targetUser._id),
+      isActive: targetUser.isActive,
+      message: isActive ? 'Usuario activado' : 'Usuario desactivado'
+    });
+  } catch (err) {
+    console.error('Update user status error:', err);
+    return res.status(500).json({ error: 'No se pudo actualizar el estado del usuario' });
+  }
+});
+
+app.delete('/api/admin/users/:id', requireAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: 'Id de usuario requerido' });
+    }
+
+    if (String(req.authUser._id) === String(id)) {
+      return res.status(400).json({ error: 'No puedes eliminar tu propia cuenta administradora' });
+    }
+
+    const targetUser = await User.findById(id).select('role');
+    if (!targetUser) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+    if (targetUser.role === 'admin') {
+      return res.status(400).json({ error: 'No se puede eliminar otro administrador desde este panel' });
+    }
+
+    const deleted = await User.findByIdAndDelete(id);
+    if (!deleted) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    return res.json({ ok: true, message: 'Usuario eliminado correctamente' });
+  } catch (err) {
+    console.error('Delete admin user error:', err);
+    return res.status(500).json({ error: 'No se pudo eliminar el usuario' });
   }
 });
 

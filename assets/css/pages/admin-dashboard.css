@@ -284,6 +284,23 @@ th {
     color: var(--ok);
 }
 
+.status-pill {
+    border-radius: 50px;
+    padding: 4px 10px;
+    font-size: 0.76rem;
+    font-weight: 700;
+}
+
+.status-active {
+    background: #e9f8ee;
+    color: #1d8158;
+}
+
+.status-inactive {
+    background: #fff1f1;
+    color: #a62626;
+}
+
 .empty {
     text-align: center;
     color: var(--muted);
@@ -429,6 +446,12 @@ th {
     gap: 6px;
 }
 
+.row-actions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
 .tiny-btn {
     border: 1px solid var(--line);
     border-radius: 8px;
@@ -443,6 +466,26 @@ th {
     border-color: #ffd3c8;
     background: #fff4ef;
     color: #9d2f13;
+}
+
+.tiny-btn.delete {
+    border-color: #f6c7c7;
+    background: #fff1f1;
+    color: #a62626;
+}
+
+.tiny-btn.delete:hover {
+    background: #ffe4e4;
+}
+
+.tiny-btn.toggle {
+    border-color: #cfd8ff;
+    background: #f1f4ff;
+    color: #3243a8;
+}
+
+.tiny-btn.toggle:hover {
+    background: #e5ebff;
 }
 
 .action-link {
