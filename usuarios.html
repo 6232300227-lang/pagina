@@ -194,6 +194,72 @@
         </div>
     </section>
 
+    <section class="account-section" id="accountSection" style="display: none;">
+        <div class="container">
+            <div class="account-container">
+                <div class="account-header">
+                    <div>
+                        <h2><i class="fas fa-id-badge"></i> Mi Cuenta</h2>
+                        <p id="accountWelcomeText">Gestiona tu perfil y tus compras</p>
+                    </div>
+                    <button id="accountLogoutBtn" class="btn-outline-account" type="button">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                    </button>
+                </div>
+
+                <div class="account-tabs" id="accountTabs">
+                    <button class="account-tab-btn active" type="button" data-target="profilePanel">Perfil</button>
+                    <button class="account-tab-btn" type="button" data-target="historyPanel">Historial de compras</button>
+                    <button class="account-tab-btn" type="button" data-target="recentPanel">Compras recientes y llegada</button>
+                </div>
+
+                <div class="account-panels">
+                    <div class="account-panel active" id="profilePanel">
+                        <form id="profileForm" class="profile-form">
+                            <div class="profile-grid">
+                                <div class="form-group">
+                                    <label for="profileName"><i class="fas fa-user"></i> Nombre completo</label>
+                                    <input type="text" id="profileName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profileEmail"><i class="fas fa-envelope"></i> Correo electrónico</label>
+                                    <input type="email" id="profileEmail" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profilePhone"><i class="fas fa-phone"></i> Teléfono</label>
+                                    <input type="text" id="profilePhone" placeholder="+34 600 123 456">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profileAddress"><i class="fas fa-map-marker-alt"></i> Dirección</label>
+                                    <input type="text" id="profileAddress" placeholder="Calle y número">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profileCity"><i class="fas fa-city"></i> Ciudad</label>
+                                    <input type="text" id="profileCity" placeholder="Madrid">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profileZipCode"><i class="fas fa-mail-bulk"></i> Código postal</label>
+                                    <input type="text" id="profileZipCode" placeholder="28001">
+                                </div>
+                            </div>
+                            <button type="submit" class="login-btn" id="saveProfileBtn">
+                                <span><i class="fas fa-save"></i> Guardar cambios</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="account-panel" id="historyPanel">
+                        <div id="orderHistoryList" class="orders-list"></div>
+                    </div>
+
+                    <div class="account-panel" id="recentPanel">
+                        <div id="recentOrdersList" class="orders-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Modal de recuperación de contraseña -->
     <div id="forgotModal" class="modal-overlay" aria-hidden="true">
         <div class="modal-content">

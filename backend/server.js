@@ -179,6 +179,22 @@ function parseBearerToken(authorizationHeader = '') {
   return authorizationHeader.slice(7).trim();
 }
 
+async function requireAuth(req, res, next) {
+  try {
+    const token = parseBearerToken(req.headers.authorization || '');
+    if (!token) return res.status(401).json({ error: 'Token requerido' });
+
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const user = await User.findById(decoded.sub).select('name email role phone address city zipCode');
+    if (!user) return res.status(401).json({ error: 'Usuario no válido' });
+
+    req.authUser = user;
+    next();
+  } catch (_err) {
+    return res.status(401).json({ error: 'Token inválido o expirado' });
+  }
+}
+
 async function requireAdmin(req, res, next) {
   try {
     const token = parseBearerToken(req.headers.authorization || '');
@@ -194,6 +210,54 @@ async function requireAdmin(req, res, next) {
   } catch (err) {
     return res.status(401).json({ error: 'Token inválido o expirado' });
   }
+}
+
+function escapeRegex(value = '') {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function getEstimatedDeliveryISO(order) {
+  const baseDate = new Date(order.paidAt || order.updatedAt || order.createdAt || Date.now());
+  const status = String(order.status || '').toLowerCase();
+  let daysToAdd = 6;
+
+  if (status === 'approved') {
+    daysToAdd = 3;
+  } else if (status === 'pending' || status === 'pending_payment') {
+    daysToAdd = 7;
+  } else if (status === 'rejected' || status === 'cancelled') {
+    daysToAdd = 0;
+  }
+
+  const estimate = new Date(baseDate);
+  estimate.setDate(estimate.getDate() + daysToAdd);
+  return estimate.toISOString();
+}
+
+function mapCustomerOrder(order) {
+  const items = Array.isArray(order.items) ? order.items : [];
+  const totalItems = items.reduce((acc, item) => acc + (Number(item.quantity) || 0), 0);
+  return {
+    id: String(order._id),
+    externalReference: order.externalReference || '',
+    status: order.status,
+    paymentStatus: order.paymentStatus || '',
+    createdAt: order.createdAt,
+    paidAt: order.paidAt,
+    estimatedDelivery: getEstimatedDeliveryISO(order),
+    totalItems,
+    summary: {
+      subtotal: Number(order.summary?.subtotal || 0),
+      shipping: Number(order.summary?.shipping || 0),
+      discount: Number(order.summary?.discount || 0),
+      total: Number(order.summary?.total || 0)
+    },
+    items: items.map((item) => ({
+      title: item.title || 'Producto',
+      quantity: Number(item.quantity) || 1,
+      unitPrice: Number(item.unitPrice || 0)
+    }))
+  };
 }
 
 app.get('/api/health', (req, res) => res.json({ ok: true }));
@@ -280,6 +344,41 @@ app.post('/api/cart', async (req, res) => {
     res.status(201).json(item);
   } catch (err) {
     res.status(400).json({ error: err.message });
+  }
+});
+
+app.get('/api/products', async (req, res) => {
+  try {
+    const page = String(req.query.page || '').trim();
+    const filter = { isActive: true };
+    if (page) {
+      filter.pageTarget = page;
+    }
+
+    const products = await Product.find(filter).sort({ createdAt: -1 }).limit(300);
+    const formatted = products.map((product) => {
+      const discount = Number(product.discountPercent || 0);
+      const basePrice = Number(product.price || 0);
+      const finalPrice = basePrice * (1 - (discount / 100));
+      return {
+        id: String(product._id),
+        name: product.name,
+        section: product.section || 'general',
+        pageTarget: product.pageTarget || 'index.html',
+        image: product.image || '',
+        description: product.description || '',
+        price: basePrice,
+        originalPrice: discount > 0 ? basePrice : null,
+        discount,
+        finalPrice: Number(finalPrice.toFixed(2)),
+        isActive: product.isActive
+      };
+    });
+
+    res.json(formatted);
+  } catch (err) {
+    console.error('Public products error:', err);
+    res.status(500).json({ error: 'No se pudieron cargar productos' });
   }
 });
 
@@ -471,6 +570,104 @@ app.post('/api/auth/google', async (req, res) => {
   }
 });
 
+app.get('/api/account/me', requireAuth, async (req, res) => {
+  const user = req.authUser;
+  return res.json({
+    id: String(user._id),
+    name: user.name || '',
+    email: user.email || '',
+    phone: user.phone || '',
+    address: user.address || '',
+    city: user.city || '',
+    zipCode: user.zipCode || '',
+    role: user.role || 'customer'
+  });
+});
+
+app.put('/api/account/me', requireAuth, async (req, res) => {
+  try {
+    const { name, phone, address, city, zipCode } = req.body || {};
+    const update = {
+      name: String(name || '').trim(),
+      phone: String(phone || '').trim(),
+      address: String(address || '').trim(),
+      city: String(city || '').trim(),
+      zipCode: String(zipCode || '').trim()
+    };
+
+    if (!update.name) {
+      return res.status(400).json({ error: 'El nombre es requerido' });
+    }
+
+    const user = await User.findByIdAndUpdate(req.authUser._id, update, {
+      new: true,
+      runValidators: true
+    }).select('name email role phone address city zipCode');
+
+    return res.json({
+      id: String(user._id),
+      name: user.name || '',
+      email: user.email || '',
+      phone: user.phone || '',
+      address: user.address || '',
+      city: user.city || '',
+      zipCode: user.zipCode || '',
+      role: user.role || 'customer'
+    });
+  } catch (err) {
+    console.error('Update account profile error:', err);
+    return res.status(500).json({ error: 'No se pudo actualizar tu perfil' });
+  }
+});
+
+app.get('/api/account/orders', requireAuth, async (req, res) => {
+  try {
+    const email = String(req.authUser.email || '').trim();
+    if (!email) {
+      return res.json([]);
+    }
+
+    const emailRegex = new RegExp(`^${escapeRegex(email)}$`, 'i');
+    const orders = await Order.find({
+      $or: [
+        { 'payer.email': emailRegex },
+        { 'shippingInfo.email': emailRegex }
+      ]
+    })
+      .sort({ createdAt: -1 })
+      .limit(100);
+
+    return res.json(orders.map(mapCustomerOrder));
+  } catch (err) {
+    console.error('Get account orders error:', err);
+    return res.status(500).json({ error: 'No se pudieron cargar tus compras' });
+  }
+});
+
+app.get('/api/account/orders/recent', requireAuth, async (req, res) => {
+  try {
+    const email = String(req.authUser.email || '').trim();
+    if (!email) {
+      return res.json([]);
+    }
+
+    const emailRegex = new RegExp(`^${escapeRegex(email)}$`, 'i');
+    const recent = await Order.find({
+      $or: [
+        { 'payer.email': emailRegex },
+        { 'shippingInfo.email': emailRegex }
+      ]
+    })
+      .sort({ createdAt: -1 })
+      .limit(3);
+
+    return res.json(recent.map(mapCustomerOrder));
+  } catch (err) {
+    console.error('Get recent account orders error:', err);
+    return res.status(500).json({ error: 'No se pudieron cargar las compras recientes' });
+  }
+});
+
 // Admin dashboard stats
 app.get('/api/admin/stats', requireAdmin, async (req, res) => {
   try {
@@ -530,6 +727,7 @@ app.get('/api/admin/products', requireAdmin, async (req, res) => {
         id: product._id,
         name: product.name,
         section: product.section || 'general',
+        pageTarget: product.pageTarget || 'index.html',
         image: product.image,
         description: product.description,
         price: basePrice,
@@ -550,7 +748,7 @@ app.get('/api/admin/products', requireAdmin, async (req, res) => {
 
 app.post('/api/admin/products', requireAdmin, async (req, res) => {
   try {
-    const { name, section, image, description, price, discountPercent, isActive } = req.body;
+    const { name, section, pageTarget, image, description, price, discountPercent, isActive } = req.body;
     if (!name || price === undefined || price === null) {
       return res.status(400).json({ error: 'Nombre y precio son requeridos' });
     }
@@ -564,6 +762,7 @@ app.post('/api/admin/products', requireAdmin, async (req, res) => {
     const product = await Product.create({
       name: String(name).trim(),
       section: String(section || 'general').toLowerCase(),
+      pageTarget: String(pageTarget || 'index.html').trim(),
       image: String(image || '').trim(),
       description: String(description || '').trim(),
       price: safePrice,
@@ -581,11 +780,12 @@ app.post('/api/admin/products', requireAdmin, async (req, res) => {
 app.put('/api/admin/products/:id', requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, section, image, description, price, discountPercent, isActive } = req.body;
+    const { name, section, pageTarget, image, description, price, discountPercent, isActive } = req.body;
 
     const update = {};
     if (name !== undefined) update.name = String(name).trim();
     if (section !== undefined) update.section = String(section || 'general').toLowerCase();
+    if (pageTarget !== undefined) update.pageTarget = String(pageTarget || 'index.html').trim();
     if (image !== undefined) update.image = String(image).trim();
     if (description !== undefined) update.description = String(description).trim();
     if (price !== undefined) {

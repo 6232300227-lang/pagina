@@ -5,6 +5,10 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: false },
   googleId: { type: String },
+  phone: { type: String, default: '' },
+  address: { type: String, default: '' },
+  city: { type: String, default: '' },
+  zipCode: { type: String, default: '' },
   role: { type: String, enum: ['customer', 'admin'], default: 'customer' },
   createdAt: { type: Date, default: Date.now }
 });

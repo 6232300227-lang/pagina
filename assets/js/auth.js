@@ -243,7 +243,7 @@ function updateUserInterface() {
         const firstName = currentUser.name ? currentUser.name.split(' ')[0] : 'Usuario';
         accountText.textContent = `Hola, ${firstName}`;
         if (accountLink) {
-            accountLink.href = currentUser.role === 'admin' ? 'admin-dashboard.html' : 'perfil.html';
+            accountLink.href = currentUser.role === 'admin' ? 'admin-dashboard.html' : 'usuarios.html';
             // Remove modal trigger so the link actually navigates
             accountLink.removeAttribute('onclick');
         }
@@ -290,6 +290,56 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
+function getCartFromStorage() {
+    const cartKeys = ['shoppingCart', 'cartItems', 'carrito'];
+    for (const key of cartKeys) {
+        try {
+            const raw = localStorage.getItem(key);
+            if (!raw) continue;
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) return parsed;
+        } catch (_err) {
+            // Ignore malformed values and continue with next key
+        }
+    }
+    return [];
+}
+
+function getCartItemsCount() {
+    const cart = getCartFromStorage();
+    return cart.reduce((acc, item) => {
+        const qty = Number(item?.quantity ?? item?.qty ?? 1);
+        return acc + (Number.isFinite(qty) && qty > 0 ? qty : 1);
+    }, 0);
+}
+
+function updateCartCount() {
+    const count = getCartItemsCount();
+    document.querySelectorAll('#cartCount, .cart-count').forEach((node) => {
+        node.textContent = String(count);
+    });
+}
+
+function updateWishlistCount() {
+    let favorites = [];
+    try {
+        const raw = localStorage.getItem('favorites');
+        favorites = raw ? JSON.parse(raw) : [];
+    } catch (_err) {
+        favorites = [];
+    }
+
+    const count = Array.isArray(favorites) ? favorites.length : 0;
+    document.querySelectorAll('#wishlistCount, .wishlist-count').forEach((node) => {
+        node.textContent = String(count);
+    });
+}
+
+function refreshHeaderCounters() {
+    updateCartCount();
+    updateWishlistCount();
+}
+
 // Cerrar modal cuando se hace click fuera de él
 document.addEventListener('DOMContentLoaded', function() {
     const authModal = document.getElementById('authModal');
@@ -303,6 +353,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Actualizar interfaz al cargar la página
     updateUserInterface();
+    refreshHeaderCounters();
     // Inicializar Google Sign-In (el script de GSI puede cargarse después del DOM)
     window.addEventListener('load', initGoogleSignIn);
 
@@ -313,7 +364,13 @@ document.addEventListener('DOMContentLoaded', function() {
             currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
             updateUserInterface();
         }
+
+        if (e.key === 'shoppingCart' || e.key === 'cartItems' || e.key === 'carrito' || e.key === 'favorites') {
+            refreshHeaderCounters();
+        }
     });
+
+    window.addEventListener('focus', refreshHeaderCounters);
 });
 
 // Exponer funciones globalmente
@@ -324,6 +381,8 @@ window.handleLogin = handleLogin;
 window.handleRegister = handleRegister;
 window.logout = logout;
 window.updateUserInterface = updateUserInterface;
+window.updateCartCount = updateCartCount;
+window.updateWishlistCount = updateWishlistCount;
 
 // ===== GOOGLE SIGN-IN =====
 // IMPORTANTE: reemplaza este valor con tu Google Client ID.

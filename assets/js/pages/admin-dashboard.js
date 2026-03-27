@@ -13,6 +13,30 @@ function sectionLabel(section) {
     return map[section] || 'General';
 }
 
+function pageLabel(pageTarget) {
+    const map = {
+        'index.html': 'Inicio',
+        'camisas.html': 'Camisas',
+        'camisetas.html': 'Camisetas',
+        'camisetas-niños.html': 'Camisetas Niños',
+        'chaquetas.html': 'Chaquetas',
+        'chaquetas-niño.html': 'Chaquetas Niño',
+        'pantalones-hombre.html': 'Pantalones Hombre',
+        'Pantalones-mujer.html': 'Pantalones Mujer',
+        'pantalones-niña.html': 'Pantalones Niña',
+        'pantalones-niño.html': 'Pantalones Niño',
+        'tops.html': 'Tops',
+        'tops-niña.html': 'Tops Niña',
+        'Trajes.html': 'Trajes',
+        'vestidos.html': 'Vestidos',
+        'vestidos-niñas.html': 'Vestidos Niñas',
+        'novedades.html': 'Novedades',
+        'ofertas.html': 'Ofertas',
+        'colecciones.html': 'Colecciones'
+    };
+    return map[pageTarget] || pageTarget || 'Inicio';
+}
+
 function currency(value) {
     return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD' }).format(value || 0);
 }
@@ -167,6 +191,7 @@ function renderProducts(products) {
                 <div>
                     <p class="product-name">${product.name}</p>
                     <p class="product-meta">Apartado: ${sectionLabel(product.section)}</p>
+                    <p class="product-meta">Página: ${pageLabel(product.pageTarget)}</p>
                     <p class="product-meta">${product.description || 'Sin descripción'}</p>
                     <p class="product-price">
                         ${discount > 0 ? `<span class="old">${currency(oldPrice)}</span>` : ''}
@@ -196,6 +221,7 @@ function fillProductForm(product) {
     document.getElementById('productId').value = product.id || '';
     document.getElementById('productName').value = product.name || '';
     document.getElementById('productSection').value = product.section || 'general';
+    document.getElementById('productPageTarget').value = product.pageTarget || 'index.html';
     document.getElementById('productImage').value = product.image || '';
     document.getElementById('productDescription').value = product.description || '';
     document.getElementById('productPrice').value = product.price ?? '';
@@ -222,6 +248,7 @@ async function saveProduct(token) {
     const payload = {
         name: document.getElementById('productName').value.trim(),
         section: document.getElementById('productSection').value,
+        pageTarget: document.getElementById('productPageTarget').value,
         image: document.getElementById('productImage').value.trim(),
         description: document.getElementById('productDescription').value.trim(),
         price: Number(document.getElementById('productPrice').value || 0),

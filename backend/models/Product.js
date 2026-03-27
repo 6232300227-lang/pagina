@@ -7,6 +7,30 @@ const ProductSchema = new mongoose.Schema({
     enum: ['mujer', 'hombre', 'ninos', 'ofertas', 'novedades', 'general'],
     default: 'general'
   },
+  pageTarget: {
+    type: String,
+    enum: [
+      'camisas.html',
+      'camisetas.html',
+      'camisetas-niños.html',
+      'chaquetas.html',
+      'chaquetas-niño.html',
+      'pantalones-hombre.html',
+      'Pantalones-mujer.html',
+      'pantalones-niña.html',
+      'pantalones-niño.html',
+      'tops.html',
+      'tops-niña.html',
+      'Trajes.html',
+      'vestidos.html',
+      'vestidos-niñas.html',
+      'novedades.html',
+      'ofertas.html',
+      'colecciones.html',
+      'index.html'
+    ],
+    default: 'index.html'
+  },
   image: { type: String, default: '' },
   description: { type: String, default: '', trim: true },
   price: { type: Number, required: true, min: 0 },
