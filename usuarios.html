@@ -237,16 +237,16 @@
             </div>
 
             <!-- Formulario de Login -->
-            <div class="auth-form active" id="loginFormModal">
+            <div class="auth-form active" id="loginForm">
                 <div class="error-message" id="loginError" style="display: none;"></div>
                 <form onsubmit="handleLogin(event)">
                     <div class="form-group">
-                        <label for="loginEmailModal">Email</label>
-                        <input type="email" id="loginEmailModal" required placeholder="tu@email.com">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" required placeholder="tu@email.com">
                     </div>
                     <div class="form-group">
-                        <label for="loginPasswordModal">Contraseña</label>
-                        <input type="password" id="loginPasswordModal" required placeholder="••••••••">
+                        <label for="loginPassword">Contraseña</label>
+                        <input type="password" id="loginPassword" required placeholder="••••••••">
                     </div>
                     <button type="submit" class="auth-submit">
                         <span>Iniciar Sesión</span>
@@ -264,20 +264,20 @@
             </div>
 
             <!-- Formulario de Registro -->
-            <div class="auth-form" id="registerFormModal">
+            <div class="auth-form" id="registerForm">
                 <div class="error-message" id="registerError" style="display: none;"></div>
                 <form onsubmit="handleRegister(event)">
                     <div class="form-group">
-                        <label for="registerNameModal">Nombre completo</label>
-                        <input type="text" id="registerNameModal" required placeholder="María García">
+                        <label for="registerName">Nombre completo</label>
+                        <input type="text" id="registerName" required placeholder="María García">
                     </div>
                     <div class="form-group">
-                        <label for="registerEmailModal">Email</label>
-                        <input type="email" id="registerEmailModal" required placeholder="maria@email.com">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" required placeholder="maria@email.com">
                     </div>
                     <div class="form-group">
-                        <label for="registerPasswordModal">Contraseña</label>
-                        <input type="password" id="registerPasswordModal" required placeholder="Mínimo 6 caracteres">
+                        <label for="registerPassword">Contraseña</label>
+                        <input type="password" id="registerPassword" required placeholder="Mínimo 6 caracteres">
                     </div>
                     <button type="submit" class="auth-submit">
                         <span>Crear Cuenta</span>
