@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
     <title>Panel Admin - StyleHub Premium</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -30,7 +30,7 @@
         </div>
         <div class="admin-actions">
             <a href="index.html" class="ghost-btn"><i class="fas fa-store"></i> Ver tienda</a>
-            <button id="logoutAdmin" class="danger-btn"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button>
+            <button id="logoutAdmin" class="danger-btn"><i class="fas fa-sign-out-alt"></i> Cerrar sesiÃ³n</button>
         </div>
     </header>
 
@@ -59,7 +59,7 @@
             <article class="stat-card">
                 <div class="stat-icon new"><i class="fas fa-user-plus"></i></div>
                 <div>
-                    <p>Nuevos (7 días)</p>
+                    <p>Nuevos (7 dÃ­as)</p>
                     <h3 id="newUsers">0</h3>
                 </div>
             </article>
@@ -99,8 +99,8 @@
             </article>
 
             <article class="panel-card quick-actions">
-                <h3><i class="fas fa-bolt"></i> Acciones rápidas</h3>
-                <a href="usuarios.html" class="action-link"><i class="fas fa-user-cog"></i> Ir a inicio de sesión</a>
+                <h3><i class="fas fa-bolt"></i> Acciones rÃ¡pidas</h3>
+                <a href="usuarios.html" class="action-link"><i class="fas fa-user-cog"></i> Ir a inicio de sesiÃ³n</a>
                 <a href="registro.html" class="action-link"><i class="fas fa-user-plus"></i> Crear usuario manual</a>
                 <a href="carrito.html" class="action-link"><i class="fas fa-cart-shopping"></i> Ver carrito</a>
                 <a href="ofertas.html" class="action-link"><i class="fas fa-tags"></i> Ver ofertas</a>
@@ -109,13 +109,13 @@
 
         <section class="panel-card sales-panel">
             <div class="panel-header">
-                <h3><i class="fas fa-chart-line"></i> Ventas (últimos 7 días)</h3>
+                <h3><i class="fas fa-chart-line"></i> Ventas (Ãºltimos 7 dÃ­as)</h3>
                 <button id="refreshSales" class="ghost-btn small"><i class="fas fa-rotate"></i> Actualizar</button>
             </div>
             <div class="sales-kpis">
                 <div><p>Ingresos</p><h4 id="salesRevenue">$0.00</h4></div>
-                <div><p>Órdenes aprobadas</p><h4 id="salesOrders">0</h4></div>
-                <div><p>Órdenes pendientes</p><h4 id="salesPending">0</h4></div>
+                <div><p>Ã“rdenes aprobadas</p><h4 id="salesOrders">0</h4></div>
+                <div><p>Ã“rdenes pendientes</p><h4 id="salesPending">0</h4></div>
                 <div><p>Ticket promedio</p><h4 id="salesAvg">$0.00</h4></div>
             </div>
             <div class="chart-wrap">
@@ -139,28 +139,28 @@
                         <option value="general">General</option>
                         <option value="mujer">Mujer</option>
                         <option value="hombre">Hombre</option>
-                        <option value="ninos">Niños</option>
+                        <option value="ninos">NiÃ±os</option>
                         <option value="ofertas">Ofertas</option>
                         <option value="novedades">Novedades</option>
                     </select>
 
-                    <label>Página donde se publicará</label>
+                    <label>PÃ¡gina donde se publicarÃ¡</label>
                     <select id="productPageTarget" required>
                         <option value="index.html">Inicio</option>
                         <option value="camisas.html">Camisas</option>
                         <option value="camisetas.html">Camisetas</option>
-                        <option value="camisetas-niños.html">Camisetas Niños</option>
+                        <option value="camisetas-niÃ±os.html">Camisetas NiÃ±os</option>
                         <option value="chaquetas.html">Chaquetas</option>
-                        <option value="chaquetas-niño.html">Chaquetas Niño</option>
+                        <option value="chaquetas-niÃ±o.html">Chaquetas NiÃ±o</option>
                         <option value="pantalones-hombre.html">Pantalones Hombre</option>
                         <option value="Pantalones-mujer.html">Pantalones Mujer</option>
-                        <option value="pantalones-niña.html">Pantalones Niña</option>
-                        <option value="pantalones-niño.html">Pantalones Niño</option>
+                        <option value="pantalones-niÃ±a.html">Pantalones NiÃ±a</option>
+                        <option value="pantalones-niÃ±o.html">Pantalones NiÃ±o</option>
                         <option value="tops.html">Tops</option>
-                        <option value="tops-niña.html">Tops Niña</option>
+                        <option value="tops-niÃ±a.html">Tops NiÃ±a</option>
                         <option value="Trajes.html">Trajes</option>
                         <option value="vestidos.html">Vestidos</option>
-                        <option value="vestidos-niñas.html">Vestidos Niñas</option>
+                        <option value="vestidos-niÃ±as.html">Vestidos NiÃ±as</option>
                         <option value="novedades.html">Novedades</option>
                         <option value="ofertas.html">Ofertas</option>
                         <option value="colecciones.html">Colecciones</option>
@@ -169,8 +169,8 @@
                     <label>Imagen (URL)</label>
                     <input type="url" id="productImage" placeholder="https://...">
 
-                    <label>Descripción</label>
-                    <textarea id="productDescription" rows="3" placeholder="Descripción del producto"></textarea>
+                    <label>DescripciÃ³n</label>
+                    <textarea id="productDescription" rows="3" placeholder="DescripciÃ³n del producto"></textarea>
 
                     <div class="form-two-cols">
                         <div>
@@ -208,5 +208,13 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
     <script src="assets/js/pages/admin-dashboard.js"></script>
+    <script src="assets/js/mobile-menu-fix.js"></script>
 </body>
 </html>
+
+
+
+
+
+
+

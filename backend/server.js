@@ -27,7 +27,7 @@ const ADMIN2_PASSWORD = process.env.ADMIN2_PASSWORD || 'Admin456!';
 const ADMIN2_NAME = process.env.ADMIN2_NAME || 'Administrador Secundario';
 
 // Mercado Pago access token (used via direct HTTP request)
-const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN || process.env.MERCADOPAGO_ACCESS_TOKEN || 'APP_USR-138373493028620-032618-c24ebc952540422844b3ed964ec3eb52-2049134991';
+const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN || process.env.MERCADOPAGO_ACCESS_TOKEN || '';
 const MP_API_URL = 'https://api.mercadopago.com/checkout/preferences';
 const MP_PAYMENT_API_URL = 'https://api.mercadopago.com/v1/payments';
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://stylehub.pics';
