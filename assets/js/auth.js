@@ -631,14 +631,25 @@ const GOOGLE_CLIENT_ID = '168775181456-70l3t07ca26h7bh0vghb7nc818tg63pr.apps.goo
 
 function initGoogleSignIn() {
     if (typeof google === 'undefined' || !google.accounts) return;
+
+    // Forzar flujo por callback JS (popup) y evitar POST redirect a login_uri (405 en frontend estático).
+    const onloadConfig = document.getElementById('g_id_onload');
+    if (onloadConfig) {
+        onloadConfig.setAttribute('data-callback', 'handleGoogleSignIn');
+        onloadConfig.setAttribute('data-ux_mode', 'popup');
+        onloadConfig.removeAttribute('data-login_uri');
+    }
+
     google.accounts.id.initialize({
         client_id: GOOGLE_CLIENT_ID,
         callback: handleGoogleSignIn,
+        ux_mode: 'popup',
         auto_select: false,
         cancel_on_tap_outside: true
     });
     // Renderizar el botón oficial de Google en todos los contenedores de la página
-    document.querySelectorAll('.google-signin-btn-container').forEach(function(container) {
+    document.querySelectorAll('.google-signin-btn-container, .g_id_signin').forEach(function(container) {
+        container.innerHTML = '';
         google.accounts.id.renderButton(container, {
             type: 'standard',
             theme: 'outline',

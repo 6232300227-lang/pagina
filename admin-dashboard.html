@@ -14,7 +14,7 @@
     <!-- Google Identity onload container -->
     <div id="g_id_onload"
          data-client_id="168775181456-70l3t07ca26h7bh0vghb7nc818tg63pr.apps.googleusercontent.com"
-         data-login_uri="https://stylehub.pics"
+         data-callback="handleGoogleSignIn"
          data-auto_prompt="false">
     </div>
     <div class="bg-orb orb-1"></div>
@@ -30,7 +30,7 @@
         </div>
         <div class="admin-actions">
             <a href="index.html" class="ghost-btn"><i class="fas fa-store"></i> Ver tienda</a>
-            <button id="logoutAdmin" class="danger-btn"><i class="fas fa-sign-out-alt"></i> Cerrar sesiÃ³n</button>
+            <button id="logoutAdmin" class="danger-btn"><i class="fas fa-sign-out-alt"></i> Cerrar sesi&oacute;n</button>
         </div>
     </header>
 
@@ -59,7 +59,7 @@
             <article class="stat-card">
                 <div class="stat-icon new"><i class="fas fa-user-plus"></i></div>
                 <div>
-                    <p>Nuevos (7 dÃ­as)</p>
+                    <p>Nuevos (7 d&iacute;as)</p>
                     <h3 id="newUsers">0</h3>
                 </div>
             </article>
@@ -99,8 +99,8 @@
             </article>
 
             <article class="panel-card quick-actions">
-                <h3><i class="fas fa-bolt"></i> Acciones rÃ¡pidas</h3>
-                <a href="usuarios.html" class="action-link"><i class="fas fa-user-cog"></i> Ir a inicio de sesiÃ³n</a>
+                <h3><i class="fas fa-bolt"></i> Acciones r&aacute;pidas</h3>
+                <a href="usuarios.html" class="action-link"><i class="fas fa-user-cog"></i> Ir a inicio de sesi&oacute;n</a>
                 <a href="registro.html" class="action-link"><i class="fas fa-user-plus"></i> Crear usuario manual</a>
                 <a href="carrito.html" class="action-link"><i class="fas fa-cart-shopping"></i> Ver carrito</a>
                 <a href="ofertas.html" class="action-link"><i class="fas fa-tags"></i> Ver ofertas</a>
@@ -109,13 +109,13 @@
 
         <section class="panel-card sales-panel">
             <div class="panel-header">
-                <h3><i class="fas fa-chart-line"></i> Ventas (Ãºltimos 7 dÃ­as)</h3>
+                <h3><i class="fas fa-chart-line"></i> Ventas (&uacute;ltimos 7 d&iacute;as)</h3>
                 <button id="refreshSales" class="ghost-btn small"><i class="fas fa-rotate"></i> Actualizar</button>
             </div>
             <div class="sales-kpis">
                 <div><p>Ingresos</p><h4 id="salesRevenue">$0.00</h4></div>
-                <div><p>Ã“rdenes aprobadas</p><h4 id="salesOrders">0</h4></div>
-                <div><p>Ã“rdenes pendientes</p><h4 id="salesPending">0</h4></div>
+                <div><p>&Oacute;rdenes aprobadas</p><h4 id="salesOrders">0</h4></div>
+                <div><p>&Oacute;rdenes pendientes</p><h4 id="salesPending">0</h4></div>
                 <div><p>Ticket promedio</p><h4 id="salesAvg">$0.00</h4></div>
             </div>
             <div class="chart-wrap">
@@ -139,28 +139,28 @@
                         <option value="general">General</option>
                         <option value="mujer">Mujer</option>
                         <option value="hombre">Hombre</option>
-                        <option value="ninos">NiÃ±os</option>
+                        <option value="ninos">Ni&ntilde;os</option>
                         <option value="ofertas">Ofertas</option>
                         <option value="novedades">Novedades</option>
                     </select>
 
-                    <label>PÃ¡gina donde se publicarÃ¡</label>
+                    <label>P&aacute;gina donde se publicar&aacute;</label>
                     <select id="productPageTarget" required>
                         <option value="index.html">Inicio</option>
                         <option value="camisas.html">Camisas</option>
                         <option value="camisetas.html">Camisetas</option>
-                        <option value="camisetas-niÃ±os.html">Camisetas NiÃ±os</option>
+                        <option value="camisetas-ni&ntilde;os.html">Camisetas Ni&ntilde;os</option>
                         <option value="chaquetas.html">Chaquetas</option>
-                        <option value="chaquetas-niÃ±o.html">Chaquetas NiÃ±o</option>
+                        <option value="chaquetas-ni&ntilde;o.html">Chaquetas Ni&ntilde;o</option>
                         <option value="pantalones-hombre.html">Pantalones Hombre</option>
                         <option value="Pantalones-mujer.html">Pantalones Mujer</option>
-                        <option value="pantalones-niÃ±a.html">Pantalones NiÃ±a</option>
-                        <option value="pantalones-niÃ±o.html">Pantalones NiÃ±o</option>
+                        <option value="pantalones-ni&ntilde;a.html">Pantalones Ni&ntilde;a</option>
+                        <option value="pantalones-ni&ntilde;o.html">Pantalones Ni&ntilde;o</option>
                         <option value="tops.html">Tops</option>
-                        <option value="tops-niÃ±a.html">Tops NiÃ±a</option>
+                        <option value="tops-ni&ntilde;a.html">Tops Ni&ntilde;a</option>
                         <option value="Trajes.html">Trajes</option>
                         <option value="vestidos.html">Vestidos</option>
-                        <option value="vestidos-niÃ±as.html">Vestidos NiÃ±as</option>
+                        <option value="vestidos-ni&ntilde;as.html">Vestidos Ni&ntilde;as</option>
                         <option value="novedades.html">Novedades</option>
                         <option value="ofertas.html">Ofertas</option>
                         <option value="colecciones.html">Colecciones</option>
@@ -169,8 +169,8 @@
                     <label>Imagen (URL)</label>
                     <input type="url" id="productImage" placeholder="https://...">
 
-                    <label>DescripciÃ³n</label>
-                    <textarea id="productDescription" rows="3" placeholder="DescripciÃ³n del producto"></textarea>
+                    <label>Descripci&oacute;n</label>
+                    <textarea id="productDescription" rows="3" placeholder="Descripci&oacute;n del producto"></textarea>
 
                     <div class="form-two-cols">
                         <div>
@@ -211,6 +211,7 @@
     <script src="assets/js/mobile-menu-fix.js"></script>
 </body>
 </html>
+
 
 
 

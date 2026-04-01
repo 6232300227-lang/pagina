@@ -21,7 +21,7 @@ body {
         var(--bg);
     color: var(--ink);
     font-family: 'Manrope', sans-serif;
-    padding: 24px;
+    padding: clamp(16px, 2vw, 28px);
     position: relative;
     overflow-x: hidden;
 }
@@ -51,7 +51,7 @@ body {
 }
 
 .admin-header {
-    max-width: 1250px;
+    max-width: min(1480px, calc(100vw - 2 * clamp(16px, 2vw, 28px)));
     margin: 0 auto 22px;
     background: rgba(255, 255, 255, 0.86);
     border: 1px solid var(--line);
@@ -136,7 +136,7 @@ body {
 }
 
 .admin-main {
-    max-width: 1250px;
+    max-width: min(1480px, calc(100vw - 2 * clamp(16px, 2vw, 28px)));
     margin: 0 auto;
     display: grid;
     gap: 18px;
@@ -174,7 +174,7 @@ body {
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(170px, 1fr));
+    grid-template-columns: repeat(4, minmax(180px, 1fr));
     gap: 14px;
 }
 
@@ -216,7 +216,7 @@ body {
 
 .panel-grid {
     display: grid;
-    grid-template-columns: 1.7fr 1fr;
+    grid-template-columns: minmax(0, 1.6fr) minmax(300px, 1fr);
     gap: 14px;
 }
 
@@ -232,6 +232,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    row-gap: 8px;
     margin-bottom: 10px;
 }
 
@@ -249,7 +251,7 @@ body {
 table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 620px;
+    min-width: 680px;
 }
 
 th,
@@ -346,11 +348,17 @@ th {
     border-radius: 14px;
     padding: 12px;
     background: #fff;
+    min-height: clamp(220px, 25vw, 320px);
+}
+
+.chart-wrap canvas {
+    width: 100% !important;
+    height: 100% !important;
 }
 
 .product-grid {
     display: grid;
-    grid-template-columns: 1fr 1.5fr;
+    grid-template-columns: minmax(320px, 1fr) minmax(420px, 1.5fr);
     gap: 14px;
 }
 
@@ -506,6 +514,32 @@ th {
     .panel-grid { grid-template-columns: 1fr; }
     .product-grid { grid-template-columns: 1fr; }
     .sales-kpis { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+}
+
+@media (min-width: 701px) and (max-width: 1366px) {
+    .admin-actions {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .welcome-card h2 {
+        font-size: clamp(1.55rem, 1.1rem + 1.2vw, 2rem);
+    }
+}
+
+@media (min-width: 1500px) {
+    .stats-grid {
+        gap: 16px;
+    }
+
+    .panel-grid,
+    .product-grid {
+        gap: 16px;
+    }
+
+    .panel-card {
+        padding: 20px;
+    }
 }
 
 @media (max-width: 700px) {

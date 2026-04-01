@@ -158,6 +158,9 @@ async function ensureDefaultAdmins() {
           name: admin.name,
           email: admin.email,
           password: hashed,
+          emailVerified: true,
+          registrationMethod: 'email',
+          lastLogin: null,
           role: 'admin'
         });
         console.log(`Admin account created: ${admin.email}`);
@@ -274,7 +277,18 @@ app.post('/api/auth/register', async (req, res) => {
     if (existing) return res.status(409).json({ error: 'Usuario ya existe' });
 
     const hashed = await bcrypt.hash(password, 10);
-    const user = await User.create({ name, email, password: hashed, role: 'customer' });
+    const user = await User.create({
+      name,
+      email,
+      password: hashed,
+      role: 'customer',
+      emailVerified: false,
+      registrationMethod: 'email',
+      lastLogin: new Date()
+    });
+
+    user.lastLogin = new Date();
+    await user.save();
 
     const token = jwt.sign({ sub: user._id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
 
@@ -326,7 +340,15 @@ app.post('/api/users', async (req, res) => {
     // Create a random password for users created via checkout
     const randomPass = Math.random().toString(36).slice(2, 10);
     const hashed = await bcrypt.hash(randomPass, 10);
-    user = await User.create({ name, email, password: hashed, role: 'customer' });
+    user = await User.create({
+      name,
+      email,
+      password: hashed,
+      role: 'customer',
+      emailVerified: false,
+      registrationMethod: 'email',
+      lastLogin: null
+    });
 
     res.status(201).json({ id: user._id, name: user.name, email: user.email });
   } catch (err) {
@@ -554,14 +576,34 @@ app.post('/api/auth/google', async (req, res) => {
     }
 
     const { email, name, sub: googleId, picture } = tokenInfo;
+    const isGoogleEmailVerified = String(tokenInfo.email_verified) === 'true';
     if (!email) return res.status(400).json({ error: 'No se pudo obtener el email de Google' });
 
-    // Find existing user or create a new one
+    // Find existing user by email. If it doesn't exist, create a new Google account.
     let user = await User.findOne({ email });
     if (!user) {
-      user = await User.create({ name: name || email.split('@')[0], email, googleId, role: 'customer' });
+      user = await User.create({
+        name: name || email.split('@')[0],
+        email,
+        password: null,
+        googleId,
+        role: 'customer',
+        emailVerified: isGoogleEmailVerified,
+        registrationMethod: 'google',
+        lastLogin: new Date()
+      });
     } else if (!user.googleId) {
       user.googleId = googleId;
+      user.registrationMethod = user.registrationMethod || 'email';
+      user.emailVerified = true;
+      user.lastLogin = new Date();
+      await user.save();
+    } else {
+      if (user.googleId !== googleId) {
+        return res.status(409).json({ error: 'El correo ya está vinculado a otra cuenta de Google' });
+      }
+      user.lastLogin = new Date();
+      user.emailVerified = true;
       await user.save();
     }
 
