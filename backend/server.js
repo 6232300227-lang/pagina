@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const path = require('path');
+const fetch = globalThis.fetch ? globalThis.fetch.bind(globalThis) : require('node-fetch');
 const { connectDB } = require('./db/connection');
 const User = require('./models/User');
 const CartItem = require('./models/Cart');
