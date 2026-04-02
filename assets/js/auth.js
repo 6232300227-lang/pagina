@@ -627,7 +627,7 @@ window.updateWishlistCount = updateWishlistCount;
 // Cómo obtenerlo: https://console.cloud.google.com/ →
 //   "APIs y servicios" → "Credenciales" → "Crear credenciales" → "ID de cliente OAuth 2.0"
 //   Tipo de aplicación: Web  |  Orígenes JS autorizados: tu dominio y http://localhost:3000
-const GOOGLE_CLIENT_ID = '168775181456-70l3t07ca26h7bh0vghb7nc818tg63pr.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = '252457363364-ciqlidgir7l2m3pmk07dm4h6d4lausn5.apps.googleusercontent.com';
 
 function initGoogleSignIn() {
     if (typeof google === 'undefined' || !google.accounts) return;

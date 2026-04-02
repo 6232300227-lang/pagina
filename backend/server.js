@@ -34,6 +34,7 @@ const FRONTEND_URL = process.env.FRONTEND_URL || 'https://stylehub.pics';
 const BACKEND_PUBLIC_URL = process.env.BACKEND_PUBLIC_URL || 'https://pagina-6ygv.onrender.com';
 const MP_NOTIFICATION_URL = process.env.MP_NOTIFICATION_URL || `${BACKEND_PUBLIC_URL}/api/payments/webhook`;
 const IS_MP_PRODUCTION = MP_ACCESS_TOKEN.startsWith('APP_USR-');
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
 
 function normalizeFrontendBase(value) {
   if (!value) return '';
@@ -587,6 +588,12 @@ app.post('/api/auth/google', async (req, res) => {
 
     if (!tokenRes.ok || tokenInfo.error) {
       return res.status(401).json({ error: 'Token de Google inválido' });
+    }
+
+    // Ensure the token was issued for our client ID
+    if (GOOGLE_CLIENT_ID && String(tokenInfo.aud || tokenInfo.azp || '').indexOf(GOOGLE_CLIENT_ID) === -1) {
+      console.warn('Google token audience mismatch', tokenInfo.aud, tokenInfo.azp);
+      return res.status(401).json({ error: 'Token de Google no válido para esta aplicación' });
     }
 
     const { email, name, sub: googleId, picture } = tokenInfo;
