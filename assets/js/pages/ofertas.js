@@ -124,7 +124,7 @@
                     <i class="fas fa-heart"></i>
                 </button>
                 <div class="product-image">
-                    <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/300x400?text=Sin+Imagen'">
+                    <img src="${product.image}" alt="${product.name}">
                 </div>
                 <div class="product-info">
                     <h3 class="product-title">${product.name}</h3>

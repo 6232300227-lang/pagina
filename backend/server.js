@@ -33,6 +33,7 @@ const MP_PAYMENT_API_URL = 'https://api.mercadopago.com/v1/payments';
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://stylehub.pics';
 const BACKEND_PUBLIC_URL = process.env.BACKEND_PUBLIC_URL || 'https://pagina-6ygv.onrender.com';
 const MP_NOTIFICATION_URL = process.env.MP_NOTIFICATION_URL || `${BACKEND_PUBLIC_URL}/api/payments/webhook`;
+const IS_MP_PRODUCTION = MP_ACCESS_TOKEN.startsWith('APP_USR-');
 
 function normalizeFrontendBase(value) {
   if (!value) return '';
@@ -467,6 +468,19 @@ app.post('/api/payments/create_preference', async (req, res) => {
 
     const mpJson = await response.json();
     if (response.ok) {
+      const initPoint = mpJson.init_point || '';
+
+      if (!initPoint) {
+        console.error('MP API missing production init_point:', mpJson);
+        return res.status(500).json({
+          error: 'Mercado Pago no devolvio un init_point de produccion',
+          details: {
+            hasSandboxInitPoint: Boolean(mpJson.sandbox_init_point),
+            usingProductionToken: IS_MP_PRODUCTION
+          }
+        });
+      }
+
       await Order.create({
         externalReference: orderReference,
         preferenceId: mpJson.id,
@@ -493,7 +507,7 @@ app.post('/api/payments/create_preference', async (req, res) => {
       });
 
       return res.json({
-        init_point: mpJson.init_point || mpJson.sandbox_init_point,
+        init_point: initPoint,
         preferenceId: mpJson.id,
         externalReference: orderReference
       });

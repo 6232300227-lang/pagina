@@ -8,7 +8,9 @@
 
         const MP_DRAFT_KEY = 'mpCheckoutDraft';
         const MP_LAST_PAYMENT_KEY = 'mpLastPaymentId';
-        const API_BASE = '';
+        const IS_LOCAL_HOST = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+        const API_BASE = IS_LOCAL_HOST ? 'http://localhost:3000' : '';
+        const CHECKOUT_RETURN_BASE = IS_LOCAL_HOST ? 'https://stylehub.pics' : window.location.origin;
 
         const SHIPPING_COST = 5.99;
         const SHIPPING_FREE_THRESHOLD = 29.99;
@@ -392,7 +394,7 @@
                     html += `
                         <div class="cart-item" data-index="${index}">
                             <div class="cart-item-image">
-                                <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/300x400?text=Sin+Imagen'">
+                                <img src="${item.image}" alt="${item.name}">
                             </div>
                             <div class="cart-item-details">
                                 <h3 class="cart-item-title">${item.name}</h3>
@@ -721,9 +723,9 @@
                         shippingInfo,
                         summary: { subtotal, shipping, discount, total },
                         back_urls: {
-                            success: `${window.location.origin}/carrito.html?mp_status=success`,
-                            failure: `${window.location.origin}/carrito.html?mp_status=failure`,
-                            pending: `${window.location.origin}/carrito.html?mp_status=pending`
+                            success: `${CHECKOUT_RETURN_BASE}/carrito.html?mp_status=success`,
+                            failure: `${CHECKOUT_RETURN_BASE}/carrito.html?mp_status=failure`,
+                            pending: `${CHECKOUT_RETURN_BASE}/carrito.html?mp_status=pending`
                         }
                     })
                 });

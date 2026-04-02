@@ -239,7 +239,7 @@ function updateCartItems() {
             html += `
                 <div class="cart-item" data-index="${index}">
                     <div class="cart-item-image">
-                        <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/300x400?text=Sin+Imagen'">
+                            <img src="${item.image}" alt="${item.name}">
                     </div>
                     <div class="cart-item-details">
                         <h3 class="cart-item-title">${item.name}</h3>
