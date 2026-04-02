@@ -6,7 +6,7 @@ db.createCollection('users', {
   validator: {
     $jsonSchema: {
       bsonType: 'object',
-      required: ['email', 'password'],
+      required: ['email'],
       properties: {
         name: {
           bsonType: 'string',
@@ -17,8 +17,48 @@ db.createCollection('users', {
           description: 'Email unico del usuario'
         },
         password: {
+          bsonType: ['string', 'null'],
+          description: 'Hash de la password o null para cuentas Google'
+        },
+        googleId: {
           bsonType: 'string',
-          description: 'Hash de la password'
+          description: 'ID de Google para cuentas federadas'
+        },
+        emailVerified: {
+          bsonType: 'bool',
+          description: 'Indica si el email fue verificado'
+        },
+        registrationMethod: {
+          enum: ['email', 'google'],
+          description: 'Metodo de registro'
+        },
+        lastLogin: {
+          bsonType: ['date', 'null'],
+          description: 'Fecha del ultimo acceso'
+        },
+        isActive: {
+          bsonType: 'bool',
+          description: 'Indica si la cuenta esta activa'
+        },
+        phone: {
+          bsonType: 'string',
+          description: 'Telefono del usuario'
+        },
+        address: {
+          bsonType: 'string',
+          description: 'Direccion del usuario'
+        },
+        city: {
+          bsonType: 'string',
+          description: 'Ciudad del usuario'
+        },
+        zipCode: {
+          bsonType: 'string',
+          description: 'Codigo postal del usuario'
+        },
+        role: {
+          enum: ['customer', 'admin'],
+          description: 'Rol del usuario'
         },
         createdAt: {
           bsonType: 'date',
