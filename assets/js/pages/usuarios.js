@@ -48,12 +48,12 @@ function getAuthHeaders() {
 
 function logoutUser() {
     if (typeof window.logout === 'function') {
-        window.logout({ redirectTo: 'usuarios.html' });
+        window.logout({ redirectTo: 'index.html' });
         return;
     }
     localStorage.removeItem('currentUser');
     localStorage.removeItem('token');
-    window.location.href = 'usuarios.html';
+    window.location.href = 'index.html';
 }
 
 function formatMoney(value) {

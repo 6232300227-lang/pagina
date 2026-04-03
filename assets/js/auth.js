@@ -242,17 +242,7 @@ function logout(options = {}) {
 
     if (inAdmin) {
         setTimeout(() => {
-            window.location.href = 'usuarios.html';
-        }, 250);
-        return;
-    }
-
-    // Intentar redirigir a la última página visitada (si existe), si no ir al inicio
-    const lastVisited = localStorage.getItem('lastVisited');
-    if (lastVisited) {
-        const target = lastVisited.startsWith('http') ? lastVisited : `${window.location.origin}${lastVisited}`;
-        setTimeout(() => {
-            window.location.href = target;
+            window.location.href = 'index.html';
         }, 250);
         return;
     }

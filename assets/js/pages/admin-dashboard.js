@@ -1,5 +1,10 @@
 const API_BASE = 'https://pagina-6ygv.onrender.com/api';
 let salesChartInstance = null;
+const mxnFormatter = new Intl.NumberFormat('es-MX', {
+    style: 'currency',
+    currency: 'MXN',
+    currencyDisplay: 'code'
+});
 
 function sectionLabel(section) {
     const map = {
@@ -38,7 +43,7 @@ function pageLabel(pageTarget) {
 }
 
 function currency(value) {
-    return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD' }).format(value || 0);
+    return mxnFormatter.format(Number(value) || 0);
 }
 
 function formatDate(value) {
@@ -268,7 +273,7 @@ function renderSales(data) {
             scales: {
                 y: {
                     ticks: {
-                        callback: (value) => `$${value}`
+                        callback: (value) => currency(value)
                     }
                 }
             }
@@ -395,7 +400,7 @@ function bindActions(token) {
             localStorage.removeItem('currentUser');
             localStorage.removeItem('mpCheckoutDraft');
             localStorage.removeItem('mpLastPaymentId');
-            window.location.href = 'usuarios.html';
+            window.location.href = 'index.html';
         });
     }
 

@@ -96,6 +96,11 @@ body {
 
 .admin-actions { display: flex; gap: 10px; }
 
+.admin-actions .ghost-btn,
+.admin-actions .danger-btn {
+    white-space: nowrap;
+}
+
 .ghost-btn,
 .danger-btn,
 .action-link {
@@ -452,6 +457,7 @@ th {
 .product-actions {
     display: grid;
     gap: 6px;
+    justify-items: end;
 }
 
 .row-actions {
@@ -516,6 +522,33 @@ th {
     .sales-kpis { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
 }
 
+@media (max-width: 900px) {
+    .admin-header {
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    .admin-actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .admin-actions .ghost-btn,
+    .admin-actions .danger-btn {
+        flex: 1 1 220px;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .sales-kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .form-two-cols {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (min-width: 701px) and (max-width: 1366px) {
     .admin-actions {
         flex-wrap: wrap;
@@ -552,4 +585,56 @@ th {
     .welcome-card h2 { font-size: 1.5rem; }
     .sales-kpis { grid-template-columns: 1fr; }
     .product-item { grid-template-columns: 1fr; }
+    .product-actions { justify-items: stretch; }
+    .table-wrap { margin: 0 -4px; }
+    table { min-width: 620px; }
+}
+
+@media (max-width: 560px) {
+    body { padding: 10px; }
+
+    .admin-header,
+    .panel-card,
+    .welcome-card {
+        padding: 14px;
+        border-radius: 14px;
+    }
+
+    .admin-brand {
+        align-items: flex-start;
+    }
+
+    .admin-brand h1 {
+        font-size: 1.15rem;
+    }
+
+    .admin-brand p,
+    .stat-card p,
+    .product-meta,
+    th,
+    td {
+        font-size: 0.8rem;
+    }
+
+    .stat-card {
+        padding: 14px;
+    }
+
+    .sales-kpis div {
+        padding: 10px;
+    }
+
+    .chart-wrap {
+        min-height: 220px;
+        padding: 10px;
+    }
+
+    .row-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .tiny-btn {
+        width: 100%;
+    }
 }
