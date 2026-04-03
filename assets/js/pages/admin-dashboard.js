@@ -294,11 +294,11 @@ function renderProducts(products) {
         const oldPrice = Number(product.price || 0);
         const discount = Number(product.discountPercent || 0);
         const finalPrice = Number(product.finalPrice || oldPrice);
-        const image = product.image || 'https://via.placeholder.com/200x200?text=Producto';
+        const image = product.image || '';
 
         return `
             <div class="product-item">
-                <img src="${image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/200x200?text=Producto'">
+                <img src="${image}" alt="${product.name}">
                 <div>
                     <p class="product-name">${product.name}</p>
                     <p class="product-meta">Apartado: ${sectionLabel(product.section)}</p>

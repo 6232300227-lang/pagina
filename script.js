@@ -501,3 +501,27 @@ function updateCart(updatedCart) {
     saveCartToStorage();
     updateCartCount();
 }
+
+// Global image error fallback: when an <img> fails to load (e.g., remote placeholder down),
+// replace it with an inline SVG data-URI showing the `alt` text.
+window.addEventListener('error', function (e) {
+    const el = e.target;
+    if (!el || el.tagName !== 'IMG' || el.dataset.fallbackApplied) return;
+    el.dataset.fallbackApplied = '1';
+
+    const w = el.naturalWidth || el.width || el.getAttribute('width') || 300;
+    const h = el.naturalHeight || el.height || el.getAttribute('height') || 400;
+    const text = el.getAttribute('alt') || 'Sin Imagen';
+
+    function escapeHtml(s) {
+        return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + w + '" height="' + h + '">' +
+        '<rect width="100%" height="100%" fill="#dddddd"/>' +
+        '<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#666" font-family="Arial, sans-serif" font-size="20">' +
+        escapeHtml(text) +
+        '</text></svg>';
+
+    el.src = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+}, true);

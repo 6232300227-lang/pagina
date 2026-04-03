@@ -343,7 +343,7 @@
                                 <i class="fas fa-times"></i>
                             </button>
                             <div class="favorite-image" onclick="window.location.href='producto.html?id=${item.id}'">
-                                <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/300x400?text=Sin+Imagen'">
+                                <img src="${item.image}" alt="${item.name}">
                             </div>
                             <div class="favorite-info">
                                 <h3 class="favorite-title">${item.name}</h3>

@@ -8,7 +8,15 @@
 
         const MP_DRAFT_KEY = 'mpCheckoutDraft';
         const MP_LAST_PAYMENT_KEY = 'mpLastPaymentId';
-        const API_BASE = '';
+        const IS_LOCAL_HOST = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+        const DEFAULT_REMOTE_API_BASE = 'https://pagina-6ygv.onrender.com';
+        const CONFIGURED_API_BASE = String(
+            window.STYLEHUB_API_BASE ||
+            document.documentElement?.dataset.apiBase ||
+            ''
+        ).replace(/\/$/, '');
+        const API_BASE = CONFIGURED_API_BASE || (IS_LOCAL_HOST ? 'http://localhost:3000' : DEFAULT_REMOTE_API_BASE);
+        const CHECKOUT_RETURN_BASE = IS_LOCAL_HOST ? 'https://stylehub.pics' : window.location.origin;
 
         const SHIPPING_COST = 5.99;
         const SHIPPING_FREE_THRESHOLD = 29.99;
@@ -392,7 +400,7 @@
                     html += `
                         <div class="cart-item" data-index="${index}">
                             <div class="cart-item-image">
-                                <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/300x400?text=Sin+Imagen'">
+                                <img src="${item.image}" alt="${item.name}">
                             </div>
                             <div class="cart-item-details">
                                 <h3 class="cart-item-title">${item.name}</h3>
@@ -721,9 +729,9 @@
                         shippingInfo,
                         summary: { subtotal, shipping, discount, total },
                         back_urls: {
-                            success: `${window.location.origin}/carrito.html?mp_status=success`,
-                            failure: `${window.location.origin}/carrito.html?mp_status=failure`,
-                            pending: `${window.location.origin}/carrito.html?mp_status=pending`
+                            success: `${CHECKOUT_RETURN_BASE}/carrito.html?mp_status=success`,
+                            failure: `${CHECKOUT_RETURN_BASE}/carrito.html?mp_status=failure`,
+                            pending: `${CHECKOUT_RETURN_BASE}/carrito.html?mp_status=pending`
                         }
                     })
                 });
@@ -797,7 +805,7 @@
 
             if (paymentId) {
                 try {
-                    const response = await fetch(`/api/payments/status/${paymentId}`);
+                    const response = await fetch(`${API_BASE}/api/payments/status/${paymentId}`);
                     if (response.ok) {
                         const statusData = await response.json();
                         const realStatus = String(statusData.paymentStatus || '').toLowerCase();
@@ -863,7 +871,7 @@
             }
 
             try {
-                await fetch('/api/users', {
+                await fetch(`${API_BASE}/api/users`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -880,7 +888,7 @@
                     userEmail: order.shippingInfo.email
                 }));
 
-                await Promise.all(itemsPayload.map(it => fetch('/api/cart', {
+                await Promise.all(itemsPayload.map(it => fetch(`${API_BASE}/api/cart`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(it)
