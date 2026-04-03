@@ -1,0 +1,159 @@
+{
+  "camisas": [
+    { "id": 201, "nombre": "Camisa de vestir",              "imagen": "https://manchester.com.mx/cdn/shop/files/ML033000-02_AZUL_01_2048x.jpg?v=1762883954" },
+    { "id": 202, "nombre": "Camisa Informal",               "imagen": "https://m.media-amazon.com/images/I/41+V3RqkQrS._AC_.jpg" },
+    { "id": 203, "nombre": "Camisa Guayabera",              "imagen": "https://m.media-amazon.com/images/I/61lfEsmKZcL._AC_SX522_.jpg" },
+    { "id": 204, "nombre": "Camisa Oxford",                 "imagen": "https://m.media-amazon.com/images/I/718GqFfqpHL._AC_SX425_.jpg" },
+    { "id": 205, "nombre": "Camisa Hawaiana",               "imagen": "https://i.etsystatic.com/19374361/r/il/d4b78a/2843656095/il_570xN.2843656095_nt4u.jpg" },
+    { "id": 206, "nombre": "Camisa de Lino",                "imagen": "https://www.chidomarca.com/cdn/shop/files/84.png?v=1752456834" },
+    { "id": 207, "nombre": "Camisa Manga Corta Clásica",    "imagen": "https://manchester.com.mx/cdn/shop/files/manchester-camisa-casual-de-cuadros-clasica-cuello-abotonado-manga-corta-8783818.png?v=1763679957" },
+    { "id": 208, "nombre": "Camisa Estampada",              "imagen": "https://costavana.com.mx/cdn/shop/files/camisa_estampada_hombre_casual_Mahi.jpg?v=1757348143" },
+    { "id": 209, "nombre": "Camisa con Cuello Mao",         "imagen": "https://uniformesroger.com/WebRoot/Store/Shops/UniformesRoger/6585/6CCF/A1EE/B6F8/BFF6/2E10/8536/5EF9/991225032XL.png" }
+  ],
+
+  "camisetas_hombre": [
+    { "id": 301, "nombre": "Camiseta Básica Negra",          "imagen": "https://m.media-amazon.com/images/I/61lUj+LrFXL._AC_SY679_.jpg" },
+    { "id": 302, "nombre": "Camiseta Estampada Gráfica",     "imagen": "https://i.ebayimg.com/images/g/z3sAAOSw9N1i7~Y9/s-l1600.jpg" },
+    { "id": 303, "nombre": "Camiseta Manga Larga",           "imagen": "https://contents.mediadecathlon.com/p2389711/k$bd6bdfc370e0af4a7c3d12e1a79f0da2/manga-larga-hombre.jpg?format=auto&f=800x0" },
+    { "id": 304, "nombre": "Camiseta Deportiva",             "imagen": "https://www.dhresource.com/0x0/f2/albu/g9/M00/3A/48/rBVaVV0bN1SAHxKBAADkO1K-6EY402.jpg" },
+    { "id": 305, "nombre": "Camiseta Polo",                  "imagen": "https://http2.mlstatic.com/D_NQ_NP_672362-MLM49317543954_032022-O.webp" },
+    { "id": 306, "nombre": "Camiseta de Algodón",            "imagen": "https://media.istockphoto.com/id/1281127383/es/foto/primer-plano-de-una-playera-blanca-aislada-en-blanco.jpg?s=612x612&w=0&k=20&c=u02sPl7EaZ8zmG6l0A2w0MawII33Om3J91sO6N28BdI=" },
+    { "id": 307, "nombre": "Camiseta Estampada Floral",      "imagen": "https://m.media-amazon.com/images/I/71RRb7lzqXL._AC_SY741_.jpg" },
+    { "id": 308, "nombre": "Camiseta Cuello V",              "imagen": "https://media.istockphoto.com/id/1273408248/es/foto/camiseta-negra-aislada-sobre-fondo-blanco.jpg?s=612x612&w=0&k=20&c=-gymCHyYYmgKvQlMN6O3Tj9PMd_J9enj_3oHlQOwr6E=" },
+    { "id": 309, "nombre": "Camiseta Oversize",              "imagen": "https://http2.mlstatic.com/D_NQ_NP_683771-MLM51548735593_092022-O.webp" }
+  ],
+
+  "camisetas_ninos": [
+    { "id": 101, "nombre": "Camisetas con Aberturas Amplias",          "imagen": "https://m.media-amazon.com/images/I/312D+ESANWL.jpg" },
+    { "id": 102, "nombre": "Estampados Divertidos",                    "imagen": "https://i5-mx.walmartimages.com/mg/gm/3pp/asr/938adbf2-8609-4692-8c66-f20b4e5b99ba.0f8208196a0e3a8ab50f22f14d732bed.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF" },
+    { "id": 103, "nombre": "Camisetas Básicas y Versátiles",           "imagen": "https://assets.theplace.com/image/upload/l_ecom:assets:static:badge:pack4,g_west,w_0.22,fl_relative/t_pdp_img_m,f_auto,q_auto/v1/ecom/assets/products/tcp/3010121/3010121_32M1.png" },
+    { "id": 104, "nombre": "Estampados que Reflejan sus Gustos",       "imagen": "https://m.media-amazon.com/images/I/3192veaID2L._AC_SY1000_.jpg" }
+  ],
+
+  "chaquetas_hombre": [
+    { "id": 401, "nombre": "Chaqueta Americana",           "imagen": "https://fieito.com/wp-content/uploads/2024/09/chaqueta-americana-sarga-hombre-3.jpg.webp" },
+    { "id": 402, "nombre": "Chaqueta de Traje",            "imagen": "https://i5.walmartimages.com/asr/fe154f90-54e5-4cd5-b423-c87f299bdd9c.f14bc7c5e002819e9a57449e4581e1a9.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF" },
+    { "id": 403, "nombre": "Cazadora Vaquera",             "imagen": "https://cdn.ferragamo.com/wcsstore/FerragamoCatalogAssetStore/images/products/790838/790838_00_r20.jpg" },
+    { "id": 404, "nombre": "Chaqueta Trench",              "imagen": "https://m.media-amazon.com/images/I/51KQJc7aqnL._AC_UF894,1000_QL80_.jpg" },
+    { "id": 405, "nombre": "Chaqueta Bomber",              "imagen": "https://image.hm.com/assets/hm/3b/dc/3bdce0e0d0786333c7392fa3f53b507983b68245.jpg" },
+    { "id": 406, "nombre": "Chaqueta Field Jacket (M65)",  "imagen": "https://cdn11.bigcommerce.com/s-98f3d/images/stencil/1280x1280/products/1286/2254/getDynamicImageODmain__44199.1525827211.jpg?c=2" },
+    { "id": 407, "nombre": "Smoking",                      "imagen": "https://upload.wikimedia.org/wikipedia/commons/e/ea/EsmoquinSombra.jpg" }
+  ],
+
+  "chaquetas_nino": [
+    { "id": 201, "nombre": "Cazadora Vaquera",      "imagen": "https://shop.mango.com/assets/rcs/pics/static/T2/fotos/S/27054404_TM_B.jpg?ts=1768831543831" },
+    { "id": 202, "nombre": "Cazadora Bomber",       "imagen": "https://assets.theplace.com/image/upload/t_pdp_img_m,f_auto,q_auto/v1/ecom/assets/products/tcp/3014016/3014016_397.jpg" },
+    { "id": 203, "nombre": "Sudadera con Capucha",  "imagen": "https://m.media-amazon.com/images/I/312hzCoR6xL._AC_SY1000_.jpg" },
+    { "id": 204, "nombre": "Chaqueta de Pana",      "imagen": "https://m.media-amazon.com/images/I/41zbBn5JtPL._AC_SY1000_.jpg" },
+    { "id": 205, "nombre": "Chubasquero",           "imagen": "https://m.media-amazon.com/images/I/4182QolVl9L._AC_.jpg" },
+    { "id": 206, "nombre": "Chaqueta Cortavientos", "imagen": "https://m.media-amazon.com/images/I/41elveWTHeL._AC_SY1000_.jpg" },
+    { "id": 207, "nombre": "Chaqueta Acolchada",    "imagen": "https://www.petitelune.com.mx/cdn/shop/files/chaqueta-acolchada-ultraligera-nino-clorofila-XL-4.jpg?v=1709480370&width=1445" },
+    { "id": 208, "nombre": "Forro Polar",           "imagen": "https://m.media-amazon.com/images/I/41SXS7YgfYL._AC_SY350_.jpg" }
+  ],
+
+  "pantalones_hombre": [
+    { "id": 201, "nombre": "Pantalón de traje",           "imagen": "https://camisasferruche.com/wp-content/uploads/2022/06/PANTALON-VESTIR-MARINO.jpeg" },
+    { "id": 202, "nombre": "Pantalón de Vestir (Chinos)", "imagen": "https://www.abito.com.mx/cdn/shop/files/4_Back.jpg?v=1750090709&width=1500" },
+    { "id": 203, "nombre": "Jeans para hombre",           "imagen": "https://coyotehd-tienda.com/cdn/shop/products/99033-23VM_B.webp?v=1668471045&width=1445" },
+    { "id": 204, "nombre": "Pantalones de Pana",          "imagen": "https://static2.goldengoose.com/public/Style/ECOMM/GMP02001.P001615-60529.jpg" },
+    { "id": 205, "nombre": "Joggers",                     "imagen": "https://shop.mango.com/assets/rcs/pics/static/T1/fotos/S/17064417_94_B.jpg?imwidth=2048&imdensity=1&ts=1750167334341" },
+    { "id": 206, "nombre": "Bermudas",                    "imagen": "https://costavana.com.mx/cdn/shop/files/bermuda_cali_beige_front.jpg?v=1757348267" },
+    { "id": 207, "nombre": "Pantalón de mezclilla",       "imagen": "https://optimamayoreo.com.mx/wp-content/uploads/2023/08/OFFEO-offeo-video-233-1000x1000.png" },
+    { "id": 208, "nombre": "Pantalón entubado",           "imagen": "https://i.pinimg.com/736x/69/90/19/69901923a827f1c3d49b13779173d691.jpg" },
+    { "id": 209, "nombre": "Pantalón Holgado",            "imagen": "https://oldnavymx.vtexassets.com/arquivos/ids/705547/cn59739688.jpg?v=638949299766000000" },
+    { "id": 210, "nombre": "Pantalón Recto",              "imagen": "https://m.media-amazon.com/images/I/918vV4ZqEIL._AC_SY741_.jpg" }
+  ],
+
+  "pantalones_mujer": [
+    { "id": 201, "nombre": "Jeans Rectos Tiro Alto Azul",       "imagen": "https://julio.com/media/catalog/product/e/5/jeans-rectos-tiro-alto-azul-medio.jpg?quality=80&bg-color=255,255,255&height=638&width=508&canvas=508:638" },
+    { "id": 202, "nombre": "Pantalones Palazzo de Lino Beige",  "imagen": "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" },
+    { "id": 203, "nombre": "Jeans Skinny Negro Elásticos",      "imagen": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/N38300s5.jpg?im=Resize,width=750" },
+    { "id": 204, "nombre": "Pantalones Cargo Oliva",            "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfLUyFrQUMZ4SwFrgFHV0i_ofRM7DZdgWl-w&s" },
+    { "id": 205, "nombre": "Pantalones Deportivos Jogger Gris", "imagen": "https://salvajetentacion.mx/cdn/shop/files/76728bda-ee10-424f-b28f-ec286cd76ca4.jpg?v=1768019255" },
+    { "id": 206, "nombre": "Jeans Acampanados Vintage",         "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQYq3HBJM5krs8Hv1T-MiKDmynkVZSi8P6Ug&s" },
+    { "id": 207, "nombre": "Pantalones Palazzo Estampados",     "imagen": "https://m.media-amazon.com/images/I/71yUPbcKF8L._AC_UY1000_.jpg" },
+    { "id": 208, "nombre": "Pantalones Cargo Negros",           "imagen": "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" },
+    { "id": 209, "nombre": "Jeans Blancos Rectos",              "imagen": "https://mivestidorazul.es/20682-large_default/pantalon-recto-pcblume-blanco.jpg" },
+    { "id": 210, "nombre": "Pantalones Deportivos Negros",      "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQo5vUl7bFpmyxbZcBwwfqr9Rkz9QIW4LqtTg&s" }
+  ],
+
+  "pantalones_nino": [
+    { "id": 501, "nombre": "Jogger para niño",               "imagen": "https://m.media-amazon.com/images/I/31Dg4DvU1HL._AC_.jpg" },
+    { "id": 502, "nombre": "Vaqueros (Jeans) niño",          "imagen": "https://marionetamoda.com/cdn/shop/products/CapturadePantalla2021-07-23ala_s_20.21.16.png?v=1627090253" },
+    { "id": 503, "nombre": "Pantalones de chándal clásicos", "imagen": "https://m.media-amazon.com/images/I/41fqInGVE2L._AC_.jpg" },
+    { "id": 504, "nombre": "Pantalón Chino",                 "imagen": "https://static2.goldengoose.com/public/Style/ECOMM/GKP01396.P001072-55159-9.jpg?im=Resize=(1200)" },
+    { "id": 505, "nombre": "Pantalón de pinzas",             "imagen": "https://static.lefties.com/assets/public/1f51/455e/b3d54bf2b511/bcad287b889b/05924107800-A5/05924107800-A5.jpg?ts=1759754245836&w=800&f=auto" },
+    { "id": 506, "nombre": "Pantalón de Vestir",             "imagen": "https://m.media-amazon.com/images/I/31mKYaH9MdL._AC_.jpg" }
+  ],
+
+  "pantalones_nina": [
+    { "id": 501, "nombre": "Jogger para niña",               "imagen": "https://m.media-amazon.com/images/I/31Dg4DvU1HL._AC_.jpg" },
+    { "id": 502, "nombre": "Vaqueros (Jeans) niña",          "imagen": "https://marionetamoda.com/cdn/shop/products/CapturadePantalla2021-07-23ala_s_20.21.16.png?v=1627090253" },
+    { "id": 503, "nombre": "Pantalones de chándal clásicos", "imagen": "https://m.media-amazon.com/images/I/41fqInGVE2L._AC_.jpg" },
+    { "id": 504, "nombre": "Pantalón Chino",                 "imagen": "https://static2.goldengoose.com/public/Style/ECOMM/GKP01396.P001072-55159-9.jpg?im=Resize=(1200)" },
+    { "id": 505, "nombre": "Pantalón de pinzas",             "imagen": "https://static.lefties.com/assets/public/1f51/455e/b3d54bf2b511/bcad287b889b/05924107800-A5/05924107800-A5.jpg?ts=1759754245836&w=800&f=auto" },
+    { "id": 506, "nombre": "Pantalón de Vestir",             "imagen": "https://m.media-amazon.com/images/I/31mKYaH9MdL._AC_.jpg" }
+  ],
+
+  "tops_mujer": [
+    { "id": 201, "nombre": "Top Negro de Encaje Premium",   "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsCD2puMlTNi6bvbkZmZxXiP2vohDJJWGxYA&s" },
+    { "id": 202, "nombre": "Blusa Blanca Elegante",         "imagen": "https://http2.mlstatic.com/D_NQ_NP_668830-MLM85056189208_052025-O-blusas-dama-blanca-manga-larga-casual-formal-elegantes.webp" },
+    { "id": 203, "nombre": "Top Corto Deportivo",           "imagen": "https://detqhtv6m6lzl.cloudfront.net/HCLContenido/producto/FullImage/7506497323422-1.jpg" },
+    { "id": 204, "nombre": "Camiseta Básica Algodón",       "imagen": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" },
+    { "id": 205, "nombre": "Top Manga Larga Rosa",          "imagen": "https://media.gotrendier.mx/media/p/2022/08/09/n_34facbc6-1814-11ed-9bb4-12fdd4c00437.jpeg" },
+    { "id": 206, "nombre": "Top Estampado Floral",          "imagen": "https://highstreet.com.mx/cdn/shop/files/HIGH-STREET-Top-strapless-floral-escote-corazon-con-nudo-tbtu-240074_01_6953a8e9-96c6-49b8-ab93-88e47e62826d.jpg?v=1740598677" },
+    { "id": 207, "nombre": "Top Azul Marino",               "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgkZ0-qdmpS4YzrlhWBvBR83T1McOzBzgcRA&s" },
+    { "id": 208, "nombre": "Blusa de Seda Roja",            "imagen": "https://m.media-amazon.com/images/I/61yihVGDEPL._AC_UY1000_.jpg" },
+    { "id": 209, "nombre": "Top de Encaje Blanco",          "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgzgYTQ5-vB8OpYJj-VMMkYU7Ytk3kRp3lqw&s" },
+    { "id": 210, "nombre": "Top Corto Cropped",             "imagen": "https://static.e-stradivarius.net/assets/public/4220/835c/d78b48ad9d25/78491902d36a/02526648001-s1/02526648001-s1.jpg?ts=1750242118670&w=1082&f=auto" },
+    { "id": 211, "nombre": "Camiseta Oversize Gris",        "imagen": "https://puntofino.co/cdn/shop/files/PHOTO-2024-04-16-09-25-56.jpg?v=1713294893" },
+    { "id": 212, "nombre": "Top Deportivo Rosa",            "imagen": "https://www.run24.mx/cdn/shop/files/526646-89-3_800x.jpg?v=1743627305" },
+    { "id": 213, "nombre": "Blusa de Lino Beige",           "imagen": "https://image.hm.com/assets/hm/e4/09/e409c6c4a4fdf445f1738722e8a091488aaa6d0b.jpg?imwidth=2160" },
+    { "id": 214, "nombre": "Top de Encaje Rojo",            "imagen": "https://cdn-images.farfetch-contents.com/19/17/28/84/19172884_50442283_600.jpg" },
+    { "id": 215, "nombre": "Top Manga Larga Negro",         "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXWiZhyo_GYz9tC3AJNGHn8T-8-cQoiHdjdA&s" },
+    { "id": 216, "nombre": "Top Estampado Geométrico",      "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnRQXwvqnJwlC-x_I3q1Yl6WEIPqvmzBC8Pw&s" }
+  ],
+
+  "tops_nina": [
+    { "id": 701, "nombre": "Camisetas básicas",     "imagen": "https://assets.theplace.com/image/upload/l_ecom:assets:static:badge:pack8,g_west,w_0.22,fl_relative/t_pdp_img_m,f_auto,q_auto/v1/ecom/assets/products/tcp/3029905/3029905_376.jpg" },
+    { "id": 702, "nombre": "Camisetas gráficas",    "imagen": "https://assets.theplace.com/image/upload/t_pdp_img_m,f_auto,q_auto/v1/ecom/assets/products/tcp/3037101/3037101_802.png" },
+    { "id": 703, "nombre": "Blusas",                "imagen": "https://ss433.liverpool.com.mx/xl/1172292883.jpg" },
+    { "id": 704, "nombre": "Blusas con Botones",    "imagen": "https://i5.walmartimages.com/asr/885d5f43-ff01-4f8b-88ac-f48d187ce052.abd571047e5b08dfc3f29222732caf86.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF" },
+    { "id": 705, "nombre": "Polos",                 "imagen": "https://sydney.pe/wp-content/uploads/2025/01/L2-CEREZA-4-6-1000x1000.jpg" },
+    { "id": 706, "nombre": "Tops Cruzados",         "imagen": "https://www.reycocr.com/wp-content/uploads/2020/10/3712-P-.jpg" },
+    { "id": 707, "nombre": "Boleros",               "imagen": "https://assets.mayoral.com/images/v1736960957/25-00320-090-XL-4/torera-bolero-basica-tricot-nina-rojo-XL-4.jpg" }
+  ],
+
+  "trajes_hombre": [
+    { "id": 201, "nombre": "Frac Clásico",               "imagen": "https://protocolonovios.com/wp-content/uploads/2021/01/Frack2MexCadreteChFrackNuitBlancoFjPj-1-scaled.jpg" },
+    { "id": 202, "nombre": "Chaqué Formal",              "imagen": "https://protocolonovios.com/wp-content/uploads/2021/01/ChaqueConstancioInglesAzulMarinoChCarreraBoscoCrudoCtAmarMarino.jpg" },
+    { "id": 203, "nombre": "Traje de Vestir Ejecutivo",  "imagen": "https://arturocalle.vtexassets.com/arquivos/ids/811689/HOMBRE-TRAJE-10151608-NEGRO-090_1.jpg?v=638996122143700000" },
+    { "id": 204, "nombre": "Traje de Diario Casual",     "imagen": "https://m.media-amazon.com/images/I/61Yis-ZvqCL._AC_UF894,1000_QL80_.jpg" },
+    { "id": 205, "nombre": "Traje de Tres Piezas",       "imagen": "https://danddclothing.com/cdn/shop/products/image_0086de6d-e1ca-4ccd-ae0b-81be71ab287d.jpg?v=1678658093" },
+    { "id": 206, "nombre": "Traje Cruzado",              "imagen": "https://danddclothing.com/cdn/shop/products/image_3eee9922-547f-4398-861e-8a612f79bff6.jpg?v=1678658477" }
+  ],
+
+  "vestidos_mujer": [
+    { "id": 101, "nombre": "Vestido Floral Midi Premium",             "imagen": "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" },
+    { "id": 102, "nombre": "Vestido Negro Elegante de Seda",          "imagen": "https://i.etsystatic.com/22414300/r/il/1f4d06/5715371972/il_fullxfull.5715371972_9b08.jpg" },
+    { "id": 103, "nombre": "Vestido Blanco con Abertura Lateral",     "imagen": "https://i5.walmartimages.com/asr/7eed763d-460e-4d34-9ebf-0d2de3e1ee0a.adac72e977933ea9fd8337ef304a825f.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF" },
+    { "id": 104, "nombre": "Vestido Rojo de Seda Italiana",           "imagen": "https://1ns.mx/cdn/shop/files/VESTIDO-XIOMARA-rojo-saten-corset-largo.jpg?v=1711134345&width=1080" },
+    { "id": 105, "nombre": "Vestido Plisado Verde Esmeralda",         "imagen": "https://img.ltwebstatic.com/images3_pi/2024/03/04/f8/1709534351db098389144d5c77405ea4dc0b6271eb_thumbnail_405x.webp" },
+    { "id": 106, "nombre": "Vestido Corto de Fiesta con Lentejuelas", "imagen": "https://kpy.com.uy/cdn/shop/files/kapullo1982.jpg?v=1751997653" },
+    { "id": 107, "nombre": "Vestido Largo Estampado Premium",         "imagen": "https://i.pinimg.com/originals/78/67/75/786775ea389398805c7b216a542e273a.jpg" },
+    { "id": 108, "nombre": "Vestido Casual de Algodón Orgánico",      "imagen": "https://i.etsystatic.com/12201809/r/il/ffd3c0/4653615080/il_570xN.4653615080_2kfo.jpg" },
+    { "id": 109, "nombre": "Vestido Azul Noche con Transparencias",   "imagen": "https://i.pinimg.com/736x/c1/eb/60/c1eb60155703df2993c224ae3b316333.jpg" },
+    { "id": 110, "nombre": "Vestido de Verano Estampado",             "imagen": "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" },
+    { "id": 111, "nombre": "Vestido de Noche Dorado",                 "imagen": "https://ae-pic-a1.aliexpress-media.com/kf/S723c5376aedf41f48ee7f389c3693d77D.jpg" },
+    { "id": 112, "nombre": "Vestido Corto Casual Rosa",               "imagen": "https://resources.claroshop.com/medios-plazavip/s2/10996/3905016/62d990fb4d859-0dfa42d2-384a-4b03-a747-84b1792fb97b-1600x1600.jpg" }
+  ],
+
+  "vestidos_ninas": [
+    { "id": 201, "nombre": "Vestido de Fiesta",      "imagen": "https://m.media-amazon.com/images/I/71nnZJaR7eL._AC_SX679_.jpg" },
+    { "id": 202, "nombre": "Vestido de Princesa",    "imagen": "https://m.media-amazon.com/images/I/61XQmarIcCL._AC_UF894,1000_QL80_.jpg" },
+    { "id": 203, "nombre": "Vestido Dama de Honor",  "imagen": "https://sophiasstyle.com/cdn/shop/files/kids-dream-160B-blush-burgundy-dress-front_47970cd6-c512-43a7-8f2c-14a34e542c1f_1500x.jpg?v=1769804589" },
+    { "id": 204, "nombre": "Vestido Coctel",         "imagen": "https://m.media-amazon.com/images/I/41EbDOPgrHL._AC_SY1000_.jpg" },
+    { "id": 205, "nombre": "Vestido Casual",         "imagen": "https://m.media-amazon.com/images/I/81nIq+AwvKL._AC_SX679_.jpg" },
+    { "id": 206, "nombre": "Vestido de Flores",      "imagen": "https://m.media-amazon.com/images/I/71cFaLBe2JL._AC_UF894,1000_QL80_.jpg" }
+  ]
+}

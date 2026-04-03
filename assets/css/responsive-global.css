@@ -158,104 +158,15 @@ textarea {
 
 /* Desktop: bajar visualmente el enlace de cuenta dentro del header */
 @media (min-width: 993px) {
-    .container {
-        width: min(100%, 1320px) !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-        padding-left: clamp(16px, 2vw, 30px) !important;
-        padding-right: clamp(16px, 2vw, 30px) !important;
-    }
-
-    .main-header {
-        padding-top: clamp(14px, 1.4vw, 22px) !important;
-        padding-bottom: clamp(14px, 1.4vw, 22px) !important;
-    }
-
     .header-content {
-        display: grid !important;
-        grid-template-columns: minmax(180px, auto) minmax(380px, 1fr) auto !important;
-        align-items: center !important;
-        gap: clamp(14px, 1.6vw, 26px) !important;
+        align-items: flex-start !important;
     }
-
-    .logo {
-        font-size: clamp(1.85rem, 1.05rem + 1.2vw, 2.35rem) !important;
-        min-width: 0 !important;
-    }
-
-    .search-bar {
-        width: 100% !important;
-        max-width: none !important;
-        margin: 0 !important;
-        min-width: 0 !important;
-    }
-
     .user-actions {
-        align-items: center !important;
-        justify-self: end !important;
-        gap: clamp(10px, 1.2vw, 16px) !important;
+        align-items: flex-start !important;
     }
-
     .account-link {
-        align-self: center !important;
-        margin-top: 0 !important;
-    }
-
-    .nav-links {
-        display: flex !important;
-        flex-wrap: wrap !important;
-        justify-content: center !important;
-        gap: clamp(12px, 1.2vw, 20px) !important;
-    }
-
-    .search-suggestions {
-        border-radius: 0 0 14px 14px !important;
-        border-top: 2px solid #e83e5f !important;
-        box-shadow: 0 16px 42px rgba(15, 23, 42, 0.2) !important;
-        padding: 8px !important;
-    }
-
-    .search-suggestions .suggestion-item {
-        min-height: 48px !important;
-        padding: 11px 13px !important;
-        border-radius: 10px !important;
-    }
-
-    .search-suggestions .suggestion-item strong {
-        font-size: 0.98rem !important;
-    }
-
-    .search-suggestions .suggestion-item small {
-        font-size: 0.78rem !important;
-    }
-}
-
-@media (min-width: 993px) and (max-width: 1199px) {
-    .header-content {
-        grid-template-columns: minmax(150px, auto) minmax(280px, 1fr) auto !important;
-        gap: 12px !important;
-    }
-
-    .account-link,
-    .wishlist-link,
-    .cart-link {
-        padding: 8px 10px !important;
-    }
-
-    .account-link span,
-    .wishlist-link span,
-    .cart-link span {
-        font-size: 0.8rem !important;
-    }
-}
-
-@media (min-width: 1400px) {
-    .container {
-        width: min(100%, 1460px) !important;
-    }
-
-    .header-content {
-        grid-template-columns: minmax(220px, auto) minmax(460px, 1fr) auto !important;
+        align-self: flex-end !important;
+        margin-top: 6px !important;
     }
 }
 
@@ -308,7 +219,7 @@ textarea {
     top: calc(100% + 6px) !important;
     left: 0 !important;
     right: 0 !important;
-    z-index: 9999 !important;
+    z-index: 2600 !important;
     background: #ffffff !important;
     border: 1px solid #cbd5e1 !important;
     box-shadow: 0 14px 36px rgba(15, 23, 42, 0.2) !important;
@@ -316,8 +227,6 @@ textarea {
     max-height: min(75vh, 620px) !important;
     overflow-y: auto !important;
     overflow-x: hidden !important;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
 }
 
 .search-suggestions .suggestion-item strong {
@@ -551,7 +460,6 @@ textarea {
         align-items: center;
         gap: 8px;
         position: relative !important;
-        z-index: 3 !important;
         border-radius: 12px;
         transition: box-shadow 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
     }
@@ -594,11 +502,11 @@ textarea {
         display: grid !important;
         grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
         justify-content: stretch !important;
-        gap: 8px !important;
+        gap: 6px !important;
         visibility: visible !important;
         opacity: 1 !important;
         position: relative;
-        z-index: 2;
+        z-index: 3;
     }
 
     .account-link,
@@ -606,21 +514,21 @@ textarea {
     .cart-link {
         flex: initial !important;
         min-width: 0 !important;
-        min-height: 46px !important;
-        padding: 8px 7px !important;
+        min-height: 40px !important;
+        padding: 7px 6px !important;
         border-radius: 10px !important;
     }
 
     .account-link span,
     .wishlist-link span,
     .cart-link span {
-        font-size: 0.74rem !important;
+        font-size: 0.69rem !important;
     }
 
     .account-link i,
     .wishlist-link i,
     .cart-link i {
-        font-size: 1rem !important;
+        font-size: 0.88rem !important;
     }
 
     .wishlist-count,
@@ -1054,4 +962,103 @@ textarea {
     .logo i {
         animation: none !important;
     }
+}
+
+/* Global navigation alignment fixes: ensure nav is consistently aligned across pages */
+header nav .container {
+    max-width: 1200px; /* consistent container width for nav */
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important; /* center nav contents horizontally */
+    gap: 12px !important;
+}
+
+header nav .container .nav-links {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 18px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+
+header nav .container .nav-links li {
+    margin: 0 !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    height: 56px !important;
+}
+
+header nav .container .nav-links .nav-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100% !important;
+    padding: 0 8px !important;
+    line-height: 1 !important;
+}
+
+/* Keep dropdown positioning but ensure vertical alignment */
+header nav .container .dropdown .dropdown-content {
+    top: calc(100% + 8px) !important;
+}
+
+/* Responsive: on small screens keep previous mobile behavior but center toggle */
+@media (max-width: 992px) {
+    header nav .container {
+        justify-content: space-between !important;
+    }
+    header nav .container .nav-links {
+        position: absolute !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+    }
+}
+
+/* Admin/dashboard header alignment */
+.admin-header {
+    max-width: 1200px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+}
+.admin-header .admin-brand {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+.admin-header .admin-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+/* Force nav link text and icons to remain upright (no rotation/skew) */
+header nav .container .nav-links .nav-link,
+header nav .container .nav-links .nav-link * {
+    transform: none !important;
+    -webkit-transform: none !important;
+    font-style: normal !important;
+    writing-mode: horizontal-tb !important;
+    text-orientation: mixed !important;
+    vertical-align: middle !important;
+}
+
+header nav .container .nav-links .nav-link i {
+    transform: none !important;
+    -webkit-transform: none !important;
+    margin-bottom: 0 !important;
+    vertical-align: middle !important;
 }

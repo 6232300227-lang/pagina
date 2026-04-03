@@ -132,6 +132,15 @@
         const grid = getProductsGrid();
         if (!grid) return;
 
+        // Respect a page-level override to show 0 (or a limited number of) products.
+        // If the page author sets `data-max-products="0"` the loader will skip rendering.
+        const maxAttr = grid.getAttribute('data-max-products');
+        const maxProducts = toNumber(maxAttr, -1);
+        if (maxProducts === 0) {
+            const productsCount = document.getElementById('productsCount');
+            if (productsCount) productsCount.textContent = 'Mostrando 0 productos';
+            return;
+        }
         const page = getCurrentPageName();
         const response = await fetch(`${API_BASE}/products?page=${encodeURIComponent(page)}`);
         if (!response.ok) return;

@@ -26,6 +26,71 @@ function loadAuthFromStorage() {
 // Inicializar desde localStorage al cargar el script
 loadAuthFromStorage();
 
+// Initialize Google Identity rendering if the client library is loaded
+function initGoogleSignIn() {
+    try {
+        if (window.google && google.accounts && google.accounts.id) {
+            const buttons = document.querySelectorAll('.g_id_signin');
+            buttons.forEach(btn => {
+                try {
+                    google.accounts.id.renderButton(btn, {
+                        theme: btn.dataset.theme || 'outline',
+                        size: btn.dataset.size || 'large',
+                        text: btn.dataset.text || 'continue_with',
+                        shape: btn.dataset.shape || 'rectangular',
+                        logo_alignment: btn.dataset.logo_alignment || 'left'
+                    });
+                } catch (e) {
+                    // ignore render errors
+                }
+            });
+        }
+    } catch (e) {
+        // silent
+    }
+}
+
+// Callback invoked by Google Identity Services when a user signs in
+async function handleGoogleSignIn(googleResponse) {
+    try {
+        const id_token = googleResponse && googleResponse.credential ? googleResponse.credential : null;
+        if (!id_token) {
+            showNotification('Google Sign-In falló (token faltante)', 'error');
+            return;
+        }
+
+        const loginBtn = null;
+        try {
+            const response = await fetch(`${API_URL}/auth/google`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id_token })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('currentUser', JSON.stringify(data.user));
+                token = data.token;
+                currentUser = data.user;
+                try { window.currentUser = currentUser; } catch (_) {}
+                try { window.token = token; } catch (_) {}
+
+                closeAuthModal();
+                updateUserInterface();
+                showNotification('Has iniciado sesión con Google', 'success');
+            } else {
+                showNotification(data.error || data.message || 'Error autenticando con Google', 'error');
+            }
+        } catch (err) {
+            console.error('Error al autenticar con Google en frontend:', err);
+            showNotification('Error de conexión con el servidor', 'error');
+        }
+    } catch (err) {
+        console.error('handleGoogleSignIn error:', err);
+    }
+}
+
 // Función para abrir el modal de autenticación
 function openAuthModal(event) {
     if (event) event.preventDefault();
@@ -214,7 +279,6 @@ async function handleRegister(event) {
 
 // Cerrar sesión
 function logout(options = {}) {
-    const redirectTo = options.redirectTo || null;
     localStorage.removeItem('token');
     localStorage.removeItem('currentUser');
     localStorage.removeItem('mpCheckoutDraft');
@@ -231,21 +295,6 @@ function logout(options = {}) {
 
     // Notificar a otros scripts/páginas
     window.dispatchEvent(new CustomEvent('stylehub:logout'));
-
-    const inAdmin = window.location.pathname.toLowerCase().includes('admin-dashboard.html');
-    if (redirectTo) {
-        setTimeout(() => {
-            window.location.href = redirectTo;
-        }, 250);
-        return;
-    }
-
-    if (inAdmin) {
-        setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 250);
-        return;
-    }
 
     setTimeout(() => {
         window.location.href = 'index.html';

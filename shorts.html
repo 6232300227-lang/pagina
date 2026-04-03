@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
+    <title>Shorts Premium - StyleHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/auth.css">
+    <link rel="stylesheet" href="assets/css/pages/shorts.css">
+    <link rel="stylesheet" href="assets/css/responsive-global.css">
+    <script src="https://accounts.google.com/gsi/client" async defer onload="if(typeof initGoogleSignIn==='function')initGoogleSignIn()"></script>
+</head>
+<body>
+    <div id="g_id_onload"
+        data-client_id="252457363364-ciqlidgir7l2m3pmk07dm4h6d4lausn5.apps.googleusercontent.com"
+        data-callback="handleGoogleSignIn"
+        data-auto_prompt="false">
+    </div>
+
+    <!-- Top Bar Premium -->
+    <div class="top-bar">
+        <div class="container top-bar-content">
+            <div class="top-message">¡Envío gratis en pedidos superiores a $49.99!</div>
+            <div class="top-links">
+                <a href="ayuda.html"><i class="fas fa-question-circle"></i> Ayuda</a>
+                <a href="seguimiento.html"><i class="fas fa-shipping-fast"></i> Seguimiento</a>
+                <a href="#" class="language-selector"><i class="fas fa-globe"></i> ES</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Premium -->
+    <header>
+        <div class="container main-header">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-crown"></i>
+                    Style<span>Hub</span>
+                </a>
+
+                <button class="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Buscar shorts...">
+                    <button type="submit" id="searchButton"><i class="fas fa-search"></i></button>
+                    <div class="search-suggestions" id="searchSuggestions"></div>
+                </div>
+
+                <div class="user-actions">
+                    <a href="#" class="account-link" id="accountLink" onclick="openAuthModal(event)">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="accountText">Mi cuenta</span>
+                    </a>
+                    <div class="wishlist-wrapper">
+                        <a href="Favoritos.html" class="wishlist-link">
+                            <i class="fas fa-heart"></i>
+                            <span>Favoritos</span>
+                        </a>
+                        <span class="wishlist-count" id="wishlistCount">0</span>
+                    </div>
+                    <div class="cart-wrapper">
+                        <a href="carrito.html" class="cart-link">
+                            <i class="fas fa-shopping-bag"></i>
+                            <span>Carrito</span>
+                        </a>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Premium con Dropdowns -->
+        <nav>
+            <div class="container">
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="sobre-nosotros.html" class="nav-link"><i class="fas fa-info-circle"></i> Sobre nosotros</a></li>
+
+                    <!-- Dropdown Mujer -->
+                    <li class="dropdown">
+                        <a href="vestidos.html" class="nav-link"><i class="fas fa-female"></i> Mujer <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <div class="dropdown-header">ROPA DE MUJER</div>
+                            <a href="vestidos.html"><i class="fas fa-tshirt"></i> Vestidos</a>
+                            <a href="tops.html"><i class="fas fa-tshirt"></i> Tops y Blusas</a>
+                            <a href="Pantalones-mujer.html"><i class="fas fa-tshirt"></i> Pantalones</a>
+                            <a href="faldas.html"><i class="fas fa-tshirt"></i> Faldas</a>
+                            <a href="chaquetas.html"><i class="fas fa-tshirt"></i> Chaquetas</a>
+                            <a href="shorts.html"><i class="fas fa-tshirt"></i> Shorts</a>
+                            <div class="dropdown-header">ACCESORIOS</div>
+                            <a href="accesorios.html"><i class="fas fa-shopping-bag"></i> Accesorios</a>
+                            <a href="zapatos.html"><i class="fas fa-shoe-prints"></i> Zapatos</a>
+                        </div>
+                    </li>
+
+                    <!-- Dropdown Hombre -->
+                    <li class="dropdown">
+                        <a href="camisas.html" class="nav-link"><i class="fas fa-male"></i> Hombre <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <div class="dropdown-header">ROPA DE HOMBRE</div>
+                            <a href="camisetas.html"><i class="fas fa-tshirt"></i> Camisetas</a>
+                            <a href="camisas.html"><i class="fas fa-tshirt"></i> Camisas</a>
+                            <a href="pantalones-hombre.html"><i class="fas fa-tshirt"></i> Pantalones</a>
+                            <a href="chaquetas.html"><i class="fas fa-tshirt"></i> Chaquetas</a>
+                            <a href="Trajes.html"><i class="fas fa-tshirt"></i> Trajes</a>
+                            <a href="shorts.html"><i class="fas fa-tshirt"></i> Shorts</a>
+                            <a href="sudaderas.html"><i class="fas fa-tshirt"></i> Sudaderas</a>
+                            <div class="dropdown-header">ACCESORIOS</div>
+                            <a href="zapatos.html"><i class="fas fa-shoe-prints"></i> Zapatos</a>
+                            <a href="gorras.html"><i class="fas fa-hat-cowboy"></i> Gorras</a>
+                        </div>
+                    </li>
+
+                    <!-- Dropdown Niños -->
+                    <li class="dropdown">
+                        <a href="camisetas-niños.html" class="nav-link"><i class="fas fa-child"></i> Niños <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <div class="dropdown-header">NIÑAS</div>
+                            <a href="tops-niña.html"><i class="fas fa-tshirt"></i> Tops para niñas</a>
+                            <a href="pantalones-niña.html"><i class="fas fa-tshirt"></i> Pantalones para niñas</a>
+                            <div class="dropdown-header">NIÑOS</div>
+                            <a href="camisetas-niños.html"><i class="fas fa-tshirt"></i> Camisetas para niños</a>
+                            <a href="pantalones-niño.html"><i class="fas fa-tshirt"></i> Pantalones para niño</a>
+                            <a href="chaquetas-niño.html"><i class="fas fa-tshirt"></i> Chaquetas para niño</a>
+                            <div class="dropdown-header">BEBÉS</div>
+                            <a href="bebes.html"><i class="fas fa-baby"></i> Ropa de bebé</a>
+                        </div>
+                    </li>
+
+                    <!-- Dropdown Más categorías -->
+                    <li class="dropdown">
+                        <a href="#" class="nav-link"><i class="fas fa-th-large"></i> Más <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="ropa-deportiva.html"><i class="fas fa-running"></i> Ropa Deportiva</a>
+                            <a href="trajes-de-bano.html"><i class="fas fa-swimmer"></i> Trajes de Baño</a>
+                            <a href="ropa-interior.html"><i class="fas fa-tshirt"></i> Ropa Interior</a>
+                            <a href="sudaderas.html"><i class="fas fa-tshirt"></i> Sudaderas</a>
+                            <a href="gorras.html"><i class="fas fa-hat-cowboy"></i> Gorras</a>
+                            <a href="accesorios.html"><i class="fas fa-gem"></i> Accesorios</a>
+                        </div>
+                    </li>
+
+                    <li><a href="novedades.html" class="nav-link"><i class="fas fa-star"></i> Novedades</a></li>
+                    <li><a href="ofertas.html" class="nav-link"><i class="fas fa-tag"></i> Ofertas</a></li>
+                    <li><a href="colecciones.html" class="nav-link"><i class="fas fa-palette"></i> Colecciones</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Category Header -->
+    <section class="category-header">
+        <div class="container">
+            <h1>Shorts Premium</h1>
+            <p>Colección de shorts para todos los estilos y ocasiones. Casuales, deportivos, vaqueros, bermudas y más. Comodidad y estilo en cada prenda.</p>
+        </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="category-filters">
+        <div class="container">
+            <div class="filter-sort">
+                <div class="products-count" id="productsCount">Mostrando 0 productos</div>
+                <select class="sort-select" id="sortSelect">
+                    <option value="featured">Ordenar por: Destacados</option>
+                    <option value="price-asc">Precio: menor a mayor</option>
+                    <option value="price-desc">Precio: mayor a menor</option>
+                    <option value="newest">Más nuevos</option>
+                    <option value="rating">Mejor valorados</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <h3><i class="fas fa-tshirt"></i> Estilo</h3>
+                <div class="filter-options">
+                    <button class="filter-btn active" data-filter="all">Todos los estilos</button>
+                    <button class="filter-btn" data-filter="casual">Casual</button>
+                    <button class="filter-btn" data-filter="deportivo">Deportivo</button>
+                    <button class="filter-btn" data-filter="vaquero">Vaquero</button>
+                    <button class="filter-btn" data-filter="bermuda">Bermuda</button>
+                    <button class="filter-btn" data-filter="elegante">Elegante</button>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h3><i class="fas fa-ruler"></i> Talla</h3>
+                <div class="filter-options">
+                    <button class="filter-btn" data-size="xs">XS</button>
+                    <button class="filter-btn" data-size="s">S</button>
+                    <button class="filter-btn" data-size="m">M</button>
+                    <button class="filter-btn" data-size="l">L</button>
+                    <button class="filter-btn" data-size="xl">XL</button>
+                    <button class="filter-btn" data-size="xxl">XXL</button>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h3><i class="fas fa-palette"></i> Color Premium</h3>
+                <div class="filter-options">
+                    <button class="filter-btn" data-color="negro">Negro</button>
+                    <button class="filter-btn" data-color="blanco">Blanco</button>
+                    <button class="filter-btn" data-color="rojo">Rojo</button>
+                    <button class="filter-btn" data-color="azul">Azul</button>
+                    <button class="filter-btn" data-color="rosa">Rosa</button>
+                    <button class="filter-btn" data-color="verde">Verde</button>
+                    <button class="filter-btn" data-color="estampado">Estampados</button>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h3><i class="fas fa-tag"></i> Rango de Precio</h3>
+                <div class="filter-options">
+                    <button class="filter-btn active" data-price="all">Todos</button>
+                    <button class="filter-btn" data-price="0-50">Hasta $50</button>
+                    <button class="filter-btn" data-price="50-100">$50 - $100</button>
+                    <button class="filter-btn" data-price="100-150">$100 - $150</button>
+                    <button class="filter-btn" data-price="150+">Más de $150</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products -->
+    <section class="category-products">
+        <div class="container">
+            <div class="product-grid-category" id="productsGrid" data-max-products="0"></div>
+
+            <div class="pagination">
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">4</button>
+                <button class="page-btn">5</button>
+                <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal de Resultados de Búsqueda -->
+    <div class="search-modal" id="searchModal">
+        <div class="search-modal-content">
+            <div class="search-modal-header">
+                <h2>Resultados de búsqueda</h2>
+                <button class="close-modal" id="closeSearchModal">&times;</button>
+            </div>
+            <div class="search-stats" id="searchStats"></div>
+            <div class="search-results-grid" id="searchResultsGrid"></div>
+        </div>
+    </div>
+
+    <!-- Modal de Autenticación -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-modal-content">
+            <button class="auth-close" onclick="closeAuthModal()">&times;</button>
+
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="switchAuthTab('login')" id="loginTab">Iniciar Sesión</div>
+                <div class="auth-tab" onclick="switchAuthTab('register')" id="registerTab">Registrarse</div>
+            </div>
+
+            <div class="auth-form active" id="loginForm">
+                <div class="error-message" id="loginError" style="display: none;"></div>
+                <form onsubmit="handleLogin(event)" autocomplete="on">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" name="email" autocomplete="email" required placeholder="tu@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Contraseña</label>
+                        <input type="password" id="loginPassword" name="password" autocomplete="current-password" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="auth-submit"><span>Iniciar Sesión</span></button>
+                </form>
+                <div class="auth-social">
+                    <div class="auth-divider"><span>o con</span></div>
+                    <div class="google-signin-btn-container" style="display:flex;justify-content:center;"></div>
+                </div>
+                <div class="auth-footer">
+                    ¿No tienes cuenta? <a onclick="switchAuthTab('register')">Regístrate</a>
+                </div>
+            </div>
+
+            <div class="auth-form" id="registerForm">
+                <div class="error-message" id="registerError" style="display: none;"></div>
+                <form onsubmit="handleRegister(event)" autocomplete="on">
+                    <div class="form-group">
+                        <label for="registerName">Nombre completo</label>
+                        <input type="text" id="registerName" name="name" autocomplete="name" required placeholder="María García">
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" name="email" autocomplete="email" required placeholder="maria@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Contraseña</label>
+                        <input type="password" id="registerPassword" name="password" autocomplete="new-password" required placeholder="Mínimo 6 caracteres">
+                    </div>
+                    <button type="submit" class="auth-submit"><span>Crear Cuenta</span></button>
+                </form>
+                <div class="auth-social">
+                    <div class="auth-divider"><span>o con</span></div>
+                    <div class="google-signin-btn-container" style="display:flex;justify-content:center;"></div>
+                </div>
+                <div class="auth-footer">
+                    ¿Ya tienes cuenta? <a onclick="switchAuthTab('login')">Inicia sesión</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Premium -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>StyleHub Premium</h3>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Ayuda Premium</h3>
+                    <ul>
+                        <li><a href="ayuda.html"><i class="fas fa-headset"></i> Centro de ayuda 24/7</a></li>
+                        <li><a href="como-comprar.html"><i class="fas fa-shopping-cart"></i> Cómo comprar</a></li>
+                        <li><a href="guia-tallas.html"><i class="fas fa-ruler-combined"></i> Guía de tallas premium</a></li>
+                        <li><a href="envios.html"><i class="fas fa-shipping-fast"></i> Envíos express</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Acerca de</h3>
+                    <ul>
+                        <li><a href="sobre-nosotros.html"><i class="fas fa-info-circle"></i> Sobre nosotros</a></li>
+                        <li><a href="trabaja-con-nosotros.html"><i class="fas fa-briefcase"></i> Trabaja con nosotros</a></li>
+                        <li><a href="terminos.html"><i class="fas fa-file-contract"></i> Términos premium</a></li>
+                        <li><a href="privacidad.html"><i class="fas fa-shield-alt"></i> Privacidad</a></li>
+                        <li><a href="#"><i class="fas fa-leaf"></i> Sostenibilidad</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Contacto Premium</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> soporte@stylehub.com</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-clock"></i> Atención 24/7</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2024 StyleHub Premium. Todos los derechos reservados.</p>
+                <p>Desarrollado con <i class="fas fa-heart"></i> para los amantes de la moda premium</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/dynamic-page-products.js"></script>
+    <script src="assets/js/i18n.js"></script>
+    <script src="assets/js/pages/index.js"></script>
+    <script src="assets/js/mobile-menu-fix.js"></script>
+</body>
+</html>

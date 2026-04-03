@@ -25,18 +25,18 @@
         const productDatabase = [
             { name: 'Vestido Floral', category: 'Mujer', subcategory: 'Vestidos', icon: 'fa-tshirt', url: 'vestidos.html' },
             { name: 'Blusa de Seda', category: 'Mujer', subcategory: 'Tops y Blusas', icon: 'fa-tshirt', url: 'tops.html' },
-            { name: 'Pantalón Palazzo', category: 'Mujer', subcategory: 'Pantalones', icon: 'fa-tshirt', url: 'pantalones-mujer.html' },
+            { name: 'Pantalón Palazzo', category: 'Mujer', subcategory: 'Pantalones', icon: 'fa-tshirt', url: 'Pantalones-mujer.html' },
             { name: 'Falda Plisada', category: 'Mujer', subcategory: 'Faldas', icon: 'fa-tshirt', url: 'faldas.html' },
-            { name: 'Chaqueta de Cuero', category: 'Mujer', subcategory: 'Chaquetas', icon: 'fa-tshirt', url: 'chaquetas-mujer.html' },
+                { name: 'Chaqueta de Cuero', category: 'Mujer', subcategory: 'Chaquetas', icon: 'fa-tshirt', url: 'chaquetas.html' },
             { name: 'Bolso de Mano', category: 'Mujer', subcategory: 'Bolsos', icon: 'fa-shopping-bag', url: 'bolsos.html' },
             { name: 'Collar de Plata', category: 'Mujer', subcategory: 'Joyería', icon: 'fa-gem', url: 'joyeria.html' },
-            { name: 'Tacones', category: 'Mujer', subcategory: 'Zapatos', icon: 'fa-shoe-prints', url: 'zapatos-mujer.html' },
+            { name: 'Tacones', category: 'Mujer', subcategory: 'Zapatos', icon: 'fa-shoe-prints', url: 'zapatos.html' },
             { name: 'Camiseta Básica', category: 'Hombre', subcategory: 'Camisetas', icon: 'fa-tshirt', url: 'camisetas.html' },
             { name: 'Camisa Oxford', category: 'Hombre', subcategory: 'Camisas', icon: 'fa-tshirt', url: 'camisas.html' },
-            { name: 'Pantalón Chino', category: 'Hombre', subcategory: 'Pantalones', icon: 'fa-tshirt', url: 'pantalones-hombre.html' },
+                { name: 'Pantalón Chino', category: 'Hombre', subcategory: 'Pantalones', icon: 'fa-tshirt', url: 'pantalones-hombre.html' },
             { name: 'Chaqueta Bomber', category: 'Hombre', subcategory: 'Chaquetas', icon: 'fa-tshirt', url: 'chaquetas.html' },
-            { name: 'Traje Azul Marino', category: 'Hombre', subcategory: 'Trajes', icon: 'fa-tshirt', url: 'trajes.html' },
-            { name: 'Zapatos Derby', category: 'Hombre', subcategory: 'Zapatos', icon: 'fa-shoe-prints', url: 'zapatos-hombre.html' },
+            { name: 'Traje Azul Marino', category: 'Hombre', subcategory: 'Trajes', icon: 'fa-tshirt', url: 'Trajes.html' },
+            { name: 'Zapatos Derby', category: 'Hombre', subcategory: 'Zapatos', icon: 'fa-shoe-prints', url: 'zapatos.html' },
             { name: 'Reloj Cronógrafo', category: 'Hombre', subcategory: 'Relojes', icon: 'fa-clock', url: 'relojes.html' },
             { name: 'Cinturón de Cuero', category: 'Hombre', subcategory: 'Cinturones', icon: 'fa-belt', url: 'cinturones.html' },
             { name: 'Tops para niñas', category: 'Niños', subcategory: 'Tops', icon: 'fa-tshirt', url: 'tops-niña.html' },
@@ -51,7 +51,9 @@
 
         // ===== FUNCIONES DE INICIALIZACIÓN =====
         document.addEventListener('DOMContentLoaded', function() {
-            optimizeImageLoading();
+                    // Apply index-style navigation to pages (skip user page)
+                    try { applyIndexNav(); } catch (e) { /* ignore if fails */ }
+                    optimizeImageLoading();
             loadFeaturedProducts();
             setupFeaturedSort();
             updateCartCount();
@@ -77,6 +79,108 @@
             } else {
                 document.getElementById('authModal').classList.add('active');
                 document.body.style.overflow = 'hidden';
+            }
+        }
+
+        // Replace existing header nav with the exact index nav structure and links
+        function applyIndexNav() {
+            try {
+                const path = (window.location.pathname || '').split('/').pop() || 'index.html';
+                if (/^usuarios\.html$/i.test(path)) return; // do not modify user page
+
+                const navTemplate = `
+        <!-- Navigation Premium con Dropdowns -->
+        <nav>
+            <div class="container">
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="sobre-nosotros.html" class="nav-link"><i class="fas fa-info-circle"></i> Sobre nosotros</a></li>
+
+                    <!-- Dropdown Mujer -->
+                    <li class="dropdown">
+                        <a href="vestidos.html" class="nav-link"><i class="fas fa-female"></i> Mujer <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <div class="dropdown-header">ROPA DE MUJER</div>
+                            <a href="vestidos.html"><i class="fas fa-tshirt"></i> Vestidos</a>
+                            <a href="tops.html"><i class="fas fa-tshirt"></i> Tops y Blusas</a>
+                            <a href="Pantalones-mujer.html"><i class="fas fa-tshirt"></i> Pantalones</a>
+                            <a href="faldas.html"><i class="fas fa-tshirt"></i> Faldas</a>
+                            <a href="chaquetas.html"><i class="fas fa-tshirt"></i> Chaquetas</a>
+                            <a href="shorts.html"><i class="fas fa-tshirt"></i> Shorts</a>
+                            <a href="ropa-interior.html"><i class="fas fa-heart"></i> Ropa Interior</a>
+                            <div class="dropdown-header">ACCESORIOS</div>
+                            <a href="bolsos.html"><i class="fas fa-shopping-bag"></i> Bolsos</a>
+                            <a href="joyeria.html"><i class="fas fa-gem"></i> Joyería</a>
+                            <a href="zapatos.html"><i class="fas fa-shoe-prints"></i> Zapatos</a>
+                            <a href="gorras.html"><i class="fas fa-hat-cowboy"></i> Gorras</a>
+                        </div>
+                    </li>
+
+                    <!-- Dropdown Hombre -->
+                    <li class="dropdown">
+                        <a href="camisas.html" class="nav-link"><i class="fas fa-male"></i> Hombre <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <div class="dropdown-header">ROPA DE HOMBRE</div>
+                            <a href="camisetas.html"><i class="fas fa-tshirt"></i> Camisetas</a>
+                            <a href="camisas.html"><i class="fas fa-tshirt"></i> Camisas</a>
+                            <a href="pantalones-hombre.html"><i class="fas fa-tshirt"></i> Pantalones</a>
+                            <a href="chaquetas.html"><i class="fas fa-tshirt"></i> Chaquetas</a>
+                            <a href="Trajes.html"><i class="fas fa-tshirt"></i> Trajes</a>
+                            <a href="shorts.html"><i class="fas fa-tshirt"></i> Shorts</a>
+                            <a href="sudaderas.html"><i class="fas fa-tshirt"></i> Sudaderas</a>
+                            <div class="dropdown-header">ACCESORIOS</div>
+                            <a href="zapatos.html"><i class="fas fa-shoe-prints"></i> Zapatos</a>
+                            <a href="relojes.html"><i class="fas fa-clock"></i> Relojes</a>
+                            <a href="cinturones.html"><i class="fas fa-belt"></i> Cinturones</a>
+                        </div>
+                    </li>
+
+                    <!-- Dropdown Niños -->
+                    <li class="dropdown">
+                        <a href="camisetas-niños.html" class="nav-link"><i class="fas fa-child"></i> Niños <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <div class="dropdown-header">NIÑAS</div>
+                            <a href="tops-niña.html"><i class="fas fa-tshirt"></i> Tops para niñas</a>
+                            <a href="pantalones-niña.html"><i class="fas fa-tshirt"></i> Pantalones para niñas</a>
+                            <div class="dropdown-header">NIÑOS</div>
+                            <a href="camisetas-niños.html"><i class="fas fa-tshirt"></i> Camisetas para niños</a>
+                            <a href="pantalones-niño.html"><i class="fas fa-tshirt"></i> Pantalones para niño</a>
+                            <a href="chaquetas-niño.html"><i class="fas fa-tshirt"></i> Chaquetas para niño</a>
+                            <div class="dropdown-header">BEBÉS</div>
+                            <a href="bebes.html"><i class="fas fa-baby"></i> Ropa de bebé</a>
+                        </div>
+                    </li>
+
+                    <!-- Dropdown Más categorías -->
+                    <li class="dropdown">
+                        <a href="#" class="nav-link"><i class="fas fa-th-large"></i> Más <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="ropa-deportiva.html"><i class="fas fa-running"></i> Ropa Deportiva</a>
+                            <a href="trajes-de-bano.html"><i class="fas fa-swimmer"></i> Trajes de Baño</a>
+                            <a href="ropa-interior.html"><i class="fas fa-tshirt"></i> Ropa Interior</a>
+                            <a href="sudaderas.html"><i class="fas fa-tshirt"></i> Sudaderas</a>
+                            <a href="gorras.html"><i class="fas fa-hat-cowboy"></i> Gorras</a>
+                            <a href="accesorios.html"><i class="fas fa-gem"></i> Accesorios</a>
+                        </div>
+                    </li>
+
+                    <li><a href="novedades.html" class="nav-link"><i class="fas fa-star"></i> Novedades</a></li>
+                    <li><a href="ofertas.html" class="nav-link"><i class="fas fa-tag"></i> Ofertas</a></li>
+                    <li><a href="colecciones.html" class="nav-link"><i class="fas fa-palette"></i> Colecciones</a></li>
+                </ul>
+            </div>
+        </nav>
+                `;
+
+                const existingNav = document.querySelector('header nav');
+                if (existingNav) {
+                    existingNav.outerHTML = navTemplate;
+                } else {
+                    const header = document.querySelector('header');
+                    if (header) header.insertAdjacentHTML('beforeend', navTemplate);
+                }
+            } catch (err) {
+                console.error('applyIndexNav error', err);
             }
         }
 
