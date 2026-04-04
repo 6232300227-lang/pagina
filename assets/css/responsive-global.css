@@ -6,6 +6,65 @@ body {
     overflow-x: hidden;
 }
 
+/* Additional mobile safety fixes: prevent horizontal overflow and ensure submenu text wraps */
+@media (max-width: 992px) {
+    header nav .container .nav-links {
+        box-sizing: border-box !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+    }
+
+    header nav .container .nav-links .nav-link {
+        justify-content: flex-start !important;
+        text-align: left !important;
+        white-space: normal !important;
+    }
+
+    header nav .container .nav-links .dropdown-content a {
+        white-space: normal !important;
+        word-break: break-word !important;
+    }
+
+    header nav .container .nav-links .dropdown-content {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+        box-sizing: border-box !important;
+    }
+}
+
+/* About hero: used on homepage when embedding "Sobre nosotros" content */
+.about-hero {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+    padding: 40px 0;
+}
+.about-hero .about-text {
+    flex: 1 1 60%;
+}
+.about-hero .about-image {
+    flex: 1 1 40%;
+}
+.about-hero .about-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+@media (max-width: 768px) {
+    .about-hero {
+        flex-direction: column;
+        padding: 24px 0;
+    }
+    .about-hero .about-image {
+        width: 100%;
+    }
+}
+
 html {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
@@ -344,6 +403,50 @@ textarea {
         max-height: none !important;
         width: 100% !important;
         padding-left: 10px !important;
+    }
+
+    /* Mobile: make the opened nav a scrollable panel that fits viewport */
+    .nav-links.active {
+        max-height: calc(100vh - 70px) !important; /* leave space for header */
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding: 10px !important;
+    }
+
+    /* Dropdowns become accordion panels on mobile */
+    .nav-links li.dropdown {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0 !important;
+    }
+
+    .nav-links li.dropdown .dropdown-content {
+        display: none !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        max-height: 0 !important;
+        overflow: hidden !important;
+        transition: max-height 220ms ease !important;
+    }
+
+    .nav-links li.dropdown.active .dropdown-content {
+        display: block !important;
+        max-height: 60vh !important; /* enough for many items */
+        overflow-y: auto !important;
+    }
+
+    /* increase tappable area */
+    .nav-links .nav-link {
+        min-height: 48px !important;
+        padding: 12px 14px !important;
+        font-size: 1rem !important;
+    }
+
+    .nav-links .dropdown-content a {
+        padding: 10px 8px !important;
+        min-height: 44px !important;
+        display: flex !important;
+        align-items: center !important;
     }
 
     .dropdown.active .dropdown-content {
@@ -1061,4 +1164,46 @@ header nav .container .nav-links .nav-link i {
     -webkit-transform: none !important;
     margin-bottom: 0 !important;
     vertical-align: middle !important;
+}
+
+/* Enforce consistent nav item alignment and spacing across all pages */
+header nav .container .nav-links,
+header nav .container .nav-links li,
+header nav .container .nav-links .nav-link {
+    /* Ensure all nav items share the same box and alignment */
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    vertical-align: middle !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+header nav .container .nav-links {
+    gap: 20px !important; /* uniform spacing between items */
+}
+
+header nav .container .nav-links li {
+    height: 56px !important; /* consistent item height */
+}
+
+header nav .container .nav-links .nav-link {
+    height: 100% !important;
+    padding: 0 10px !important; /* even horizontal padding */
+    line-height: 1 !important;
+    font-size: 0.95rem !important;
+}
+
+/* Ensure icons and text are centered and don't shift baseline */
+header nav .container .nav-links .nav-link i,
+header nav .container .nav-links .nav-link span {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    vertical-align: middle !important;
+}
+
+/* Make underline pseudo-element not affect vertical layout */
+header nav .container .nav-links .nav-link::after {
+    bottom: 8px !important;
 }

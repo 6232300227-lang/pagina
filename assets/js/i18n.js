@@ -88,13 +88,22 @@
   }
 
   function translateAttributes(el, lang){
-    if(el.placeholder){
+    const attrMap = ['placeholder','alt','title','value','aria-label'];
+    attrMap.forEach(attr=>{
+      if(!el.hasAttribute || !el.hasAttribute(attr)) return;
+      const val = el.getAttribute(attr).trim();
+      if(!val) return;
       if(lang === 'en'){
-        if(el.placeholder.includes('Buscar')) el.placeholder = el.placeholder.replace(/Buscar[^]*/,'Search products, brands and more...');
+        if(translations[val]) el.setAttribute(attr, translations[val]);
+        else if(val.includes('Buscar')) el.setAttribute(attr, 'Search products, brands and more...');
       } else {
-        if(el.placeholder.includes('Search')) el.placeholder = el.placeholder.replace(/Search[^]*/,'Buscar productos, marcas y más...');
+        // reverse lookup
+        for(const [es,en] of Object.entries(translations)){
+          if(val === en){ el.setAttribute(attr, es); return; }
+        }
+        if(val.includes('Search')) el.setAttribute(attr, 'Buscar productos, marcas y más...');
       }
-    }
+    });
   }
 
   function walkAndTranslate(root, lang){
@@ -104,13 +113,34 @@
       translateTextNode(node, lang);
     }
     // attributes
-    root.querySelectorAll('[placeholder]').forEach(el=>translateAttributes(el, lang));
+    root.querySelectorAll('*').forEach(el=>translateAttributes(el, lang));
+
+    // data-i18n explicit keys (preferred for stable translations)
+    root.querySelectorAll('[data-i18n]').forEach(el=>{
+      const key = el.getAttribute('data-i18n');
+      if(!key) return;
+      if(lang === 'en' && translations[key]) el.textContent = translations[key];
+      if(lang === 'es' && translations[key]) el.textContent = key;
+    });
   }
 
   function updateLanguageUI(lang){
     document.querySelectorAll('.language-selector').forEach(el=>{
       el.innerHTML = '<i class="fas fa-globe"></i> ' + (lang==='en' ? 'EN' : 'ES');
     });
+  }
+
+  // If header has no .language-selector, inject a small toggle button in the top-links
+  function ensureToggleButton(){
+    if(document.querySelector('.language-selector')) return;
+    const topLinks = document.querySelector('.top-links') || document.querySelector('.header-content');
+    if(!topLinks) return;
+    const a = document.createElement('a');
+    a.href = '#';
+    a.className = 'language-selector';
+    a.style.cursor = 'pointer';
+    a.innerHTML = '<i class="fas fa-globe"></i> ES';
+    topLinks.appendChild(a);
   }
 
   function setLanguage(lang){
@@ -127,6 +157,7 @@
   document.addEventListener('DOMContentLoaded', ()=>{
     const lang = getStored();
     // ensure UI shows correct label
+    ensureToggleButton();
     updateLanguageUI(lang);
     // apply translations if english requested
     if(lang === 'en') walkAndTranslate(document.body, 'en');
@@ -138,5 +169,53 @@
       const next = getStored() === 'es' ? 'en' : 'es';
       setLanguage(next);
     });
+
+    // Enhance mobile menu interactions site-wide
+    function enhanceMobileMenu(){
+      const menuToggle = document.querySelector('.mobile-menu-toggle');
+      const navLinks = document.querySelector('.nav-links');
+      if(menuToggle && navLinks){
+        menuToggle.addEventListener('click', ()=>{
+          const opened = navLinks.classList.toggle('active');
+          document.body.style.overflow = opened ? 'hidden' : '';
+        });
+
+        // close menu when tapping outside
+        document.addEventListener('click', (ev)=>{
+          if(!navLinks.classList.contains('active')) return;
+          if(ev.target.closest('.nav-links') || ev.target.closest('.mobile-menu-toggle')) return;
+          navLinks.classList.remove('active');
+          document.body.style.overflow = '';
+        });
+      }
+
+      // accordion behavior for dropdowns on mobile
+      const dropdownLinks = document.querySelectorAll('.nav-links li.dropdown > .nav-link');
+      dropdownLinks.forEach(link=>{
+        link.addEventListener('click', function(e){
+          if(window.innerWidth > 992) return; // only mobile/tablet
+          e.preventDefault();
+          const parent = this.parentElement;
+          const wasActive = parent.classList.contains('active');
+          // close other dropdowns for clarity
+          dropdownLinks.forEach(l=>{
+            const p = l.parentElement;
+            if(p !== parent) p.classList.remove('active');
+          });
+          if(wasActive) parent.classList.remove('active'); else parent.classList.add('active');
+        });
+      });
+
+      // cleanup on resize (desktop behavior)
+      window.addEventListener('resize', ()=>{
+        if(window.innerWidth > 992){
+          if(document.querySelector('.nav-links')) document.querySelectorAll('.nav-links').forEach(n=>n.classList.remove('active'));
+          document.body.style.overflow = '';
+          document.querySelectorAll('.nav-links li.dropdown.active').forEach(li=>li.classList.remove('active'));
+        }
+      });
+    }
+
+    try{ enhanceMobileMenu(); }catch(err){ /* non-fatal */ }
   });
 })();
