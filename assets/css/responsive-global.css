@@ -413,6 +413,57 @@ textarea {
         padding: 10px !important;
     }
 
+    /* Full-screen mobile panel and overlay for better legibility */
+    .nav-links.mobile-panel {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        height: 100vh !important;
+        padding-top: calc(56px + 10px) !important; /* header height + gap */
+        background: #ffffff !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        z-index: 3000 !important;
+        max-height: none !important;
+        overflow-y: auto !important;
+    }
+
+    .mobile-nav-overlay {
+        position: fixed !important;
+        inset: 0 !important;
+        background: rgba(0,0,0,0.36) !important;
+        z-index: 2990 !important;
+        backdrop-filter: blur(4px) !important;
+    }
+
+    /* Extra ergonomics to avoid horizontal overflow and improve tappable area */
+    .nav-links,
+    .nav-links * {
+        box-sizing: border-box !important;
+        max-width: 100% !important;
+    }
+
+    .nav-links.mobile-panel .dropdown-content {
+        -webkit-overflow-scrolling: touch !important;
+        box-sizing: border-box !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+
+    .nav-links .dropdown-content a {
+        touch-action: manipulation !important;
+        -webkit-tap-highlight-color: transparent !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        word-break: break-word !important;
+    }
+
+    .nav-links .nav-link {
+        word-break: break-word !important;
+        hyphens: auto !important;
+    }
+
     /* Dropdowns become accordion panels on mobile */
     .nav-links li.dropdown {
         display: flex !important;
@@ -431,7 +482,7 @@ textarea {
 
     .nav-links li.dropdown.active .dropdown-content {
         display: block !important;
-        max-height: 60vh !important; /* enough for many items */
+        max-height: 50vh !important; /* enough for many items on mobile */
         overflow-y: auto !important;
     }
 
@@ -464,6 +515,51 @@ textarea {
     .nav-links input[type="text"] {
         width: 100% !important;
         max-width: 100% !important;
+    }
+}
+
+/* Enforce consistent header alignment across pages (desktop & tablet)
+   Keeps logo left, search centered/stretch, and user-actions right */
+@media (min-width: 640px) {
+    .main-header .header-content:has(.search-bar) {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 18px !important;
+        width: 100%;
+    }
+
+    .main-header .logo {
+        flex: 0 0 auto !important;
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+
+    .main-header .search-bar {
+        flex: 1 1 520px !important;
+        max-width: 720px !important;
+        min-width: 0 !important;
+        margin: 0 12px !important;
+    }
+
+    .main-header .user-actions {
+        flex: 0 0 auto !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+    }
+
+    /* Ensure account link aligns vertically with logo and search */
+    .main-header .account-link {
+        align-self: center !important;
+        margin-top: 0 !important;
+    }
+}
+
+/* Desktop exact alignment enforcement */
+@media (min-width: 993px) {
+    .main-header .header-content:has(.search-bar) {
+        align-items: center !important;
     }
 }
 

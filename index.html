@@ -11,6 +11,29 @@
 
     <link rel="stylesheet" href="assets/css/responsive-global.css">
     <script src="https://accounts.google.com/gsi/client" async defer onload="if(typeof initGoogleSignIn==='function')initGoogleSignIn()"></script>
+    <style>
+        /* Index-specific: ensure header items are vertically centered and aligned */
+        .main-header .header-content {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 18px !important;
+        }
+        .main-header .logo {
+            display: inline-flex !important;
+            align-items: center !important;
+        }
+        .main-header .search-bar {
+            flex: 1 1 520px !important;
+            max-width: 720px !important;
+            min-width: 0 !important;
+            margin: 0 12px !important;
+        }
+        .main-header .account-link {
+            align-self: center !important;
+            margin-top: 0 !important;
+        }
+    </style>
 </head>
 <body>
     <!-- Google Identity onload container -->
