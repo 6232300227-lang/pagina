@@ -256,7 +256,9 @@ body {
 table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 680px;
+    /* allow table to shrink on small screens instead of forcing horizontal scroll */
+    min-width: 0;
+    table-layout: auto;
 }
 
 th,
@@ -587,7 +589,7 @@ th {
     .product-item { grid-template-columns: 1fr; }
     .product-actions { justify-items: stretch; }
     .table-wrap { margin: 0 -4px; }
-    table { min-width: 620px; }
+    table { min-width: 0; }
 }
 
 @media (max-width: 560px) {
@@ -637,4 +639,34 @@ th {
     .tiny-btn {
         width: 100%;
     }
+
+    /* Make tables mobile-friendly: convert rows into stacked cards */
+    .table-wrap thead { display: none; }
+    .table-wrap table, .table-wrap tbody, .table-wrap tr, .table-wrap td { display: block; width: 100%; }
+    .table-wrap tr {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 10px 12px;
+        margin-bottom: 10px;
+        background: var(--panel);
+    }
+    .table-wrap td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: none;
+        font-size: 0.88rem;
+    }
+    /* Show labels for each cell using nth-child to match table headers */
+    .table-wrap td:nth-child(1):before { content: "Nombre"; color: var(--muted); margin-right: 8px; }
+    .table-wrap td:nth-child(2):before { content: "Email"; color: var(--muted); margin-right: 8px; }
+    .table-wrap td:nth-child(3):before { content: "Rol"; color: var(--muted); margin-right: 8px; }
+    .table-wrap td:nth-child(4):before { content: "Estado"; color: var(--muted); margin-right: 8px; }
+    .table-wrap td:nth-child(5):before { content: "Google"; color: var(--muted); margin-right: 8px; }
+    .table-wrap td:nth-child(6):before { content: "Fecha"; color: var(--muted); margin-right: 8px; }
+    .table-wrap td:nth-child(7):before { content: "Acciones"; color: var(--muted); margin-right: 8px; }
+
+    /* Ensure action buttons and small elements fit nicely */
+    .row-actions { flex-direction: column; gap: 8px; }
+    .product-item img { width: 64px; height: 64px; }
 }
