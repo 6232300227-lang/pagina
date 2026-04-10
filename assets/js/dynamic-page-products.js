@@ -8,7 +8,13 @@
     }
 
     function getProductsGrid() {
-        return document.getElementById('productsGrid') || document.querySelector('.product-grid-category');
+        // support several grid containers: page category grids, generic product-grid, and the index featured grid
+        return (
+            document.getElementById('productsGrid') ||
+            document.getElementById('featuredProductsGrid') ||
+            document.querySelector('.product-grid-category') ||
+            document.querySelector('.product-grid')
+        );
     }
 
     function toNumber(value, fallback = 0) {
