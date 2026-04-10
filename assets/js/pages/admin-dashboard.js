@@ -284,6 +284,36 @@ function renderSales(data) {
     });
 }
 
+/* Banner de conectividad con la API */
+function showApiBanner(message, retryFn) {
+    let banner = document.getElementById('apiWarningBanner');
+    if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'apiWarningBanner';
+        banner.className = 'api-warning-banner';
+        const p = document.createElement('p');
+        p.id = 'apiWarningBannerMsg';
+        const btn = document.createElement('button');
+        btn.className = 'retry-btn';
+        btn.textContent = 'Reintentar';
+        btn.addEventListener('click', () => {
+            if (typeof retryFn === 'function') retryFn();
+        });
+        banner.appendChild(p);
+        banner.appendChild(btn);
+        const container = document.querySelector('.admin-main') || document.body;
+        container.insertBefore(banner, container.firstChild);
+    }
+    const msgEl = document.getElementById('apiWarningBannerMsg');
+    if (msgEl) msgEl.textContent = message || 'No se pudo conectar con el servidor';
+    banner.style.display = 'flex';
+}
+
+function hideApiBanner() {
+    const banner = document.getElementById('apiWarningBanner');
+    if (banner) banner.style.display = 'none';
+}
+
 function renderProducts(products, token) {
     const container = document.getElementById('productsList');
     if (!container) return;
@@ -419,6 +449,7 @@ function bindActions(token) {
             refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando';
             try {
                 await loadDashboard(token);
+                hideApiBanner();
             } catch (err) {
                 alert(err.message || 'No se pudo actualizar el panel');
             } finally {
@@ -435,6 +466,7 @@ function bindActions(token) {
             try {
                 const sales = await apiGet('/admin/sales-overview', token);
                 renderSales(sales);
+                hideApiBanner();
             } catch (err) {
                 alert(err.message || 'No se pudo actualizar ventas');
             } finally {
@@ -450,6 +482,7 @@ function bindActions(token) {
             try {
                 const products = await apiGet('/admin/products', token);
                 renderProducts(products, token);
+                hideApiBanner();
             } catch (err) {
                 alert(err.message || 'No se pudo actualizar productos');
             } finally {
@@ -475,6 +508,7 @@ function bindActions(token) {
 
             try {
                 await saveProduct(token);
+                hideApiBanner();
                 const [products, sales] = await Promise.all([
                     apiGet('/admin/products', token),
                     apiGet('/admin/sales-overview', token)
@@ -531,6 +565,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         await loadDashboard(token);
     } catch (err) {
-        alert(err.message || 'No se pudo cargar el dashboard');
+        console.warn('No se pudo cargar el dashboard:', err);
+        // Intentar comprobar salud del backend para dar un mensaje más claro
+        try {
+            const healthRes = await fetch(`${API_BASE}/health`);
+            if (healthRes.ok) {
+                // backend responde, problema puede ser token/403/401
+                showApiBanner('El servidor responde pero hubo un error al cargar datos (revisa token). Pulsa Reintentar.', async () => {
+                    hideApiBanner();
+                    try { await loadDashboard(token); hideApiBanner(); } catch (_) { /* ignore */ }
+                });
+            } else {
+                showApiBanner('El servidor respondió con error. Pulsa Reintentar para intentarlo de nuevo.', async () => {
+                    hideApiBanner();
+                    try { await loadDashboard(token); hideApiBanner(); } catch (_) { /* ignore */ }
+                });
+            }
+        } catch (healthErr) {
+            showApiBanner('No se puede conectar al servidor API. Comprueba que el backend esté en línea. Pulsa Reintentar.', async () => {
+                hideApiBanner();
+                try { await loadDashboard(token); hideApiBanner(); } catch (_) { /* ignore */ }
+            });
+        }
+        try { renderStats({}); } catch (e) {}
+        try { renderUsers([], token); } catch (e) {}
+        try { renderSales({}); } catch (e) {}
+        try { renderProducts([], token); } catch (e) {}
     }
 });
