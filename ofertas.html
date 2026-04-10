@@ -12,66 +12,66 @@
     <link rel="stylesheet" href="assets/css/responsive-global.css">
     <script src="https://accounts.google.com/gsi/client" async defer onload="if(typeof initGoogleSignIn==='function')initGoogleSignIn()"></script>
 </head>
-<body>
-    <!-- Google Identity onload container -->
-        <div id="g_id_onload"
-            data-client_id="252457363364-ciqlidgir7l2m3pmk07dm4h6d4lausn5.apps.googleusercontent.com"
-            data-callback="handleGoogleSignIn"
-            data-auto_prompt="false">
-    </div>
-    <!-- Top Bar Premium -->
-    <div class="top-bar">
-        <div class="container top-bar-content">
-            <div class="top-message">¡Envío gratis en pedidos superiores a $49.99!</div>
-            <div class="top-links">
-                <a href="ayuda.html"><i class="fas fa-question-circle"></i> Ayuda</a>
-                <a href="seguimiento.html"><i class="fas fa-shipping-fast"></i> Seguimiento</a>
-                <a href="#" class="language-selector"><i class="fas fa-globe"></i> ES</a>
-            </div>
-        </div>
-    </div>
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="sobre-nosotros.html" class="nav-link"><i class="fas fa-info-circle"></i> Sobre nosotros</a></li>
 
-    <!-- Header Premium -->
-    <header>
-        <div class="container main-header">
-            <div class="header-content">
-                <a href="index.html" class="logo">
-                    <i class="fas fa-crown"></i>
-                    Style<span>Hub</span>
-                </a>
+                    <!-- Dropdown Mujer -->
+                    <li class="dropdown">
+                        <a href="vestidos.html" class="nav-link"><i class="fas fa-female"></i> Mujer <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <div class="dropdown-header">ROPA DE MUJER</div>
+                            <a href="vestidos.html"><i class="fas fa-tshirt"></i> Vestidos</a>
+                            <a href="tops.html"><i class="fas fa-tshirt"></i> Tops y Blusas</a>
+                            <a href="pantalones-mujer.html"><i class="fas fa-tshirt"></i> Pantalones</a>
+                            <a href="faldas.html"><i class="fas fa-tshirt"></i> Faldas</a>
+                            <a href="chaquetas-mujer.html"><i class="fas fa-tshirt"></i> Chaquetas</a>
+                            <div class="dropdown-header">ACCESORIOS</div>
+                            <a href="bolsos.html"><i class="fas fa-shopping-bag"></i> Bolsos</a>
+                            <a href="joyeria.html"><i class="fas fa-gem"></i> Joyería</a>
+                            <a href="zapatos-mujer.html"><i class="fas fa-shoe-prints"></i> Zapatos</a>
+                        </div>
+                    </li>
 
-                <button class="mobile-menu-toggle">
-                    <i class="fas fa-bars"></i>
-                </button>
+                    <!-- Dropdown Hombre -->
+                    <li class="dropdown">
+                        <a href="camisas.html" class="nav-link"><i class="fas fa-male"></i> Hombre <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <div class="dropdown-header">ROPA DE HOMBRE</div>
+                            <a href="camisetas.html"><i class="fas fa-tshirt"></i> Camisetas</a>
+                            <a href="camisas.html"><i class="fas fa-tshirt"></i> Camisas</a>
+                            <a href="pantalones-hombre.html"><i class="fas fa-tshirt"></i> Pantalones</a>
+                            <a href="chaquetas.html"><i class="fas fa-tshirt"></i> Chaquetas</a>
+                            <a href="trajes.html"><i class="fas fa-tshirt"></i> Trajes</a>
+                            <div class="dropdown-header">ACCESORIOS</div>
+                            <a href="zapatos-hombre.html"><i class="fas fa-shoe-prints"></i> Zapatos</a>
+                            <a href="relojes.html"><i class="fas fa-clock"></i> Relojes</a>
+                            <a href="cinturones.html"><i class="fas fa-belt"></i> Cinturones</a>
+                        </div>
+                    </li>
 
-                <div class="search-bar">
-                    <input type="text" id="searchInput" placeholder="Buscar ofertas, productos y más...">
-                    <button type="submit" id="searchButton"><i class="fas fa-search"></i></button>
+                    <!-- Dropdown Niños -->
+                    <li class="dropdown">
+                        <a href="camisetas-niños.html" class="nav-link"><i class="fas fa-child"></i> Niños <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <div class="dropdown-header">NIÑAS</div>
+                            <a href="tops-niña.html"><i class="fas fa-tshirt"></i> Tops para niñas</a>
+                            <a href="pantalones-niña.html"><i class="fas fa-tshirt"></i> Pantalones para niñas</a>
 
-                    <!-- Sugerencias de búsqueda mejoradas -->
-                    <div class="search-suggestions" id="searchSuggestions"></div>
-                </div>
+                            <div class="dropdown-header">NIÑOS</div>
+                            <a href="camisetas-niños.html"><i class="fas fa-tshirt"></i> Camisetas para niños</a>
+                            <a href="pantalones-niño.html"><i class="fas fa-tshirt"></i> Pantalones para niño</a>
+                            <a href="chaquetas-niño.html"><i class="fas fa-tshirt"></i> Chaquetas para niño</a>
 
-                <div class="user-actions">
-                    <a href="#" class="account-link" id="accountLink" onclick="openAuthModal(event)">
-                        <i class="fas fa-user-circle"></i>
-                        <span id="accountText">Mi cuenta</span>
-                    </a>
-                    <div class="wishlist-wrapper">
-                        <a href="Favoritos.html" class="wishlist-link">
-                            <i class="fas fa-heart"></i>
-                            <span>Favoritos</span>
-                        </a>
-                        <span class="wishlist-count" id="wishlistCount">0</span>
-                    </div>
-                    <div class="cart-wrapper">
-                        <a href="carrito.html" class="cart-link">
-                            <i class="fas fa-shopping-bag"></i>
-                            <span>Carrito</span>
-                        </a>
-                        <span class="cart-count" id="cartCount">0</span>
-                    </div>
-                </div>
+                            <div class="dropdown-header">BEBÉS</div>
+                            <a href="bebes.html"><i class="fas fa-baby"></i> Ropa de bebé</a>
+                        </div>
+                    </li>
+
+                    <li><a href="novedades.html" class="nav-link"><i class="fas fa-star"></i> Novedades</a></li>
+                    <li><a href="ofertas.html" class="nav-link"><i class="fas fa-tag"></i> Ofertas</a></li>
+                    <li><a href="colecciones.html" class="nav-link"><i class="fas fa-palette"></i> Colecciones</a></li>
+                </ul>
             </div>
         </div>
 
@@ -359,38 +359,7 @@
     <footer>
         <div class="container">
             <div class="footer-content">
-                <div class="footer-column">
-                    <h3>StyleHub Premium</h3>
-                    <p>Tu destino de moda premium online con las últimas tendencias internacionales.</p>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-pinterest"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-
-                <div class="footer-column">
-                    <h3>Ayuda Premium</h3>
-                    <ul>
-                        <li><a href="ayuda.html"><i class="fas fa-headset"></i> Centro de ayuda 24/7</a></li>
-                        <li><a href="como-comprar.html"><i class="fas fa-shopping-cart"></i> Cómo comprar</a></li>
-                        <li><a href="guia-tallas.html"><i class="fas fa-ruler-combined"></i> Guía de tallas premium</a></li>
-                        <li><a href="envios.html"><i class="fas fa-shipping-fast"></i> Envíos express</a></li>
-                        <li><a href="devoluciones.html"><i class="fas fa-undo-alt"></i> Devoluciones premium</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-column">
-                    <h3>Acerca de</h3>
-                    <ul>
-                        <li><a href="sobre-nosotros.html"><i class="fas fa-info-circle"></i> Sobre nosotros</a></li>
-                        <li><a href="trabaja-con-nosotros.html"><i class="fas fa-briefcase"></i> Trabaja con nosotros</a></li>
-                        <li><a href="terminos.html"><i class="fas fa-file-contract"></i> Términos premium</a></li>
-                        <li><a href="privacidad.html"><i class="fas fa-shield-alt"></i> Privacidad</a></li>
-                    </ul>
-                </div>
+                <!-- Promotional / help / about columns removed as requested -->
 
                 <div class="footer-column">
                     <h3>Contacto Premium</h3>

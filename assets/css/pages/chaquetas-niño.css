@@ -655,6 +655,14 @@
             max-height: 400px;
             overflow-y: auto;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            .social-icons i {
+                font-size: 18px;
+                color: #333;
+            }
+
+            .social-icons a:hover i {
+                color: #e91e63;
+            }
             border-radius: var(--border-radius);
             z-index: 1000;
             opacity: 0;
