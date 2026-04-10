@@ -3,46 +3,22 @@
         return window.matchMedia('(max-width: 992px)').matches;
     }
 
+    function isDesktopViewport() {
+        return window.matchMedia('(min-width: 993px)').matches;
+    }
+
     function closeMenu(toggleBtn, navLinks) {
         navLinks.classList.remove('active');
-        navLinks.classList.remove('mobile-panel');
         toggleBtn.setAttribute('aria-expanded', 'false');
         const icon = toggleBtn.querySelector('i');
         if (icon) {
             icon.classList.remove('fa-times');
             icon.classList.add('fa-bars');
         }
-        // remove overlay if present
-        const existingOverlay = document.querySelector('.mobile-nav-overlay');
-        if (existingOverlay && existingOverlay.parentNode) {
-            existingOverlay.parentNode.removeChild(existingOverlay);
-        }
-        // restore body scroll
-        document.documentElement.style.overflow = '';
-        document.body.style.overflow = '';
-        // collapse any open dropdowns
-        try {
-            const openDropdowns = navLinks.querySelectorAll('li.dropdown.active');
-            openDropdowns.forEach(function (d) {
-                d.classList.remove('active');
-                const content = d.querySelector('.dropdown-content');
-                const trigger = d.querySelector('a.nav-link');
-                if (content) {
-                    content.style.maxHeight = '0px';
-                    content.setAttribute('aria-hidden', 'true');
-                }
-                if (trigger) {
-                    trigger.setAttribute('aria-expanded', 'false');
-                }
-            });
-        } catch (e) {
-            // swallow errors silently
-        }
     }
 
     function openMenu(toggleBtn, navLinks) {
         navLinks.classList.add('active');
-        navLinks.classList.add('mobile-panel');
         toggleBtn.setAttribute('aria-expanded', 'true');
         const icon = toggleBtn.querySelector('i');
         if (icon) {
@@ -54,18 +30,6 @@
         if (menuSearch) {
             menuSearch.focus();
         }
-        // create overlay to capture outside taps
-        if (!document.querySelector('.mobile-nav-overlay')) {
-            const overlay = document.createElement('div');
-            overlay.className = 'mobile-nav-overlay';
-            overlay.addEventListener('click', function () {
-                closeMenu(toggleBtn, navLinks);
-            });
-            document.body.appendChild(overlay);
-        }
-        // lock body scroll
-        document.documentElement.style.overflow = 'hidden';
-        document.body.style.overflow = 'hidden';
     }
 
     function bindMobileMenu() {
@@ -75,7 +39,6 @@
             return;
         }
 
-        // Remove previous listeners attached by page scripts.
         const freshToggle = menuToggle.cloneNode(true);
         menuToggle.parentNode.replaceChild(freshToggle, menuToggle);
         menuToggle = freshToggle;
@@ -84,31 +47,6 @@
         menuToggle.setAttribute('aria-controls', 'mobile-main-menu');
         menuToggle.setAttribute('aria-expanded', 'false');
         navLinks.id = 'mobile-main-menu';
-
-        // Initialize accordion state for mobile dropdowns (start collapsed)
-        (function initMobileDropdowns() {
-            try {
-                const dropdownItems = navLinks.querySelectorAll('li.dropdown');
-                dropdownItems.forEach(function (d, idx) {
-                    const trigger = d.querySelector('a.nav-link');
-                    const content = d.querySelector('.dropdown-content');
-                    if (content) {
-                        content.style.maxHeight = '0px';
-                        content.style.overflow = 'hidden';
-                        content.style.transition = 'max-height 220ms ease';
-                        content.setAttribute('aria-hidden', 'true');
-                        const cid = 'mobile-dropdown-' + idx;
-                        content.id = cid;
-                        if (trigger) {
-                            trigger.setAttribute('aria-controls', cid);
-                            trigger.setAttribute('aria-expanded', 'false');
-                        }
-                    }
-                });
-            } catch (e) {
-                // ignore initialization errors
-            }
-        })();
 
         menuToggle.addEventListener('click', function (e) {
             e.preventDefault();
@@ -149,19 +87,7 @@
             const isDropdownTrigger = parentDropdown && targetLink.classList.contains('nav-link');
             if (isDropdownTrigger && isMobileMenuViewport()) {
                 e.preventDefault();
-                // toggle active class and animate max-height for smooth accordion
-                const content = parentDropdown.querySelector('.dropdown-content');
-                const isActive = parentDropdown.classList.toggle('active');
-                if (content) {
-                    if (isActive) {
-                        // expand to scrollHeight
-                        content.style.maxHeight = content.scrollHeight + 'px';
-                        targetLink.setAttribute('aria-expanded', 'true');
-                    } else {
-                        content.style.maxHeight = '0px';
-                        targetLink.setAttribute('aria-expanded', 'false');
-                    }
-                }
+                parentDropdown.classList.toggle('active');
                 return;
             }
 
@@ -173,20 +99,12 @@
         window.addEventListener('resize', function () {
             if (!isMobileMenuViewport()) {
                 navLinks.classList.remove('active');
-                navLinks.classList.remove('mobile-panel');
                 menuToggle.setAttribute('aria-expanded', 'false');
                 const icon = menuToggle.querySelector('i');
                 if (icon) {
                     icon.classList.remove('fa-times');
                     icon.classList.add('fa-bars');
                 }
-                // cleanup overlay and body lock
-                const existingOverlay = document.querySelector('.mobile-nav-overlay');
-                if (existingOverlay && existingOverlay.parentNode) {
-                    existingOverlay.parentNode.removeChild(existingOverlay);
-                }
-                document.documentElement.style.overflow = '';
-                document.body.style.overflow = '';
             }
         });
     }
@@ -212,7 +130,11 @@
             suggestions = document.createElement('div');
             suggestions.id = 'searchSuggestions';
             suggestions.className = 'search-suggestions';
-            wrapper.appendChild(suggestions);
+        }
+        // Move to <body> to escape the header stacking context entirely.
+        // This ensures the panel always renders on top of all elements.
+        if (suggestions.parentElement !== document.body) {
+            document.body.appendChild(suggestions);
         }
 
         return { input: input, button: button, wrapper: wrapper, suggestions: suggestions };
@@ -302,6 +224,66 @@
 
         let lastResults = [];
 
+        function getDesktopMenuAnchorRect() {
+            const navContainer = document.querySelector('header nav .container, nav .container');
+            const navLinks = document.querySelector('.nav-links');
+            const viewportPadding = 12;
+
+            if (navLinks) {
+                const linksRect = navLinks.getBoundingClientRect();
+                if (linksRect.width > 0) {
+                    return {
+                        left: Math.max(viewportPadding, linksRect.left),
+                        width: Math.min(linksRect.width, window.innerWidth - viewportPadding * 2),
+                        bottom: linksRect.bottom
+                    };
+                }
+            }
+
+            if (navContainer) {
+                const containerRect = navContainer.getBoundingClientRect();
+                if (containerRect.width > 0) {
+                    return {
+                        left: Math.max(viewportPadding, containerRect.left),
+                        width: Math.min(containerRect.width, window.innerWidth - viewportPadding * 2),
+                        bottom: containerRect.bottom
+                    };
+                }
+            }
+
+            return null;
+        }
+
+        // Position panel for desktop and mobile without changing mobile interactions.
+        // setProperty with 'important' overrides CSS !important rules.
+        function positionPanel() {
+            const inputRect = ui.wrapper.getBoundingClientRect();
+            const desktopRect = isDesktopViewport() ? getDesktopMenuAnchorRect() : null;
+            const rect = desktopRect || inputRect;
+            const top = desktopRect ? rect.bottom + 6 : rect.bottom + 4;
+            const maxH = Math.max(200, window.innerHeight - top - 12);
+            const s = ui.suggestions.style;
+            s.setProperty('position', 'fixed', 'important');
+            s.setProperty('top', top + 'px', 'important');
+            s.setProperty('left', rect.left + 'px', 'important');
+            s.setProperty('right', 'auto', 'important');
+            s.setProperty('width', rect.width + 'px', 'important');
+            s.setProperty('max-height', maxH + 'px', 'important');
+            s.setProperty('z-index', '99999', 'important');
+        }
+
+        function hidePanel() {
+            ui.suggestions.classList.remove('active');
+            const s = ui.suggestions.style;
+            s.removeProperty('position');
+            s.removeProperty('top');
+            s.removeProperty('left');
+            s.removeProperty('right');
+            s.removeProperty('width');
+            s.removeProperty('max-height');
+            s.removeProperty('z-index');
+        }
+
         function executeSearch() {
             const rawQuery = ui.input.value || '';
             const query = normalizeText(rawQuery);
@@ -312,7 +294,9 @@
 
             lastResults = results;
             renderResults(ui.suggestions, query, results);
-
+            if (query) {
+                positionPanel();
+            }
         }
 
         ui.button.addEventListener('click', function (e) {
@@ -330,8 +314,7 @@
         ui.input.addEventListener('input', function () {
             const query = normalizeText(ui.input.value || '');
             if (!query) {
-                ui.suggestions.innerHTML = '';
-                ui.suggestions.classList.remove('active');
+                hidePanel();
                 return;
             }
             executeSearch();
@@ -359,11 +342,25 @@
             }
         });
 
+        // Close when clicking outside both the search bar and the panel
         document.addEventListener('click', function (e) {
-            if (!ui.wrapper.contains(e.target)) {
-                ui.suggestions.classList.remove('active');
+            if (!ui.wrapper.contains(e.target) && !ui.suggestions.contains(e.target)) {
+                hidePanel();
             }
         });
+
+        // Reposition when viewport resizes while panel is open
+        window.addEventListener('resize', function () {
+            if (ui.suggestions.classList.contains('active')) {
+                positionPanel();
+            }
+        });
+
+        window.addEventListener('scroll', function () {
+            if (ui.suggestions.classList.contains('active')) {
+                positionPanel();
+            }
+        }, true);
     }
 
     if (document.readyState === 'loading') {

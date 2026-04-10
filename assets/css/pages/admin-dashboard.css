@@ -96,11 +96,6 @@ body {
 
 .admin-actions { display: flex; gap: 10px; }
 
-.admin-actions .ghost-btn,
-.admin-actions .danger-btn {
-    white-space: nowrap;
-}
-
 .ghost-btn,
 .danger-btn,
 .action-link {
@@ -256,9 +251,7 @@ body {
 table {
     width: 100%;
     border-collapse: collapse;
-    /* allow table to shrink on small screens instead of forcing horizontal scroll */
-    min-width: 0;
-    table-layout: auto;
+    min-width: 680px;
 }
 
 th,
@@ -459,7 +452,6 @@ th {
 .product-actions {
     display: grid;
     gap: 6px;
-    justify-items: end;
 }
 
 .row-actions {
@@ -524,33 +516,6 @@ th {
     .sales-kpis { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
 }
 
-@media (max-width: 900px) {
-    .admin-header {
-        flex-wrap: wrap;
-        align-items: flex-start;
-    }
-
-    .admin-actions {
-        width: 100%;
-        flex-wrap: wrap;
-    }
-
-    .admin-actions .ghost-btn,
-    .admin-actions .danger-btn {
-        flex: 1 1 220px;
-        text-align: center;
-        justify-content: center;
-    }
-
-    .sales-kpis {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .form-two-cols {
-        grid-template-columns: 1fr;
-    }
-}
-
 @media (min-width: 701px) and (max-width: 1366px) {
     .admin-actions {
         flex-wrap: wrap;
@@ -587,86 +552,4 @@ th {
     .welcome-card h2 { font-size: 1.5rem; }
     .sales-kpis { grid-template-columns: 1fr; }
     .product-item { grid-template-columns: 1fr; }
-    .product-actions { justify-items: stretch; }
-    .table-wrap { margin: 0 -4px; }
-    table { min-width: 0; }
-}
-
-@media (max-width: 560px) {
-    body { padding: 10px; }
-
-    .admin-header,
-    .panel-card,
-    .welcome-card {
-        padding: 14px;
-        border-radius: 14px;
-    }
-
-    .admin-brand {
-        align-items: flex-start;
-    }
-
-    .admin-brand h1 {
-        font-size: 1.15rem;
-    }
-
-    .admin-brand p,
-    .stat-card p,
-    .product-meta,
-    th,
-    td {
-        font-size: 0.8rem;
-    }
-
-    .stat-card {
-        padding: 14px;
-    }
-
-    .sales-kpis div {
-        padding: 10px;
-    }
-
-    .chart-wrap {
-        min-height: 220px;
-        padding: 10px;
-    }
-
-    .row-actions {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .tiny-btn {
-        width: 100%;
-    }
-
-    /* Make tables mobile-friendly: convert rows into stacked cards */
-    .table-wrap thead { display: none; }
-    .table-wrap table, .table-wrap tbody, .table-wrap tr, .table-wrap td { display: block; width: 100%; }
-    .table-wrap tr {
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        padding: 10px 12px;
-        margin-bottom: 10px;
-        background: var(--panel);
-    }
-    .table-wrap td {
-        display: flex;
-        justify-content: space-between;
-        padding: 8px 0;
-        border-bottom: none;
-        font-size: 0.88rem;
-    }
-    /* Show labels for each cell using nth-child to match table headers */
-    .table-wrap td:nth-child(1):before { content: "Nombre"; color: var(--muted); margin-right: 8px; }
-    .table-wrap td:nth-child(2):before { content: "Email"; color: var(--muted); margin-right: 8px; }
-    .table-wrap td:nth-child(3):before { content: "Rol"; color: var(--muted); margin-right: 8px; }
-    .table-wrap td:nth-child(4):before { content: "Estado"; color: var(--muted); margin-right: 8px; }
-    .table-wrap td:nth-child(5):before { content: "Google"; color: var(--muted); margin-right: 8px; }
-    .table-wrap td:nth-child(6):before { content: "Fecha"; color: var(--muted); margin-right: 8px; }
-    .table-wrap td:nth-child(7):before { content: "Acciones"; color: var(--muted); margin-right: 8px; }
-
-    /* Ensure action buttons and small elements fit nicely */
-    .row-actions { flex-direction: column; gap: 8px; }
-    .product-item img { width: 64px; height: 64px; }
 }

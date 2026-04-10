@@ -18,7 +18,7 @@
         const API_BASE = CONFIGURED_API_BASE || (IS_LOCAL_HOST ? 'http://localhost:3000' : DEFAULT_REMOTE_API_BASE);
         const CHECKOUT_RETURN_BASE = IS_LOCAL_HOST ? 'https://stylehub.pics' : window.location.origin;
 
-        const SHIPPING_COST = 0;
+        const SHIPPING_COST = 5.99;
         const SHIPPING_FREE_THRESHOLD = 29.99;
         const VALID_PROMO_CODES = {
             'VERANO20': 0.20,
@@ -484,7 +484,7 @@
 
         function updateOrderSummary() {
             const subtotal = cart.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
-            const shipping = SHIPPING_COST;
+            const shipping = subtotal >= SHIPPING_FREE_THRESHOLD ? 0 : SHIPPING_COST;
             let discount = 0;
 
             if (promoCodeApplied && subtotal > 0) {
@@ -499,7 +499,7 @@
             const totalElement = document.getElementById('total');
 
             if (subtotalElement) subtotalElement.textContent = `$${subtotal.toFixed(2)}`;
-            if (shippingElement) shippingElement.textContent = '00.00 pesos';
+            if (shippingElement) shippingElement.textContent = shipping === 0 ? 'Gratis' : `$${shipping.toFixed(2)}`;
             if (discountElement) discountElement.textContent = discount > 0 ? `-$${discount.toFixed(2)}` : '$0.00';
             if (totalElement) totalElement.textContent = `$${total.toFixed(2)}`;
 
@@ -684,7 +684,7 @@
                 'Cliente StyleHub';
 
             const subtotal = cart.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
-            const shipping = SHIPPING_COST;
+            const shipping = subtotal >= SHIPPING_FREE_THRESHOLD ? 0 : SHIPPING_COST;
             const discount = promoCodeApplied ? subtotal * discountAmount : 0;
             const total = subtotal + shipping - discount;
 
@@ -919,7 +919,7 @@
                 },
                 summary: (() => {
                     const subtotal = cart.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
-                    const shipping = SHIPPING_COST;
+                    const shipping = subtotal >= SHIPPING_FREE_THRESHOLD ? 0 : SHIPPING_COST;
                     const discount = promoCodeApplied ? subtotal * discountAmount : 0;
                     const total = subtotal + shipping - discount;
                     return { subtotal, shipping, discount, total };
@@ -934,9 +934,9 @@
             const zipCode = source.shippingInfo.zipCode || '';
             const phone = source.shippingInfo.phone || '';
             const subtotal = Number(source.summary.subtotal || 0);
-            const shipping = 0;
+            const shipping = Number(source.summary.shipping || 0);
             const discount = Number(source.summary.discount || 0);
-            const total = Number(source.summary.subtotal || 0) - Number(source.summary.discount || 0);
+            const total = Number(source.summary.total || 0);
             const estimated = estimateDeliveryRange(subtotal);
 
             container.innerHTML = `
@@ -962,7 +962,7 @@
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Envío:</span>
-                    <span class="detail-value">00.00 pesos</span>
+                    <span class="detail-value">${shipping === 0 ? 'Gratis' : '$' + Number(shipping).toFixed(2)}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Descuento:</span>

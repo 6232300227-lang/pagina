@@ -11,29 +11,6 @@
 
     <link rel="stylesheet" href="assets/css/responsive-global.css">
     <script src="https://accounts.google.com/gsi/client" async defer onload="if(typeof initGoogleSignIn==='function')initGoogleSignIn()"></script>
-    <style>
-        /* Index-specific: ensure header items are vertically centered and aligned */
-        .main-header .header-content {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: space-between !important;
-            gap: 18px !important;
-        }
-        .main-header .logo {
-            display: inline-flex !important;
-            align-items: center !important;
-        }
-        .main-header .search-bar {
-            flex: 1 1 520px !important;
-            max-width: 720px !important;
-            min-width: 0 !important;
-            margin: 0 12px !important;
-        }
-        .main-header .account-link {
-            align-self: center !important;
-            margin-top: 0 !important;
-        }
-    </style>
 </head>
 <body>
     <!-- Google Identity onload container -->
@@ -103,7 +80,7 @@
             <div class="container">
                 <ul class="nav-links">
                     <li><a href="index.html" class="nav-link active"><i class="fas fa-home"></i> Inicio</a></li>
-                    <!-- 'Sobre nosotros' moved into homepage; link removed -->
+                    <li><a href="sobre-nosotros.html" class="nav-link"><i class="fas fa-info-circle"></i> Sobre nosotros</a></li>
 
                     <!-- Dropdown Mujer -->
                     <li class="dropdown">
@@ -112,13 +89,13 @@
                             <div class="dropdown-header">ROPA DE MUJER</div>
                             <a href="vestidos.html"><i class="fas fa-tshirt"></i> Vestidos</a>
                             <a href="tops.html"><i class="fas fa-tshirt"></i> Tops y Blusas</a>
-                            <a href="Pantalones-mujer.html"><i class="fas fa-tshirt"></i> Pantalones</a>
+                            <a href="pantalones-mujer.html"><i class="fas fa-tshirt"></i> Pantalones</a>
                             <a href="faldas.html"><i class="fas fa-tshirt"></i> Faldas</a>
-                            <a href="chaquetas.html"><i class="fas fa-tshirt"></i> Chaquetas</a>
+                            <a href="chaquetas-mujer.html"><i class="fas fa-tshirt"></i> Chaquetas</a>
                             <div class="dropdown-header">ACCESORIOS</div>
                             <a href="bolsos.html"><i class="fas fa-shopping-bag"></i> Bolsos</a>
                             <a href="joyeria.html"><i class="fas fa-gem"></i> Joyería</a>
-                            <a href="zapatos.html"><i class="fas fa-shoe-prints"></i> Zapatos</a>
+                            <a href="zapatos-mujer.html"><i class="fas fa-shoe-prints"></i> Zapatos</a>
                         </div>
                     </li>
 
@@ -139,35 +116,24 @@
                         </div>
                     </li>
 
-                    <!-- Dropdown Hombre -->
+                    <!-- Dropdown Niños -->
                     <li class="dropdown">
-                        <a href="camisas.html" class="nav-link"><i class="fas fa-male"></i> Hombre <i class="fas fa-chevron-down"></i></a>
+                        <a href="camisetas-niños.html" class="nav-link"><i class="fas fa-child"></i> Niños <i class="fas fa-chevron-down"></i></a>
                         <div class="dropdown-content">
-                            <div class="dropdown-header">ROPA DE HOMBRE</div>
-                            <a href="camisetas.html"><i class="fas fa-tshirt"></i> Camisetas</a>
-                            <a href="camisas.html"><i class="fas fa-tshirt"></i> Camisas</a>
-                            <a href="pantalones-hombre.html"><i class="fas fa-tshirt"></i> Pantalones</a>
-                            <a href="chaquetas.html"><i class="fas fa-tshirt"></i> Chaquetas</a>
-                            <a href="Trajes.html"><i class="fas fa-tshirt"></i> Trajes</a>
-                            <a href="shorts.html"><i class="fas fa-tshirt"></i> Shorts</a>
-                            <a href="sudaderas.html"><i class="fas fa-tshirt"></i> Sudaderas</a>
-                            <div class="dropdown-header">ACCESORIOS</div>
-                            <a href="zapatos.html"><i class="fas fa-shoe-prints"></i> Zapatos</a>
-                            <a href="relojes.html"><i class="fas fa-clock"></i> Relojes</a>
-                            <a href="cinturones.html"><i class="fas fa-belt"></i> Cinturones</a>
+                            <div class="dropdown-header">NIÑAS</div>
+                            <a href="tops-niña.html"><i class="fas fa-tshirt"></i> Tops para niñas</a>
+                            <a href="pantalones-niña.html"><i class="fas fa-tshirt"></i> Pantalones para niñas</a>
+
+                            <div class="dropdown-header">NIÑOS</div>
+                            <a href="camisetas-niños.html"><i class="fas fa-tshirt"></i> Camisetas para niños</a>
+                            <a href="pantalones-niño.html"><i class="fas fa-tshirt"></i> Pantalones para niño</a>
+                            <a href="chaquetas-niño.html"><i class="fas fa-tshirt"></i> Chaquetas para niño</a>
+
+                            <div class="dropdown-header">BEBÉS</div>
+                            <a href="bebes.html"><i class="fas fa-baby"></i> Ropa de bebé</a>
                         </div>
                     </li>
-                    <li class="dropdown">
-                        <a href="#" class="nav-link"><i class="fas fa-th-large"></i> Más <i class="fas fa-chevron-down"></i></a>
-                        <div class="dropdown-content">
-                            <a href="ropa-deportiva.html"><i class="fas fa-running"></i> Ropa Deportiva</a>
-                            <a href="trajes-de-bano.html"><i class="fas fa-swimmer"></i> Trajes de Baño</a>
-                            <a href="ropa-interior.html"><i class="fas fa-tshirt"></i> Ropa Interior</a>
-                            <a href="sudaderas.html"><i class="fas fa-tshirt"></i> Sudaderas</a>
-                            <a href="gorras.html"><i class="fas fa-hat-cowboy"></i> Gorras</a>
-                            <a href="accesorios.html"><i class="fas fa-gem"></i> Accesorios</a>
-                        </div>
-                    </li>
+
                     <li><a href="novedades.html" class="nav-link"><i class="fas fa-star"></i> Novedades</a></li>
                     <li><a href="ofertas.html" class="nav-link"><i class="fas fa-tag"></i> Ofertas</a></li>
                     <li><a href="colecciones.html" class="nav-link"><i class="fas fa-palette"></i> Colecciones</a></li>
@@ -176,31 +142,12 @@
         </nav>
     </header>
 
-        <!-- Sobre Nosotros (insertado en homepage) -->
-    <section class="about-hero">
-        <div class="container" style="display:flex;padding:0;">
-            <div class="about-text">
-                <h1>Sobre Nosotros</h1>
-                <p><strong>Mi Empresa</strong> es una tienda dedicada a ofrecer moda de calidad a precios accesibles. Nos enfocamos en seleccionar prendas con buen diseño y materiales duraderos, además de brindar un servicio de atención al cliente cercano y rápido.</p>
-
-                <h2>Nuestra misión</h2>
-                <p>Ofrecer productos de moda que inspiren confianza y estilo a nuestros clientes, priorizando la experiencia de compra y la satisfacción postventa.</p>
-
-                <h2>Contacto</h2>
-                <p>Correo: <a href="mailto:contacto@miempresa.com">contacto@miempresa.com</a></p>
-                <p>Teléfono: +34 600 000 000</p>
-
-                <h2>Nuestros valores</h2>
-                <ul>
-                    <li>Calidad y diseño</li>
-                    <li>Transparencia</li>
-                    <li>Atención al cliente</li>
-                    <li>Sostenibilidad</li>
-                </ul>
-            </div>
-            <div class="about-image">
-                <img src="https://http2.mlstatic.com/D_NQ_NP_630721-MLM85422037497_052025-O-conjunto-de-moda-elegante-casual-de-dos-pcs-ropa-para-mujer.webp" alt="Modelo - Mi Empresa" loading="lazy" decoding="async">
-            </div>
+    <!-- Banner Premium -->
+    <section class="banner">
+        <div class="container">
+            <h1>Verano 2024</h1>
+            <p>Descubre las últimas tendencias en moda premium con descuentos exclusivos de hasta el 70%.</p>
+            <a href="novedades.html" class="btn"><span>Ver novedades</span></a>
         </div>
     </section>
 
@@ -401,7 +348,7 @@
                 <div class="footer-column">
                     <h3>Acerca de</h3>
                     <ul>
-                        <!-- Sobre nosotros page removed; link intentionally omitted -->
+                        <li><a href="sobre-nosotros.html"><i class="fas fa-info-circle"></i> Sobre nosotros</a></li>
                         <li><a href="trabaja-con-nosotros.html"><i class="fas fa-briefcase"></i> Trabaja con nosotros</a></li>
                         <li><a href="terminos.html"><i class="fas fa-file-contract"></i> Términos premium</a></li>
                         <li><a href="privacidad.html"><i class="fas fa-shield-alt"></i> Privacidad</a></li>
@@ -426,7 +373,6 @@
     </footer>
 
         <script src="assets/js/auth.js"></script>
-        <script src="assets/js/i18n.js"></script>
         <script src="assets/js/pages/index.js"></script>
         <script>
             // Ensure `Mi cuenta` works reliably on index page: open modal when logged out, navigate when logged in

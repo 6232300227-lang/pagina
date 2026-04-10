@@ -113,8 +113,6 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 18px;
-            flex-wrap: wrap;
         }
 
         .logo {
@@ -157,7 +155,6 @@
             border-radius: 50px;
             transition: var(--transition);
             background: var(--gray);
-            margin-left: auto;
         }
 
         .back-home:hover {
@@ -827,12 +824,6 @@
                 right: 20px;
                 left: 20px;
                 padding: 15px 20px;
-            }
-
-            .back-home {
-                width: 100%;
-                justify-content: center;
-                margin-left: 0;
             }
         }
 

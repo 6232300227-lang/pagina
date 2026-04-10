@@ -325,74 +325,6 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// Google Sign-In
-app.post('/api/auth/google', async (req, res) => {
-  try {
-    const { id_token } = req.body || {};
-    if (!id_token) return res.status(400).json({ error: 'id_token requerido' });
-    if (!GOOGLE_CLIENT_ID) return res.status(500).json({ error: 'GOOGLE_CLIENT_ID no configurado en el servidor' });
-
-    // Verify token with Google
-    const verifyUrl = `https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(id_token)}`;
-    const verifyResp = await fetch(verifyUrl);
-    const payload = await verifyResp.json();
-
-    if (!verifyResp.ok || !payload) {
-      return res.status(401).json({ error: 'Token inválido' });
-    }
-
-    // Ensure token audience matches our client id
-    if (String(payload.aud || payload.audience || '').trim() !== String(GOOGLE_CLIENT_ID).trim()) {
-      return res.status(401).json({ error: 'Token no fue emitido para esta aplicación' });
-    }
-
-    const email = String(payload.email || '').trim().toLowerCase();
-    const name = String(payload.name || payload.given_name || '').trim();
-    const googleId = String(payload.sub || payload.user_id || '').trim();
-    const emailVerified = payload.email_verified === 'true' || payload.email_verified === true;
-
-    if (!email || !googleId) {
-      return res.status(400).json({ error: 'Datos incompletos en token de Google' });
-    }
-
-    let user = await User.findOne({ email });
-
-    if (user) {
-      if (user.isActive === false) return res.status(403).json({ error: 'Cuenta desactivada' });
-
-      // If existing user has no googleId, attach it
-      if (!user.googleId) {
-        user.googleId = googleId;
-        user.registrationMethod = 'google';
-        user.password = null;
-      }
-
-      user.emailVerified = true;
-      user.lastLogin = new Date();
-      await user.save();
-    } else {
-      // Create new user
-      user = await User.create({
-        name: name || '',
-        email,
-        password: null,
-        googleId,
-        emailVerified: true,
-        registrationMethod: 'google',
-        lastLogin: new Date(),
-        role: 'customer'
-      });
-    }
-
-    const token = jwt.sign({ sub: user._id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
-
-    res.json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role } });
-  } catch (err) {
-    console.error('Error en /api/auth/google:', err);
-    res.status(500).json({ error: 'Error en autenticación con Google' });
-  }
-});
-
 // Simple users endpoint for admin/dev
 app.get('/api/users', async (req, res) => {
   const users = await User.find().limit(50).select('-password');
@@ -1041,9 +973,7 @@ app.get('/api/admin/sales-overview', requireAdmin, async (req, res) => {
     approvedOrders.forEach((order) => {
       const d = new Date(order.updatedAt || order.createdAt || now);
       const key = d.toISOString().slice(0, 10);
-      const orderTotal = Number(order.summary?.total || 0);
-      const orderShipping = Number(order.summary?.shipping || 0);
-      const amount = Math.max(0, orderTotal - orderShipping);
+      const amount = Number(order.summary?.total || 0);
       salesByDay[key] = (salesByDay[key] || 0) + amount;
       totalRevenue += amount;
       totalOrders += 1;

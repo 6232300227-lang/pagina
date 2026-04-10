@@ -146,41 +146,60 @@ function fillProfileForm(profile) {
 }
 
 async function loadAccountData() {
-    const [profileResp, historyResp, recentResp] = await Promise.all([
-        fetch(`${API_BASE}/api/account/me`, { headers: getAuthHeaders() }),
-        fetch(`${API_BASE}/api/account/orders`, { headers: getAuthHeaders() }),
-        fetch(`${API_BASE}/api/account/orders/recent`, { headers: getAuthHeaders() })
-    ]);
+    try {
+        const [profileResp, historyResp, recentResp] = await Promise.all([
+            fetch(`${API_BASE}/api/account/me`, { headers: getAuthHeaders() }),
+            fetch(`${API_BASE}/api/account/orders`, { headers: getAuthHeaders() }),
+            fetch(`${API_BASE}/api/account/orders/recent`, { headers: getAuthHeaders() })
+        ]);
 
-    if ([profileResp, historyResp, recentResp].some((resp) => resp.status === 401)) {
-        showNotification('Tu sesión expiró. Inicia sesión nuevamente.', 'info');
-        logoutUser();
-        return;
-    }
+        if ([profileResp, historyResp, recentResp].some((resp) => resp.status === 401)) {
+            showNotification('Tu sesión expiró. Inicia sesión nuevamente.', 'info');
+            logoutUser();
+            return;
+        }
 
-    if (!profileResp.ok || !historyResp.ok || !recentResp.ok) {
-        throw new Error('No se pudieron cargar tus datos de cuenta');
-    }
+        if (!profileResp.ok || !historyResp.ok || !recentResp.ok) {
+            throw new Error('No se pudieron cargar tus datos de cuenta');
+        }
 
-    const profile = await profileResp.json();
-    const history = await historyResp.json();
-    const recent = await recentResp.json();
+        const profile = await profileResp.json();
+        const history = await historyResp.json();
+        const recent = await recentResp.json();
 
-    fillProfileForm(profile);
-    renderOrderList(document.getElementById('orderHistoryList'), history, 'history');
-    renderOrderList(document.getElementById('recentOrdersList'), recent, 'recent');
+        fillProfileForm(profile);
+        renderOrderList(document.getElementById('orderHistoryList'), history, 'history');
+        renderOrderList(document.getElementById('recentOrdersList'), recent, 'recent');
 
-    const stored = JSON.parse(localStorage.getItem('currentUser') || 'null') || {};
-    localStorage.setItem('currentUser', JSON.stringify({
-        ...stored,
-        id: profile.id,
-        name: profile.name,
-        fullName: profile.name,
-        email: profile.email,
-        role: profile.role || 'customer'
-    }));
-    if (typeof window.updateUserInterface === 'function') {
-        window.updateUserInterface();
+        const stored = JSON.parse(localStorage.getItem('currentUser') || 'null') || {};
+        localStorage.setItem('currentUser', JSON.stringify({
+            ...stored,
+            id: profile.id,
+            name: profile.name,
+            fullName: profile.name,
+            email: profile.email,
+            role: profile.role || 'customer'
+        }));
+        if (typeof window.updateUserInterface === 'function') {
+            window.updateUserInterface();
+        }
+    } catch (err) {
+        console.warn('Falling back to local profile due to error:', err);
+        // If API fails, try to populate profile from localStorage so profile view appears
+        try {
+            const stored = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            if (stored) {
+                fillProfileForm({
+                    id: stored.id,
+                    name: stored.name || stored.fullName || '',
+                    email: stored.email || ''
+                });
+            }
+        } catch (_) {}
+
+        // Ensure order lists show empty state instead of breaking
+        renderOrderList(document.getElementById('orderHistoryList'), [], 'history');
+        renderOrderList(document.getElementById('recentOrdersList'), [], 'recent');
     }
 }
 

@@ -6,65 +6,6 @@ body {
     overflow-x: hidden;
 }
 
-/* Additional mobile safety fixes: prevent horizontal overflow and ensure submenu text wraps */
-@media (max-width: 992px) {
-    header nav .container .nav-links {
-        box-sizing: border-box !important;
-        padding-left: 12px !important;
-        padding-right: 12px !important;
-        left: 0 !important;
-        right: 0 !important;
-        width: 100% !important;
-    }
-
-    header nav .container .nav-links .nav-link {
-        justify-content: flex-start !important;
-        text-align: left !important;
-        white-space: normal !important;
-    }
-
-    header nav .container .nav-links .dropdown-content a {
-        white-space: normal !important;
-        word-break: break-word !important;
-    }
-
-    header nav .container .nav-links .dropdown-content {
-        padding-left: 8px !important;
-        padding-right: 8px !important;
-        box-sizing: border-box !important;
-    }
-}
-
-/* About hero: used on homepage when embedding "Sobre nosotros" content */
-.about-hero {
-    display: flex;
-    gap: 28px;
-    align-items: center;
-    padding: 40px 0;
-}
-.about-hero .about-text {
-    flex: 1 1 60%;
-}
-.about-hero .about-image {
-    flex: 1 1 40%;
-}
-.about-hero .about-image img {
-    width: 100%;
-    height: auto;
-    border-radius: 12px;
-    object-fit: cover;
-}
-
-@media (max-width: 768px) {
-    .about-hero {
-        flex-direction: column;
-        padding: 24px 0;
-    }
-    .about-hero .about-image {
-        width: 100%;
-    }
-}
-
 html {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
@@ -217,15 +158,104 @@ textarea {
 
 /* Desktop: bajar visualmente el enlace de cuenta dentro del header */
 @media (min-width: 993px) {
+    .container {
+        width: min(100%, 1320px) !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding-left: clamp(16px, 2vw, 30px) !important;
+        padding-right: clamp(16px, 2vw, 30px) !important;
+    }
+
+    .main-header {
+        padding-top: clamp(14px, 1.4vw, 22px) !important;
+        padding-bottom: clamp(14px, 1.4vw, 22px) !important;
+    }
+
     .header-content {
-        align-items: flex-start !important;
+        display: grid !important;
+        grid-template-columns: minmax(180px, auto) minmax(380px, 1fr) auto !important;
+        align-items: center !important;
+        gap: clamp(14px, 1.6vw, 26px) !important;
     }
+
+    .logo {
+        font-size: clamp(1.85rem, 1.05rem + 1.2vw, 2.35rem) !important;
+        min-width: 0 !important;
+    }
+
+    .search-bar {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        min-width: 0 !important;
+    }
+
     .user-actions {
-        align-items: flex-start !important;
+        align-items: center !important;
+        justify-self: end !important;
+        gap: clamp(10px, 1.2vw, 16px) !important;
     }
+
     .account-link {
-        align-self: flex-end !important;
-        margin-top: 6px !important;
+        align-self: center !important;
+        margin-top: 0 !important;
+    }
+
+    .nav-links {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: clamp(12px, 1.2vw, 20px) !important;
+    }
+
+    .search-suggestions {
+        border-radius: 0 0 14px 14px !important;
+        border-top: 2px solid #e83e5f !important;
+        box-shadow: 0 16px 42px rgba(15, 23, 42, 0.2) !important;
+        padding: 8px !important;
+    }
+
+    .search-suggestions .suggestion-item {
+        min-height: 48px !important;
+        padding: 11px 13px !important;
+        border-radius: 10px !important;
+    }
+
+    .search-suggestions .suggestion-item strong {
+        font-size: 0.98rem !important;
+    }
+
+    .search-suggestions .suggestion-item small {
+        font-size: 0.78rem !important;
+    }
+}
+
+@media (min-width: 993px) and (max-width: 1199px) {
+    .header-content {
+        grid-template-columns: minmax(150px, auto) minmax(280px, 1fr) auto !important;
+        gap: 12px !important;
+    }
+
+    .account-link,
+    .wishlist-link,
+    .cart-link {
+        padding: 8px 10px !important;
+    }
+
+    .account-link span,
+    .wishlist-link span,
+    .cart-link span {
+        font-size: 0.8rem !important;
+    }
+}
+
+@media (min-width: 1400px) {
+    .container {
+        width: min(100%, 1460px) !important;
+    }
+
+    .header-content {
+        grid-template-columns: minmax(220px, auto) minmax(460px, 1fr) auto !important;
     }
 }
 
@@ -278,7 +308,7 @@ textarea {
     top: calc(100% + 6px) !important;
     left: 0 !important;
     right: 0 !important;
-    z-index: 2600 !important;
+    z-index: 9999 !important;
     background: #ffffff !important;
     border: 1px solid #cbd5e1 !important;
     box-shadow: 0 14px 36px rgba(15, 23, 42, 0.2) !important;
@@ -286,6 +316,8 @@ textarea {
     max-height: min(75vh, 620px) !important;
     overflow-y: auto !important;
     overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
 }
 
 .search-suggestions .suggestion-item strong {
@@ -405,101 +437,6 @@ textarea {
         padding-left: 10px !important;
     }
 
-    /* Mobile: make the opened nav a scrollable panel that fits viewport */
-    .nav-links.active {
-        max-height: calc(100vh - 70px) !important; /* leave space for header */
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-        padding: 10px !important;
-    }
-
-    /* Full-screen mobile panel and overlay for better legibility */
-    .nav-links.mobile-panel {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        height: 100vh !important;
-        padding-top: calc(56px + 10px) !important; /* header height + gap */
-        background: #ffffff !important;
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        z-index: 3000 !important;
-        max-height: none !important;
-        overflow-y: auto !important;
-    }
-
-    .mobile-nav-overlay {
-        position: fixed !important;
-        inset: 0 !important;
-        background: rgba(0,0,0,0.36) !important;
-        z-index: 2990 !important;
-        backdrop-filter: blur(4px) !important;
-    }
-
-    /* Extra ergonomics to avoid horizontal overflow and improve tappable area */
-    .nav-links,
-    .nav-links * {
-        box-sizing: border-box !important;
-        max-width: 100% !important;
-    }
-
-    .nav-links.mobile-panel .dropdown-content {
-        -webkit-overflow-scrolling: touch !important;
-        box-sizing: border-box !important;
-        padding-left: 12px !important;
-        padding-right: 12px !important;
-    }
-
-    .nav-links .dropdown-content a {
-        touch-action: manipulation !important;
-        -webkit-tap-highlight-color: transparent !important;
-        padding-left: 12px !important;
-        padding-right: 12px !important;
-        word-break: break-word !important;
-    }
-
-    .nav-links .nav-link {
-        word-break: break-word !important;
-        hyphens: auto !important;
-    }
-
-    /* Dropdowns become accordion panels on mobile */
-    .nav-links li.dropdown {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 0 !important;
-    }
-
-    .nav-links li.dropdown .dropdown-content {
-        display: none !important;
-        padding-left: 12px !important;
-        padding-right: 12px !important;
-        max-height: 0 !important;
-        overflow: hidden !important;
-        transition: max-height 220ms ease !important;
-    }
-
-    .nav-links li.dropdown.active .dropdown-content {
-        display: block !important;
-        max-height: 50vh !important; /* enough for many items on mobile */
-        overflow-y: auto !important;
-    }
-
-    /* increase tappable area */
-    .nav-links .nav-link {
-        min-height: 48px !important;
-        padding: 12px 14px !important;
-        font-size: 1rem !important;
-    }
-
-    .nav-links .dropdown-content a {
-        padding: 10px 8px !important;
-        min-height: 44px !important;
-        display: flex !important;
-        align-items: center !important;
-    }
-
     .dropdown.active .dropdown-content {
         display: block !important;
     }
@@ -515,51 +452,6 @@ textarea {
     .nav-links input[type="text"] {
         width: 100% !important;
         max-width: 100% !important;
-    }
-}
-
-/* Enforce consistent header alignment across pages (desktop & tablet)
-   Keeps logo left, search centered/stretch, and user-actions right */
-@media (min-width: 640px) {
-    .main-header .header-content:has(.search-bar) {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        gap: 18px !important;
-        width: 100%;
-    }
-
-    .main-header .logo {
-        flex: 0 0 auto !important;
-        display: inline-flex !important;
-        align-items: center !important;
-    }
-
-    .main-header .search-bar {
-        flex: 1 1 520px !important;
-        max-width: 720px !important;
-        min-width: 0 !important;
-        margin: 0 12px !important;
-    }
-
-    .main-header .user-actions {
-        flex: 0 0 auto !important;
-        display: flex !important;
-        align-items: center !important;
-        gap: 12px !important;
-    }
-
-    /* Ensure account link aligns vertically with logo and search */
-    .main-header .account-link {
-        align-self: center !important;
-        margin-top: 0 !important;
-    }
-}
-
-/* Desktop exact alignment enforcement */
-@media (min-width: 993px) {
-    .main-header .header-content:has(.search-bar) {
-        align-items: center !important;
     }
 }
 
@@ -659,6 +551,7 @@ textarea {
         align-items: center;
         gap: 8px;
         position: relative !important;
+        z-index: 3 !important;
         border-radius: 12px;
         transition: box-shadow 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
     }
@@ -701,11 +594,11 @@ textarea {
         display: grid !important;
         grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
         justify-content: stretch !important;
-        gap: 6px !important;
+        gap: 8px !important;
         visibility: visible !important;
         opacity: 1 !important;
         position: relative;
-        z-index: 3;
+        z-index: 2;
     }
 
     .account-link,
@@ -713,21 +606,21 @@ textarea {
     .cart-link {
         flex: initial !important;
         min-width: 0 !important;
-        min-height: 40px !important;
-        padding: 7px 6px !important;
+        min-height: 46px !important;
+        padding: 8px 7px !important;
         border-radius: 10px !important;
     }
 
     .account-link span,
     .wishlist-link span,
     .cart-link span {
-        font-size: 0.69rem !important;
+        font-size: 0.74rem !important;
     }
 
     .account-link i,
     .wishlist-link i,
     .cart-link i {
-        font-size: 0.88rem !important;
+        font-size: 1rem !important;
     }
 
     .wishlist-count,
@@ -1163,143 +1056,268 @@ textarea {
     }
 }
 
-/* Global navigation alignment fixes: ensure nav is consistently aligned across pages */
-header nav .container {
-    max-width: 1200px; /* consistent container width for nav */
-    margin-left: auto !important;
-    margin-right: auto !important;
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important; /* center nav contents horizontally */
-    gap: 12px !important;
+/* Unified public storefront navbar */
+.top-bar {
+    background: linear-gradient(135deg, #172033 0%, #24314a 58%, #122033 100%) !important;
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.08) !important;
 }
 
-header nav .container .nav-links {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 18px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    list-style: none !important;
+.top-bar .top-links a {
+    opacity: 0.9;
 }
 
-header nav .container .nav-links li {
-    margin: 0 !important;
-    padding: 0 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    height: 56px !important;
+.top-bar .top-links a:hover {
+    opacity: 1;
 }
 
-header nav .container .nav-links .nav-link {
-    display: inline-flex !important;
+body > header:not(.admin-header) {
+    position: relative;
+    z-index: 40;
+}
+
+body > header:not(.admin-header) .main-header {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, #ffffff 100%) !important;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
+    box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08) !important;
+}
+
+body > header:not(.admin-header) .logo {
+    letter-spacing: -0.04em;
+}
+
+body > header:not(.admin-header) .search-bar {
+    position: relative !important;
+}
+
+body > header:not(.admin-header) .search-bar input {
+    border-color: rgba(148, 163, 184, 0.35) !important;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7) !important;
+}
+
+body > header:not(.admin-header) .search-bar button {
+    background: linear-gradient(135deg, #1f2f46 0%, #324865 100%) !important;
+    border-color: #1f2f46 !important;
+    box-shadow: 0 10px 20px rgba(31, 47, 70, 0.18) !important;
+}
+
+body > header:not(.admin-header) .search-bar button:hover {
+    background: linear-gradient(135deg, #182537 0%, #25374f 100%) !important;
+}
+
+body > header:not(.admin-header) .user-actions {
+    gap: clamp(8px, 1vw, 14px) !important;
+}
+
+body > header:not(.admin-header) .account-link,
+body > header:not(.admin-header) .wishlist-link,
+body > header:not(.admin-header) .cart-link {
+    background: linear-gradient(180deg, rgba(248, 250, 252, 0.96) 0%, rgba(241, 245, 249, 0.96) 100%) !important;
+    border: 1px solid rgba(148, 163, 184, 0.24) !important;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06) !important;
+}
+
+body > header:not(.admin-header) .account-link:hover,
+body > header:not(.admin-header) .wishlist-link:hover,
+body > header:not(.admin-header) .cart-link:hover {
+    background: #ffffff !important;
+    border-color: rgba(232, 62, 95, 0.24) !important;
+    color: #e83e5f !important;
+    box-shadow: 0 14px 26px rgba(232, 62, 95, 0.12) !important;
+}
+
+body > header:not(.admin-header) nav {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 250, 252, 0.98) 100%) !important;
+    border-top: 1px solid rgba(148, 163, 184, 0.18) !important;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2) !important;
+    box-shadow: 0 18px 30px rgba(15, 23, 42, 0.06) !important;
+    backdrop-filter: blur(12px);
+}
+
+body > header:not(.admin-header) nav .container {
+    position: relative;
+}
+
+body > header:not(.admin-header) .nav-links {
     align-items: center !important;
-    justify-content: center !important;
-    height: 100% !important;
-    padding: 0 8px !important;
+    gap: clamp(10px, 1vw, 18px) !important;
+    padding-top: 14px !important;
+    padding-bottom: 14px !important;
+}
+
+body > header:not(.admin-header) .nav-link {
+    min-height: 48px !important;
+    padding: 0 16px !important;
+    border-radius: 999px !important;
+    font-weight: 600 !important;
     line-height: 1 !important;
+    gap: 8px !important;
+    color: #223047 !important;
+    background: transparent !important;
+    transition: background-color 0.22s ease, color 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease !important;
 }
 
-/* Keep dropdown positioning but ensure vertical alignment */
-header nav .container .dropdown .dropdown-content {
-    top: calc(100% + 8px) !important;
+body > header:not(.admin-header) .nav-link::after {
+    display: none !important;
 }
 
-/* Responsive: on small screens keep previous mobile behavior but center toggle */
+body > header:not(.admin-header) .nav-link:hover,
+body > header:not(.admin-header) .nav-link.active,
+body > header:not(.admin-header) .dropdown.active > .nav-link {
+    color: #e83e5f !important;
+    background: rgba(232, 62, 95, 0.08) !important;
+    box-shadow: inset 0 0 0 1px rgba(232, 62, 95, 0.14) !important;
+    transform: translateY(-1px);
+}
+
+body > header:not(.admin-header) .dropdown {
+    position: relative !important;
+}
+
+body > header:not(.admin-header) .dropdown > .nav-link .fa-chevron-down {
+    font-size: 0.78rem !important;
+    transition: transform 0.22s ease !important;
+}
+
+body > header:not(.admin-header) .dropdown:hover > .nav-link .fa-chevron-down,
+body > header:not(.admin-header) .dropdown.active > .nav-link .fa-chevron-down {
+    transform: rotate(180deg) !important;
+}
+
+body > header:not(.admin-header) .dropdown-content {
+    margin-top: 10px !important;
+    padding: 12px !important;
+    min-width: 280px !important;
+    border-radius: 22px !important;
+    border: 1px solid rgba(148, 163, 184, 0.22) !important;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%) !important;
+    box-shadow: 0 24px 48px rgba(15, 23, 42, 0.14) !important;
+    backdrop-filter: blur(16px);
+}
+
+body > header:not(.admin-header) .dropdown-content .dropdown-header {
+    margin: 8px 6px 10px !important;
+    color: #8b1e3f !important;
+    letter-spacing: 0.08em !important;
+    font-size: 0.72rem !important;
+}
+
+body > header:not(.admin-header) .dropdown-content a {
+    min-height: 44px !important;
+    margin-bottom: 4px !important;
+    padding: 10px 12px !important;
+    border-radius: 14px !important;
+    color: #243247 !important;
+}
+
+body > header:not(.admin-header) .dropdown-content a:hover {
+    background: rgba(232, 62, 95, 0.08) !important;
+    color: #d63357 !important;
+    transform: translateX(2px);
+}
+
+body > header:not(.admin-header) .dropdown-content a:last-child {
+    margin-bottom: 0 !important;
+}
+
+body > header:not(.admin-header) .mobile-menu-toggle {
+    border-radius: 16px !important;
+    border: 1px solid rgba(148, 163, 184, 0.24) !important;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.1) !important;
+}
+
+body > header:not(.admin-header) .mobile-menu-toggle:hover {
+    color: #e83e5f !important;
+    border-color: rgba(232, 62, 95, 0.26) !important;
+}
+
 @media (max-width: 992px) {
-    header nav .container {
-        justify-content: space-between !important;
+    body > header:not(.admin-header) nav {
+        background: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
     }
-    header nav .container .nav-links {
-        position: absolute !important;
+
+    body > header:not(.admin-header) .nav-links {
+        top: calc(100% + 10px) !important;
+        padding: 12px !important;
+        border-radius: 24px !important;
+        border: 1px solid rgba(148, 163, 184, 0.2) !important;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.99) 100%) !important;
+        box-shadow: 0 22px 48px rgba(15, 23, 42, 0.16) !important;
+    }
+
+    body > header:not(.admin-header) .nav-links.active {
+        gap: 8px !important;
+    }
+
+    body > header:not(.admin-header) .nav-links .nav-link {
+        min-height: 50px !important;
+        justify-content: space-between !important;
+        padding: 0 16px !important;
+        border: 1px solid rgba(226, 232, 240, 0.92) !important;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05) !important;
+    }
+
+    body > header:not(.admin-header) .dropdown .dropdown-content {
+        margin-top: 8px !important;
+        padding: 10px !important;
+        border-radius: 18px !important;
+        border: 1px solid rgba(226, 232, 240, 0.95) !important;
+        background: linear-gradient(180deg, rgba(255, 249, 250, 0.96) 0%, rgba(255, 255, 255, 0.98) 100%) !important;
+    }
+
+    body > header:not(.admin-header) .dropdown-content a {
+        min-height: 42px !important;
+        padding: 10px 12px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    body > header:not(.admin-header) .main-header {
+        border-bottom-left-radius: 20px !important;
+        border-bottom-right-radius: 20px !important;
+        box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08) !important;
+    }
+
+    body > header:not(.admin-header) .user-actions {
+        gap: 10px !important;
+    }
+
+    body > header:not(.admin-header) .account-link,
+    body > header:not(.admin-header) .wishlist-link,
+    body > header:not(.admin-header) .cart-link {
+        border-radius: 14px !important;
+        border-color: rgba(226, 232, 240, 0.96) !important;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+    }
+
+    body > header:not(.admin-header) .search-bar {
+        gap: 10px !important;
+    }
+
+    body > header:not(.admin-header) .search-bar input,
+    body > header:not(.admin-header) .search-bar button {
+        border-radius: 14px !important;
+    }
+
+    body > header:not(.admin-header) .nav-links {
+        border-radius: 22px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    body > header:not(.admin-header) .nav-links {
         left: 0 !important;
         right: 0 !important;
         width: 100% !important;
     }
-}
 
-/* Admin/dashboard header alignment */
-.admin-header {
-    max-width: 1200px;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    gap: 12px !important;
-}
-.admin-header .admin-brand {
-    display: flex !important;
-    align-items: center !important;
-    gap: 12px !important;
-}
-.admin-header .admin-actions {
-    display: flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-}
-
-/* Force nav link text and icons to remain upright (no rotation/skew) */
-header nav .container .nav-links .nav-link,
-header nav .container .nav-links .nav-link * {
-    transform: none !important;
-    -webkit-transform: none !important;
-    font-style: normal !important;
-    writing-mode: horizontal-tb !important;
-    text-orientation: mixed !important;
-    vertical-align: middle !important;
-}
-
-header nav .container .nav-links .nav-link i {
-    transform: none !important;
-    -webkit-transform: none !important;
-    margin-bottom: 0 !important;
-    vertical-align: middle !important;
-}
-
-/* Enforce consistent nav item alignment and spacing across all pages */
-header nav .container .nav-links,
-header nav .container .nav-links li,
-header nav .container .nav-links .nav-link {
-    /* Ensure all nav items share the same box and alignment */
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    vertical-align: middle !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-header nav .container .nav-links {
-    gap: 20px !important; /* uniform spacing between items */
-}
-
-header nav .container .nav-links li {
-    height: 56px !important; /* consistent item height */
-}
-
-header nav .container .nav-links .nav-link {
-    height: 100% !important;
-    padding: 0 10px !important; /* even horizontal padding */
-    line-height: 1 !important;
-    font-size: 0.95rem !important;
-}
-
-/* Ensure icons and text are centered and don't shift baseline */
-header nav .container .nav-links .nav-link i,
-header nav .container .nav-links .nav-link span {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    vertical-align: middle !important;
-}
-
-/* Make underline pseudo-element not affect vertical layout */
-header nav .container .nav-links .nav-link::after {
-    bottom: 8px !important;
+    body > header:not(.admin-header) .nav-links .nav-link {
+        min-height: 48px !important;
+        padding: 0 14px !important;
+    }
 }
