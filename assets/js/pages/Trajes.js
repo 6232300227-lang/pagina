@@ -150,8 +150,8 @@
                 <div class="product-info">
                     <h3 class="product-title">${product.name}</h3>
                     <div class="product-price">
-                        <span class="current-price">$${product.price.toFixed(2)}</span>
-                        ${product.originalPrice ? `<span class="original-price">$${product.originalPrice.toFixed(2)}</span>` : ''}
+                        <span class="current-price">${formatCurrency(product.price)}</span>
+                        ${product.originalPrice ? `<span class="original-price">${formatCurrency(product.originalPrice)}</span>` : ''}
                         ${product.discount ? `<span class="discount">-${product.discount}%</span>` : ''}
                     </div>
                     <div class="product-rating">

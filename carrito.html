@@ -152,14 +152,7 @@
                 <div class="step-circle active" id="step1Circle">1</div>
                 <div class="step-label active" id="step1Label">Carrito</div>
             </div>
-            <div class="progress-step locked">
-                <div class="step-circle" id="step2Circle">2</div>
-                <div class="step-label" id="step2Label">Datos</div>
-            </div>
-            <div class="progress-step locked">
-                <div class="step-circle" id="step3Circle">3</div>
-                <div class="step-label" id="step3Label">Pago</div>
-            </div>
+            <!-- Paso 2 (Datos) y Paso 3 (Pago) eliminados por solicitud -->
             <div class="progress-step" onclick="goToStep(4)">
                 <div class="step-circle" id="step4Circle">2</div>
                 <div class="step-label" id="step4Label">Confirmación</div>
@@ -262,6 +255,20 @@
 
                     <div class="order-details-confirm" id="confirmationDetails">
                         <!-- Los detalles se llenarán dinámicamente -->
+                    </div>
+
+                    <!-- Contenedor específico para impresión: solo logo, pago exitoso y datos de envío -->
+                    <div id="printInvoice" style="display:none;">
+                        <div class="print-logo">
+                            <a href="index.html" class="logo">
+                                <i class="fas fa-crown"></i>
+                                Style<span>Hub</span>
+                            </a>
+                        </div>
+                        <h2 class="print-title">Pago exitoso</h2>
+                        <div id="printOrderNumber" class="print-order-number"></div>
+                        <div id="printShippingDetails" class="print-shipping-details"></div>
+                        <div id="printPaymentSummary" class="print-payment-summary"></div>
                     </div>
 
                     <div class="action-buttons">
@@ -367,7 +374,7 @@
             <div class="footer-content">
                 <!-- Promotional / help / about columns removed as requested -->
 
-                <div class="footer-column">
+                <div class="footer-column contact-premium">
                     <h3>Contacto Premium</h3>
                     <ul>
                         <li><a href="mailto:6232300227@univermilenium.edu.mx"><i class="fas fa-envelope"></i> 6232300227@univermilenium.edu.mx</a></li>

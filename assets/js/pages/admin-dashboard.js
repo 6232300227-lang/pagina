@@ -38,7 +38,13 @@ function pageLabel(pageTarget) {
 }
 
 function currency(value) {
-    return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD' }).format(value || 0);
+    // Preferir el formateador global si está disponible
+    try {
+        if (typeof window !== 'undefined' && typeof window.formatCurrency === 'function') {
+            return window.formatCurrency(value);
+        }
+    } catch (e) {}
+    return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(value || 0);
 }
 
 function formatDate(value) {
@@ -268,7 +274,9 @@ function renderSales(data) {
             scales: {
                 y: {
                     ticks: {
-                        callback: (value) => `$${value}`
+                        callback: (value) => {
+                            try { return formatCurrency(value); } catch (e) { return `$${value}`; }
+                        }
                     }
                 }
             }

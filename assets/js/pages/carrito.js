@@ -18,7 +18,7 @@
         const API_BASE = CONFIGURED_API_BASE || (IS_LOCAL_HOST ? 'http://localhost:3000' : DEFAULT_REMOTE_API_BASE);
         const CHECKOUT_RETURN_BASE = IS_LOCAL_HOST ? 'https://stylehub.pics' : window.location.origin;
 
-        const SHIPPING_COST = 5.99;
+        const SHIPPING_COST = 0.00;
         const SHIPPING_FREE_THRESHOLD = 29.99;
         const VALID_PROMO_CODES = {
             'VERANO20': 0.20,
@@ -405,8 +405,8 @@
                             <div class="cart-item-details">
                                 <h3 class="cart-item-title">${item.name}</h3>
                                 <div class="cart-item-price">
-                                    <span>$${item.price.toFixed(2)}</span>
-                                    ${item.originalPrice ? `<span class="cart-item-original-price">$${item.originalPrice.toFixed(2)}</span>` : ''}
+                                    <span>${formatCurrency(item.price)}</span>
+                                    ${item.originalPrice ? `<span class="cart-item-original-price">${formatCurrency(item.originalPrice)}</span>` : ''}
                                 </div>
                                 <div class="cart-item-actions">
                                     <div class="quantity-controls">
@@ -420,7 +420,7 @@
                                 </div>
                             </div>
                             <div class="cart-item-total">
-                                <div class="cart-item-total-price">$${itemTotal.toFixed(2)}</div>
+                                <div class="cart-item-total-price">${formatCurrency(itemTotal)}</div>
                             </div>
                         </div>
                     `;
@@ -498,10 +498,10 @@
             const discountElement = document.getElementById('discount');
             const totalElement = document.getElementById('total');
 
-            if (subtotalElement) subtotalElement.textContent = `$${subtotal.toFixed(2)}`;
-            if (shippingElement) shippingElement.textContent = shipping === 0 ? 'Gratis' : `$${shipping.toFixed(2)}`;
-            if (discountElement) discountElement.textContent = discount > 0 ? `-$${discount.toFixed(2)}` : '$0.00';
-            if (totalElement) totalElement.textContent = `$${total.toFixed(2)}`;
+            if (subtotalElement) subtotalElement.textContent = formatCurrency(subtotal);
+            if (shippingElement) shippingElement.textContent = formatCurrency(shipping);
+            if (discountElement) discountElement.textContent = discount > 0 ? `-${formatCurrency(discount)}` : formatCurrency(0);
+            if (totalElement) totalElement.textContent = formatCurrency(total);
 
             // Estimated delivery
             const etaEl = document.getElementById('estimatedDelivery');
@@ -618,7 +618,7 @@
 
         function validateAndGoToPayment() {
             if (validateInfo()) {
-                goToStep(3);
+                goToStep(4);
             }
         }
 
@@ -863,6 +863,20 @@
 
             const cleanUrl = `${window.location.origin}${window.location.pathname}`;
             window.history.replaceState({}, document.title, cleanUrl);
+
+            // Si el usuario está autenticado, abrir su cuenta en una nueva pestaña
+            // para que vea el historial completo y los datos de la compra.
+            try {
+                const token = localStorage.getItem('token');
+                if (token) {
+                    // Esperar un momento para dar tiempo al backend a guardar/actualizar la orden
+                    setTimeout(() => {
+                        try { window.open('usuarios.html', '_blank'); } catch (e) { /* no interrumpir flujo */ }
+                    }, 1200);
+                }
+            } catch (e) {
+                // No bloquear si hay errores al acceder a localStorage
+            }
         }
 
         async function persistOrderInBackend(order) {
@@ -981,6 +995,35 @@
                     <span class="detail-value">${estimated}</span>
                 </div>
             `;
+
+            /* Rellenar el contenedor de impresión con solo lo necesario */
+            try {
+                const printOrderEl = document.getElementById('printOrderNumber');
+                const printShippingEl = document.getElementById('printShippingDetails');
+                const printSummaryEl = document.getElementById('printPaymentSummary');
+
+                if (printOrderEl) printOrderEl.textContent = document.getElementById('orderNumber')?.textContent || '';
+
+                if (printShippingEl) {
+                    printShippingEl.innerHTML = `
+                        <div class="detail-row"><strong>Nombre:</strong> ${fullName || 'No especificado'}</div>
+                        <div class="detail-row"><strong>Dirección:</strong> ${address || ''}, ${city || ''} ${zipCode || ''}</div>
+                        <div class="detail-row"><strong>Teléfono:</strong> ${phone || 'No especificado'}</div>
+                    `;
+                }
+
+                if (printSummaryEl) {
+                    printSummaryEl.innerHTML = `
+                        <div class="detail-row"><strong>Subtotal:</strong> ${formatCurrency(subtotal)}</div>
+                        <div class="detail-row"><strong>Envío:</strong> ${shipping === 0 ? 'Gratis' : formatCurrency(shipping)}</div>
+                        <div class="detail-row"><strong>Descuento:</strong> -${formatCurrency(discount)}</div>
+                        <div class="detail-row"><strong>Total:</strong> ${formatCurrency(total)}</div>
+                        <div class="detail-row"><strong>Método:</strong> ${source.paymentMethodLabel || 'Mercado Pago'}</div>
+                    `;
+                }
+            } catch (e) {
+                console.warn('No se pudo rellenar el contenedor de impresión:', e);
+            }
         }
 
         // ===== FUNCIONES AUXILIARES =====

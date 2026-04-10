@@ -26,6 +26,15 @@ function loadAuthFromStorage() {
 // Inicializar desde localStorage al cargar el script
 loadAuthFromStorage();
 
+// Formateador de moneda global: muestra en pesos mexicanos (MXN)
+window.formatCurrency = function(value) {
+    try {
+        return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(Number(value || 0));
+    } catch (e) {
+        return `$${Number(value || 0).toFixed(2)}`;
+    }
+};
+
 // Función para abrir el modal de autenticación
 function openAuthModal(event) {
     if (event) event.preventDefault();

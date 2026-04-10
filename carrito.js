@@ -156,6 +156,12 @@ function logout() {
     localStorage.removeItem('token');
     updateUserInterface();
     showNotification('Has cerrado sesión correctamente', 'info');
+    // Redirigir a la página principal inmediatamente después de cerrar sesión
+    try {
+        setTimeout(() => { window.location.href = 'index.html'; }, 250);
+    } catch (e) {
+        /* noop */
+    }
 }
 
 // Cargar carrito desde localStorage
@@ -194,7 +200,7 @@ function setupEventListeners() {
     const proceedBtn = document.getElementById('proceedToInfo');
     if (proceedBtn) {
         proceedBtn.addEventListener('click', function() {
-            goToStep(2);
+            goToStep(4);
         });
     }
 }
@@ -428,7 +434,7 @@ function goToStep(step) {
 // Función para validar y continuar al pago
 function validateAndGoToPayment() {
     if (validateInfo()) {
-        goToStep(3);
+        goToStep(4);
     }
 }
 

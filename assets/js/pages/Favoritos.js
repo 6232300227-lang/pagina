@@ -462,7 +462,7 @@
                         <i class="fas ${getProductIcon(product.category)} recommendation-icon"></i>
                         <div class="recommendation-title">${product.name}</div>
                         <div class="recommendation-category">${product.category} - ${product.subcategory}</div>
-                        <div class="recommendation-price">$${product.price.toFixed(2)}</div>
+                        <div class="recommendation-price">${formatCurrency(product.price)}</div>
                     </div>
                 `;
             });

@@ -780,6 +780,186 @@ textarea {
     }
 }
 
+    /* ===== Fallback responsive utilities for product grids and cards ===== */
+    .product-grid,
+    .products-list,
+    .products,
+    .product-grid-category,
+    .product-item,
+    .product-card {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
+        gap: 16px !important;
+        align-items: start !important;
+    }
+
+    /* Ensure product images and thumbnails scale correctly */
+    .product-item img,
+    .product-card img,
+    .product-thumbnail img {
+        width: 100% !important;
+        height: auto !important;
+        object-fit: cover !important;
+        display: block !important;
+    }
+
+    /* Make product detail columns stack on small screens */
+    @media (max-width: 768px) {
+        .product-grid,
+        .products-list,
+        .product-grid-category {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 12px !important;
+        }
+    }
+
+    @media (max-width: 420px) {
+        .product-grid,
+        .products-list,
+        .product-grid-category {
+            grid-template-columns: 1fr !important;
+        }
+    }
+
+    /* Utility: prevent oversized fixed elements from breaking layouts */
+    [style*="width:"] {
+        max-width: 100% !important;
+    }
+
+    /* Broad responsive fallbacks for common card/list naming conventions */
+    .card-grid,
+    .cards-grid,
+    .cards,
+    .card-list,
+    .card-item,
+    .card,
+    .product,
+    .product-card,
+    .product-listing,
+    .product-list,
+    .products-grid,
+    .products-container,
+    .items-grid,
+    .items-list,
+    .listing-grid,
+    .listing-item {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
+        gap: 16px !important;
+        align-items: start !important;
+    }
+
+    /* Estilos mejorados para el bloque Contacto Premium */
+    footer .footer-column.contact-premium {
+        background: #000000;
+        border-radius: 12px;
+        padding: 18px 20px;
+        box-shadow: 0 8px 26px rgba(0,0,0,0.5);
+        max-width: 380px;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
+
+    footer .footer-column.contact-premium h3 {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+        color: #ffffff;
+        letter-spacing: 0.2px;
+    }
+
+    footer .footer-column.contact-premium ul {
+        list-style: none;
+        padding: 0;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+
+    /* Enlaces como botones mejorados */
+    footer .footer-column.contact-premium ul li a {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        color: #ffffff;
+        font-weight: 700;
+        background: linear-gradient(90deg, #e83e5f 0%, #ff6b8a 100%);
+        padding: 10px 16px;
+        border-radius: 10px;
+        box-shadow: 0 6px 18px rgba(232,62,95,0.18);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    footer .footer-column.contact-premium ul li a:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 26px rgba(232,62,95,0.24);
+    }
+
+    footer .footer-column.contact-premium ul li a i {
+        color: #fff;
+        width: 36px;
+        height: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255,255,255,0.08);
+        border-radius: 8px;
+        font-size: 0.95rem;
+    }
+
+    /* Asegurar responsividad del bloque de contacto */
+    @media (max-width: 768px) {
+        footer .footer-column.contact-premium {
+            max-width: none;
+            width: 100%;
+            padding: 14px;
+        }
+        footer .footer-column.contact-premium ul li a {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    /* Order history / account cards: ensure full width and stacking on small screens */
+    .order-card,
+    .orders-list,
+    .order-item {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Make smaller cards / product variants fit better */
+    @media (max-width: 992px) {
+        .card-grid,
+        .cards-grid,
+        .product-grid,
+        .products-grid,
+        .products-container,
+        .product-list,
+        .products {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 12px !important;
+        }
+    }
+
+    @media (max-width: 420px) {
+        .card-grid,
+        .cards-grid,
+        .product-grid,
+        .products-grid,
+        .products-container,
+        .product-list,
+        .products,
+        .items-grid {
+            grid-template-columns: 1fr !important;
+            gap: 10px !important;
+        }
+    }
+
 /* iPhone 11 / XR baseline (414px width) */
 @media (min-width: 390px) and (max-width: 430px) {
     body {
@@ -1019,6 +1199,129 @@ textarea {
         font-size: 1.2rem !important;
     }
 
+
+/* Normalize .category-header across pages to remove light lines and improve contrast */
+.category-header {
+    padding: 100px 0 90px !important;
+    margin: 20px 0 30px !important;
+    position: relative !important;
+    overflow: hidden !important;
+    border-radius: var(--border-radius) !important;
+    box-shadow: none !important;
+}
+
+.category-header::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    /* dark, subtle overlay to mask any hairline or gradient artifacts */
+    background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.55)) !important;
+    pointer-events: none !important;
+}
+
+.category-header p {
+    opacity: 1 !important;
+    line-height: 1.6 !important;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.6) !important;
+}
+
+/* Reduce padding on small screens for category headers */
+@media (max-width: 768px) {
+    .category-header {
+        padding: 60px 0 45px !important;
+        margin: 12px 0 18px !important;
+    }
+}
+
+/* ===== Standardize main navigation/menu across pages ===== */
+.nav-links {
+    display: flex !important;
+    gap: clamp(10px, 1.2vw, 18px) !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+    padding: 8px 0 !important;
+    margin: 0 !important;
+    list-style: none !important;
+}
+
+.nav-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+    color: inherit !important;
+    padding: 8px 12px !important;
+    border-radius: 10px !important;
+    transition: background-color 0.12s ease, transform 0.12s ease !important;
+}
+
+.nav-link.active,
+.nav-link[aria-current="page"] {
+    background: linear-gradient(90deg,#e83e5f,#ff6b8a) !important;
+    color: #fff !important;
+    box-shadow: 0 8px 20px rgba(232,62,95,0.12) !important;
+}
+
+.dropdown {
+    position: relative !important;
+}
+
+.dropdown .dropdown-content {
+    position: absolute !important;
+    top: calc(100% + 8px) !important;
+    left: 0 !important;
+    min-width: 220px !important;
+    background: #fff !important;
+    border-radius: 12px !important;
+    box-shadow: 0 16px 42px rgba(15,23,42,0.12) !important;
+    padding: 12px !important;
+    display: none !important;
+    z-index: 2200 !important;
+}
+
+.dropdown:hover .dropdown-content,
+.dropdown:focus-within .dropdown-content {
+    display: block !important;
+}
+
+.dropdown .dropdown-header {
+    font-weight: 800 !important;
+    font-size: 0.78rem !important;
+    color: #111827 !important;
+    padding: 6px 0 !important;
+}
+
+.dropdown .dropdown-content a {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    color: #0f172a !important;
+    padding: 8px 6px !important;
+    border-radius: 8px !important;
+}
+
+@media (max-width: 992px) {
+    .nav-links {
+        justify-content: flex-start !important;
+        gap: 8px !important;
+    }
+
+    .dropdown .dropdown-content {
+        position: static !important;
+        box-shadow: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+        display: none !important;
+    }
+
+    .dropdown.active .dropdown-content {
+        display: block !important;
+    }
+}
     .account-link,
     .wishlist-link,
     .cart-link {
