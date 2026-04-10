@@ -132,8 +132,9 @@
         const grid = getProductsGrid();
         if (!grid) return;
 
-        const page = getCurrentPageName();
-        const response = await fetch(`${API_BASE}/products?page=${encodeURIComponent(page)}`);
+        // Cargar todos los productos para que los publicados desde el dashboard
+        // aparezcan en todas las páginas del sitio.
+        const response = await fetch(`${API_BASE}/products`);
         if (!response.ok) return;
 
         const products = await response.json();
