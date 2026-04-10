@@ -361,9 +361,9 @@ th {
 
 .product-grid {
     display: grid;
-    /* Balance entre formulario y lista: 3fr / 2fr da más espacio a Productos registrados */
-    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-    gap: 48px;
+    /* Más espacio horizontal para formulario y lista: 4fr / 3fr */
+    grid-template-columns: minmax(0, 4fr) minmax(0, 3fr);
+    gap: 64px;
     width: 100%;
     max-width: none; /* usar todo el ancho disponible para formularios amplios */
     margin: 0 auto; /* centrar en pantallas grandes */
@@ -434,7 +434,7 @@ th {
     min-height: 760px; /* igual que el panel de Cargar / Editar producto */
     max-height: none;
     overflow: hidden;
-    padding: 22px;
+    padding: 28px;
     gap: 14px;
 }
 
@@ -454,7 +454,7 @@ th {
 }
 
 .product-form-card {
-    padding-right: 22px;
+    padding-right: 28px;
 }
 
 .products-list .product-item {

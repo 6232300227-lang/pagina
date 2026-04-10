@@ -128,16 +128,41 @@
         return card;
     }
 
+    async function fetchProductsFromApi() {
+        try {
+            const response = await fetch(`${API_BASE}/products`);
+            if (!response.ok) throw new Error('API response not ok');
+            const products = await response.json();
+            if (!Array.isArray(products) || products.length === 0) throw new Error('No products from API');
+            return products;
+        } catch (err) {
+            console.warn('API products load failed, will try local seed:', err);
+            return null;
+        }
+    }
+
+    async function fetchProductsFromSeed() {
+        try {
+            const resp = await fetch('assets/js/products-seed.json');
+            if (!resp.ok) throw new Error('Seed file not found');
+            const data = await resp.json();
+            if (!Array.isArray(data)) throw new Error('Invalid seed format');
+            return data;
+        } catch (err) {
+            console.warn('Local seed load failed:', err);
+            return [];
+        }
+    }
+
     async function appendDynamicProducts() {
         const grid = getProductsGrid();
         if (!grid) return;
 
-        // Cargar todos los productos para que los publicados desde el dashboard
-        // aparezcan en todas las páginas del sitio.
-        const response = await fetch(`${API_BASE}/products`);
-        if (!response.ok) return;
+        let products = await fetchProductsFromApi();
+        if (!Array.isArray(products) || products.length === 0) {
+            products = await fetchProductsFromSeed();
+        }
 
-        const products = await response.json();
         if (!Array.isArray(products) || products.length === 0) return;
 
         const existingIds = new Set(
@@ -154,7 +179,7 @@
                 image: product.image,
                 description: product.description,
                 price: toNumber(product.price, 0),
-                finalPrice: toNumber(product.finalPrice, toNumber(product.price, 0)),
+                finalPrice: toNumber(product.finalPrice ?? product.price, toNumber(product.price, 0)),
                 discount: toNumber(product.discount, 0)
             };
 
