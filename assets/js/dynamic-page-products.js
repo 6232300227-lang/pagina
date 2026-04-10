@@ -171,6 +171,44 @@
 
         if (!Array.isArray(products) || products.length === 0) return;
 
+        // Determine page-specific category filtering
+        const pageName = getCurrentPageName();
+        function mapPageToCategories(name, gridId) {
+            // featured on index: handled separately
+            const map = {
+                'camisetas.html': ['camisetas'],
+                'camisas.html': ['camisas'],
+                'camisetas-niños.html': ['camisetas-niños'],
+                'pantalones-hombre.html': ['pantalones-hombre'],
+                'Pantalones-mujer.html': ['pantalones-mujer'],
+                'pantalones-niña.html': ['pantalones-niña'],
+                'pantalones-niño.html': ['pantalones-niño'],
+                'tops.html': ['tops'],
+                'tops-niña.html': ['tops-niña'],
+                'chaquetas.html': ['chaquetas'],
+                'chaquetas-niño.html': ['chaquetas-niño'],
+                'vestidos.html': ['vestidos'],
+                'vestidos-niñas.html': ['vestidos'],
+                'Trajes.html': ['Trajes']
+            };
+            // If the grid is the featured grid on index, return null to indicate no category filter
+            if (gridId === 'featuredProductsGrid' || name === 'index.html') return null;
+            return map[name] || null;
+        }
+
+        const allowedCategories = mapPageToCategories(pageName, grid.id);
+        if (grid.id === 'featuredProductsGrid') {
+            // show only a limited number of featured items
+            products = products.slice(0, 8);
+        } else if (Array.isArray(allowedCategories)) {
+            products = products.filter((p) => {
+                const cats = p.category || p.categories || null;
+                if (!cats) return false;
+                if (Array.isArray(cats)) return cats.some((c) => allowedCategories.includes(c));
+                return allowedCategories.includes(String(cats));
+            });
+        }
+
         const existingIds = new Set(
             Array.from(grid.querySelectorAll('[data-id]')).map((el) => String(el.getAttribute('data-id')))
         );
