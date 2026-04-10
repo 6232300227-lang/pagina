@@ -236,7 +236,7 @@ async function loadDashboard(token) {
     renderStats(stats);
     renderUsers(users, token);
     renderSales(salesOverview);
-    renderProducts(products);
+    renderProducts(products, token);
 }
 
 function renderSales(data) {
@@ -284,7 +284,7 @@ function renderSales(data) {
     });
 }
 
-function renderProducts(products) {
+function renderProducts(products, token) {
     const container = document.getElementById('productsList');
     if (!container) return;
 
@@ -316,6 +316,7 @@ function renderProducts(products) {
                 </div>
                 <div class="product-actions">
                     <button class="tiny-btn edit" data-edit-product="${product.id}">Editar</button>
+                    <button class="tiny-btn delete" data-delete-product="${product.id}">Eliminar</button>
                 </div>
             </div>
         `;
@@ -328,6 +329,10 @@ function renderProducts(products) {
             if (!found) return;
             fillProductForm(found);
         });
+    });
+
+    container.querySelectorAll('[data-delete-product]').forEach((btn) => {
+        // deletion handled via delegated listener in bindActions to apply across the page
     });
 }
 
@@ -444,7 +449,7 @@ function bindActions(token) {
             refreshProducts.disabled = true;
             try {
                 const products = await apiGet('/admin/products', token);
-                renderProducts(products);
+                renderProducts(products, token);
             } catch (err) {
                 alert(err.message || 'No se pudo actualizar productos');
             } finally {
@@ -474,7 +479,7 @@ function bindActions(token) {
                     apiGet('/admin/products', token),
                     apiGet('/admin/sales-overview', token)
                 ]);
-                renderProducts(products);
+                renderProducts(products, token);
                 renderSales(sales);
             } catch (err) {
                 alert(err.message || 'Error guardando producto');
@@ -490,6 +495,32 @@ function bindActions(token) {
             }
         });
     }
+
+    // Delegated delete handler for products: captures any element with data-delete-product
+    document.addEventListener('click', async (ev) => {
+        const btn = ev.target.closest('[data-delete-product]');
+        if (!btn) return;
+        ev.preventDefault();
+        const id = btn.getAttribute('data-delete-product');
+        if (!id) return;
+
+        const ok = window.confirm('¿Seguro que deseas eliminar este producto? Esta acción no se puede deshacer.');
+        if (!ok) return;
+
+        const original = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = 'Eliminando...';
+
+        try {
+            await apiDelete(`/admin/products/${encodeURIComponent(id)}`, token);
+            const productsUpdated = await apiGet('/admin/products', token);
+            renderProducts(productsUpdated, token);
+        } catch (err) {
+            alert(err.message || 'No se pudo eliminar el producto');
+            btn.disabled = false;
+            btn.innerHTML = original;
+        }
+    });
 }
 
 document.addEventListener('DOMContentLoaded', async () => {

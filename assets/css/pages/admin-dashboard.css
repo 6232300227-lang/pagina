@@ -51,7 +51,7 @@ body {
 }
 
 .admin-header {
-    max-width: min(1480px, calc(100vw - 2 * clamp(16px, 2vw, 28px)));
+    max-width: min(1920px, calc(100vw - 2 * clamp(16px, 2vw, 28px)));
     margin: 0 auto 22px;
     background: rgba(255, 255, 255, 0.86);
     border: 1px solid var(--line);
@@ -136,8 +136,11 @@ body {
 }
 
 .admin-main {
-    max-width: min(1480px, calc(100vw - 2 * clamp(16px, 2vw, 28px)));
+    /* permitir que el contenido del dashboard use más ancho del viewport */
+    max-width: none;
     margin: 0 auto;
+    padding-left: clamp(16px, 2vw, 28px);
+    padding-right: clamp(16px, 2vw, 28px);
     display: grid;
     gap: 18px;
 }
@@ -358,8 +361,13 @@ th {
 
 .product-grid {
     display: grid;
-    grid-template-columns: minmax(320px, 1fr) minmax(420px, 1.5fr);
-    gap: 14px;
+    /* Ambos paneles más anchos: proporción 3fr / 2fr para ocupar mayor espacio */
+    /* Tamaño promedio: formulario con ancho moderado respecto a la lista */
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 48px;
+    width: 100%;
+    max-width: 1400px; /* ancho promedio para buena lectura */
+    margin: 0 auto; /* centrar en pantallas grandes */
 }
 
 .product-form {
@@ -395,6 +403,109 @@ th {
     align-items: center;
     gap: 8px;
     font-size: 0.9rem;
+}
+
+/* Hacer que el panel Cargar / Editar producto tenga forma cuadrada
+   y que su contenido interno sea desplazable si excede la altura */
+.product-form-card {
+    /* Panel cuadrado: header fijo + contenido desplazable */
+    display: grid;
+    grid-template-rows: auto 1fr;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    max-height: none;
+    overflow: hidden;
+    padding: 18px;
+    gap: 12px;
+}
+
+.product-form-card .product-form {
+    overflow: auto;
+    padding-right: 8px; /* evitar que el scrollbar tape inputs */
+    display: grid;
+    gap: 12px;
+}
+
+/* Productos registrados: panel cuadrado y lista interna limpia */
+.products-list-card {
+    /* Panel cuadrado: header fijo + lista desplazable */
+    display: grid;
+    grid-template-rows: auto 1fr;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    max-height: none;
+    overflow: hidden;
+    padding: 18px;
+    gap: 12px;
+}
+
+.products-list {
+    overflow: auto;
+    display: grid;
+    gap: 12px;
+    padding-right: 8px;
+}
+
+.products-list-card {
+    /* Separador visual: en escritorio usar border-left, en móvil se ajusta más abajo */
+    border-left: 2px solid var(--line);
+    padding-left: 22px;
+    padding-top: 0;
+    margin-left: 0;
+}
+
+.product-form-card {
+    padding-right: 22px;
+}
+
+.products-list .product-item {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #ffffff;
+}
+
+.products-list .product-item img {
+    width: 84px;
+    height: 84px;
+    object-fit: cover;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.products-list .product-item p.product-name {
+    margin: 0 0 6px;
+    font-weight: 700;
+}
+
+.products-list .product-item .product-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Ajustes responsivos: en pantallas pequeñas permitir que los paneles apilen verticalmente */
+@media (max-width: 980px) {
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+    .product-form-card,
+    .products-list-card {
+        aspect-ratio: auto;
+        max-height: none;
+        margin-left: 0; /* quitar desplazamiento en mobile */
+    }
+    /* En móvil revertir separador a la parte superior para apilado vertical */
+    .products-list-card {
+        border-left: none;
+        border-top: 2px solid var(--line);
+        padding-left: 0;
+        padding-top: 22px;
+    }
 }
 
 .products-list {
